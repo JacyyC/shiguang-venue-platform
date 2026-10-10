@@ -9,7 +9,7 @@ npm run build --prefix frontend
 (cd backend && mvn -B -ntp clean verify)
 ```
 
-后端 MySQL/Redis Testcontainers 测试需要可用 Docker。完整容量实验另用 `mvn -B -ntp clean '-Dtest=*Test,WaveAScalePerformanceIT' package`，本地性能阈值不适合作为所有共享 CI runner 的生产性能保证。
+后端 MySQL/Redis Testcontainers 测试需要可用 Docker。Surefire 为测试 JVM 固定 `Asia/Shanghai`，与项目的日历和集成夹具保持一致；不改变部署进程的时区。完整容量实验另用 `mvn -B -ntp clean '-Dtest=*Test,WaveAScalePerformanceIT' package`，本地性能阈值不适合作为所有共享 CI runner 的生产性能保证。
 
 ## 显式 DEV 储值集成
 

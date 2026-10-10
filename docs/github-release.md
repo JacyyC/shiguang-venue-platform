@@ -22,10 +22,13 @@
 
 ## 首次 GitHub CI 与修复
 
-[首次运行](https://github.com/JacyyC/shiguang-venue-platform/actions/runs/38052476325)的前端测试、构建、依赖扫描与公开结构检查通过，但另外两项检查失败：
+[首次运行](https://github.com/JacyyC/shiguang-venue-platform/actions/runs/38052476325)的前端测试、构建、依赖扫描与公开结构检查通过，但后端、储值集成和扫描任务失败：
 
 - Gitleaks Action 为首次推送构造了根提交的父提交范围，Git 无法解析该范围，扫描未完成。改为固定 Gitleaks 8.30.1 容器直接扫描完整公开 Git 历史；保留默认规则和已有窄范围的合成数据例外。
 - 储值测试中有 9 项报「未完成储值身份核验」：数据库与 JDBC 为 `Asia/Shanghai`，Ubuntu 测试 JVM 默认为 UTC，导致当前核验时间被判断为未来。运行器为测试 JVM 显式设置相同时区；业务身份核验逻辑保持原有要求。
+- 后端默认 2,076 项测试中有 3 项失败：活动通知重试/过期的 2 项受相同时区假设影响；广告位查询计划 1 项使用了近空表的统计，选择全表扫描。Surefire 明确测试 JVM 时区，广告位夹具同步数据库会话时区并在规模数据装载后刷新统计；索引与查询断言保持原有要求。
+
+[第二次运行](https://github.com/JacyyC/shiguang-venue-platform/actions/runs/38053067560)的储值四组集成和完整历史扫描通过。扫描之后的 shell 测试暴露 macOS 固定 `lsof` 路径；改为发现当前工具路径，并按操作系统选择 `stat` 参数，保留进程所有权、隐私目录权限与拒绝误停的断言。
 
 修复后的实际状态见 [GitHub Actions](https://github.com/JacyyC/shiguang-venue-platform/actions/workflows/ci.yml)；每次运行与具体提交关联，不能把一次通过推广为生产验收。
 

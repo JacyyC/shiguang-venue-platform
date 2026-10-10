@@ -27,6 +27,7 @@ run_root="$fixture/run"
 env_file="$fixture/smoke.env"
 capture_file="$fixture/backend-env"
 stop_order_file="$fixture/stop-order"
+real_lsof="$(command -v lsof)"
 mkdir -p "$fake_bin" "$run_root"
 
 cat > "$fake_bin/cloudflared" <<'EOS'
@@ -73,7 +74,7 @@ if [[ "$*" == *"-tiTCP:18080"* ]]; then
   find "$ALIPAY_SMOKE_RUN_ROOT" -maxdepth 2 -type f -name backend.pid -exec cat {} \; | head -n 1
   exit 0
 fi
-exec /usr/sbin/lsof "$@"
+exec "$FAKE_REAL_LSOF" "$@"
 EOS
 
 chmod +x "$fake_bin/cloudflared" "$fake_bin/mvn" "$fake_bin/curl" "$fake_bin/nc" "$fake_bin/lsof"
@@ -100,6 +101,7 @@ common_env=(
   "ALIPAY_SMOKE_BACKEND_WAIT_SECONDS=3"
   "FAKE_CAPTURE=$capture_file"
   "FAKE_STOP_ORDER=$stop_order_file"
+  "FAKE_REAL_LSOF=$real_lsof"
 )
 
 missing_path="/usr/bin:/bin:/usr/sbin:/sbin"
@@ -149,7 +151,11 @@ if [[ ! -f "$active_dir/backend-listener.pid" ]]; then
   exit 1
 fi
 
-permissions="$(stat -f '%Lp' "$active_dir" 2>/dev/null || stat -c '%a' "$active_dir")"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  permissions="$(stat -f '%Lp' "$active_dir")"
+else
+  permissions="$(stat -c '%a' "$active_dir")"
+fi
 if [[ "$permissions" != "700" ]]; then
   echo "run directory permissions are $permissions instead of 700" >&2
   exit 1

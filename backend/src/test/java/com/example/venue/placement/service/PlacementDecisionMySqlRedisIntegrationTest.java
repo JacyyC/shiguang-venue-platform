@@ -61,6 +61,7 @@ class PlacementDecisionMySqlRedisIntegrationTest {
         .withDatabaseName("placement_decision_integration")
         .withUsername("placement")
         .withPassword("placement")
+        .withEnv("TZ", "Asia/Shanghai")
         .withCommand("--character-set-server=utf8mb4",
                      "--collation-server=utf8mb4_unicode_ci",
                      "--log-bin-trust-function-creators=1");
@@ -76,7 +77,8 @@ class PlacementDecisionMySqlRedisIntegrationTest {
 
     @DynamicPropertySource
     static void infrastructureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", MYSQL::getJdbcUrl);
+        registry.add("spring.datasource.url", () -> MYSQL.getJdbcUrl()
+            + "?connectionTimeZone=Asia/Shanghai&forceConnectionTimeZoneToSession=true");
         registry.add("spring.datasource.username", MYSQL::getUsername);
         registry.add("spring.datasource.password", MYSQL::getPassword);
         registry.add("spring.flyway.enabled", () -> true);
@@ -308,6 +310,8 @@ class PlacementDecisionMySqlRedisIntegrationTest {
                 result_status, occurred_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, events);
+        // Use statistics for this fixture, rather than the almost-empty table at startup.
+        jdbc.execute("ANALYZE TABLE placement_candidate_version, placement_event");
     }
 
     private void assertIndexed(String label, String explainSql, String expectedIndex) {

@@ -39,11 +39,23 @@ services:
       - mailpit-data:/data
 
   backend:
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          bash -ec 'exec 3<>/dev/tcp/127.0.0.1/8080;
+          printf "GET /actuator/health HTTP/1.0\r\nHost: localhost\r\n\r\n" >&3;
+          cat <&3 | grep -q "\"status\":\"UP\""'
+      interval: 3s
+      timeout: 5s
+      start_period: 10s
+      retries: 60
     build:
       context: ../backend
       args:
         MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9.9-eclipse-temurin-17}
         JRE_IMAGE: ${JRE_IMAGE:-eclipse-temurin:17-jre}
+        MAVEN_MIRROR_URL: ${MAVEN_MIRROR_URL:-}
     environment:
       # A26-P3-09：backend 容器与 mysql 同步使用 Asia/Shanghai，
       # 使 LocalDateTime.now()（JVM 默认时区）与对账按 Asia/Shanghai 切日的窗口对齐，
@@ -137,10 +149,9 @@ services:
         NGINX_IMAGE: ${NGINX_IMAGE:-nginx:1.29-alpine}
     ports:
       - "127.0.0.1:${NGINX_PORT:-8088}:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   mysql-data:

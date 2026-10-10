@@ -74,7 +74,8 @@ def launch(e,folder):
     env['VITE_API_PROXY_TARGET']=e['base']
     p2=subprocess.Popen(['npm','exec','vite','--','--host','127.0.0.1','--port',str(e['frontendPort']),'--strictPort'],cwd=ROOT/'frontend',env=env,stdout=(folder/'frontend.log').open('w'),stderr=subprocess.STDOUT,start_new_session=True)
     e['frontendPid']=p2.pid;p.write_text(json.dumps(e))
-    for _ in range(150):
+    # First launch may also compile tests and download Spring Boot plugin dependencies.
+    for _ in range(600):
         if p1.poll() is not None:raise RuntimeError('Backend exited; inspect owned backend.log')
         try:
             if request(e['base'],'/actuator/health')[0]==200:break

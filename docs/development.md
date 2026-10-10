@@ -33,6 +33,8 @@ cp .env.example .env.local
 
 Docker Hub 无法访问时，可以在 `.env.local` 的 `MYSQL_IMAGE`、`REDIS_IMAGE`、`MAILPIT_IMAGE`、`NODE_IMAGE`、`NGINX_IMAGE`、`MAVEN_IMAGE`、`JRE_IMAGE` 中指定自己信任的镜像地址。公开模板仍使用上游镜像名；使用镜像服务后的验证应记录实际来源。
 
+容器内 Maven 下载缓慢时，可在 `.env.local` 设置 `MAVEN_MIRROR_URL` 为自己信任的 Maven Central 镜像 HTTPS 地址；留空时使用 Maven Central。该参数仅用于镜像构建，不应包含凭据。BuildKit 会缓存 Maven 依赖以便重试。
+
 ## 演示账号与配置
 
 首次运行 Flyway V1–V36 创建合成演示管理员 `admin` / `password`。普通用户可自行注册。不要把这些账号、示例数据库口令或开发 JWT 密钥用于公开服务。

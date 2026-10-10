@@ -1,22 +1,24 @@
 # GitHub 发布资料
 
-## 建议仓库信息
+## 仓库信息
 
+- 所属账号：`JacyyC`
+- 中文展示名：拾光 · 综合预约系统
 - Repository name：`shiguang-venue-platform`
 - Description：`Vue 3 + Spring Boot 场地预约与社区平台，包含请求恢复、资源并发与 DEV 账务的可复现实验。`
 - Topics：`vue`、`typescript`、`spring-boot`、`java`、`reservation`、`booking-system`、`mysql`、`redis`、`testcontainers`、`vitest`
 - 默认分支：`main`
 - 首版标签：`v0.1.0`；本地准备阶段使用候选版本，发布后才把候选说明改为正式发布事实。
 
-## 发布前人工确认
+## 发布授权和检查
 
-1. 确认愿意将自己拥有的项目代码按 MIT 发布，并确认仓库名与公开账号。
+1. 维护者于 2026-10-10 确认有权公开源码与文档，采用 MIT，版权署名 JacyyC，并授权在上述账号下创建公开仓库。
 2. 阅读[实际验证结果](release-verification.md)和[依赖公告审查](security-advisories.md)。
 3. 确认公开目录只包含已审查快照，不将原开发仓的历史、私人配置和开发记录追加进来。
 4. 在 GitHub Security 设置启用 Private vulnerability reporting；配置 main 分支保护和 CI 必须通过。
 5. 第一次 push 后查看真实 GitHub Actions 结果；本地通过不能代替远程 CI。
 
-本文件是发布准备资料，未创建远程仓库、未推送、未进行公开发布。
+发布授权已确认；远程仓库、推送及 GitHub Actions 的实际结果在完成后记录。
 
 ## v0.1.0 发布说明草稿
 

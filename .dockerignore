@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+**/node_modules
+**/target
+**/dist
+.run
+engineering/runs
+docs/screenshots
+*.log

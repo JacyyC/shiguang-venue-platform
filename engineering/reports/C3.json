@@ -1,0 +1,231 @@
+{
+  "run": "sgrel-s06-final",
+  "head": "fe16256dd1e4c269f55ea6677bcc51b52cfc1542",
+  "productDiffSha256": "0e64ed636ca2259e9ab52898eb0fb970c0df83bc7e7aedbd046ee4e40720f9b2",
+  "sourceManifestSha256": "03f6022b4bf70dc374e74576802006f45946e15f07cb4f9cc08c6f356a2890c6",
+  "utc": "2026-09-19T05:49:41.544896+00:00",
+  "containers": [
+    {
+      "Id": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+      "Image": "sha256:b3b90af2a6552ae30c266fdb7d5dd55f3afb72404bb78d37fe8a23eb857fd3fb"
+    },
+    {
+      "Id": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+      "Image": "sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99"
+    }
+  ],
+  "limits": [
+    "synthetic DEV funds only; external providers disabled",
+    "four suites use isolated schemas; order suite mocks OrderLocalSettlementService, including rollback injection",
+    "real HTTP case uses actual settlement, ledger, order transitions and refund services",
+    "counterexample SQL and compensation policy exercised inside explicit suites; tests are not production claims"
+  ],
+  "case": "C3",
+  "results": [
+    {
+      "scenario": "StoredValueMySqlIntegrationTest",
+      "passed": true,
+      "exit": 0,
+      "database": "sgrel_c3_0_928e86dab8",
+      "initialTables": 0,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testNames": [
+        "failsClosedAndKeepsMoneyBoundaries",
+        "serializesAccountCreationAndPendingReservations",
+        "postsOnceUsesRechargePolicyAndRebuildsProjection",
+        "rejectsCrossScopeRollsBackAndClassifiesCallbackFailures",
+        "expiresRefundsFreezesDisputesAndClosesOnlyEmptyAccounts",
+        "freezesAndUnfreezesNonEmptyBucketsThroughLedgerFacts",
+        "replaysSameLedgerKeyWhenOnlyOccurredAtChanges",
+        "databaseRejectsPostedLedgerWithoutBalancedEntries",
+        "malformedCallbackIsRecordedBeforeEnvelopeValidation",
+        "callbackSuccessPersistsPendingPostingBeforeARecoverableClaim",
+        "postingTransactionRollsBackAndAccountGateDoesNotCreateMoney",
+        "concurrentPostingClaimsProduceOneSuccessfulLedgerOutcome"
+      ],
+      "migrationsMatch": true,
+      "facts": "StoredValueMySqlIntegrationTest-facts.json"
+    },
+    {
+      "scenario": "StoredValueOrderPaymentMySqlIntegrationTest",
+      "passed": true,
+      "exit": 0,
+      "database": "sgrel_c3_1_e344c9fbec",
+      "initialTables": 0,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testNames": [
+        "migratesV1ToV33AndRepeatMigrateIsStable",
+        "paysByFefoReplaysWithoutDoubleDebitAndSurvivesSpendDisable",
+        "orderLockSerializesStoredValueAgainstExternalPaymentFact",
+        "serializesSameAccountOrdersAndRejectsFrozenOrInsufficientBalanceWithoutPartialFacts",
+        "rollsBackLedgerAndAllocationWhenLocalSettlementFails",
+        "refundsOriginalBucketsCompensatesExpiredBonusAndReplaysOnce",
+        "reconcilesAllocationAndAllProjectionBucketsAndCanRebuildProjection",
+        "orderPaymentAndRefundKeepLedgerOccurrenceOutOfReplayPayload"
+      ],
+      "migrationsMatch": true,
+      "facts": "StoredValueOrderPaymentMySqlIntegrationTest-facts.json"
+    },
+    {
+      "scenario": "StoredValueApprovalMySqlIntegrationTest",
+      "passed": true,
+      "exit": 0,
+      "database": "sgrel_c3_2_5e94d05860",
+      "initialTables": 0,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testNames": [
+        "recoveryRequiresDifferentReviewAndExecutionSubjectsAndConsumesOnce",
+        "rejectedExpiredRevokedAndDisabledApprovalsCannotExecute",
+        "targetSnapshotCasRejectsTamperingBeforeConsumption",
+        "refundAndUnfreezeUseTheSameApprovalContract",
+        "approvedAdjustmentWritesBalancedLedgerAndResolvesDifference",
+        "concurrentExecutionConsumesApprovalOnce"
+      ],
+      "migrationsMatch": true,
+      "facts": "StoredValueApprovalMySqlIntegrationTest-facts.json"
+    },
+    {
+      "scenario": "StoredValueReconciliationMySqlIntegrationTest",
+      "passed": true,
+      "exit": 0,
+      "database": "sgrel_c3_3_792ce7f307",
+      "initialTables": 0,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testNames": [
+        "providerFailureIsRecordedAndARepeatFailureIsIdempotent",
+        "fullStatementReconciliationClassifiesPendingDuplicateMissingAndKeepsStableRerun",
+        "manualAndScheduledLaneShareTheSameInProcessMutex"
+      ],
+      "migrationsMatch": true,
+      "facts": "StoredValueReconciliationMySqlIntegrationTest-facts.json"
+    },
+    {
+      "scenario": "real-application-dev-settlement-refund",
+      "passed": true,
+      "actual": {
+        "productId": 1,
+        "accountId": 1,
+        "reservationId": 4327,
+        "orderId": 1,
+        "rechargeId": 1,
+        "payment": {
+          "paymentId": 1,
+          "paymentNo": "SVOP-0B7701E92D454E408D0269394F81A7A1",
+          "orderId": 1,
+          "status": "SUCCEEDED",
+          "amount": 40.0,
+          "principalAmount": 35.0,
+          "bonusAmount": 5.0,
+          "replayed": false
+        },
+        "samePaymentReplay": true,
+        "orderPaidFact": "PAID:STORED_VALUE:SVOP-0B7701E92D454E408D0269394F81A7A1",
+        "before": {
+          "account": {
+            "bonus": 5.0,
+            "principal": 100.0,
+            "bonusFrozen": 0.0,
+            "principalFrozen": 0.0
+          },
+          "ledgerProjection": [
+            {
+              "net": 5.0,
+              "bucket": "BONUS_AVAILABLE"
+            },
+            {
+              "net": 100.0,
+              "bucket": "PRINCIPAL_AVAILABLE"
+            }
+          ],
+          "unbalancedTransactions": 0
+        },
+        "afterPayment": {
+          "account": {
+            "bonus": 0.0,
+            "principal": 65.0,
+            "bonusFrozen": 0.0,
+            "principalFrozen": 0.0
+          },
+          "ledgerProjection": [
+            {
+              "net": 0,
+              "bucket": "BONUS_AVAILABLE"
+            },
+            {
+              "net": 65.0,
+              "bucket": "PRINCIPAL_AVAILABLE"
+            }
+          ],
+          "unbalancedTransactions": 0
+        },
+        "afterRefund": {
+          "account": {
+            "bonus": 5.0,
+            "principal": 100.0,
+            "bonusFrozen": 0.0,
+            "principalFrozen": 0.0
+          },
+          "ledgerProjection": [
+            {
+              "net": 5.0,
+              "bucket": "BONUS_AVAILABLE"
+            },
+            {
+              "net": 100.0,
+              "bucket": "PRINCIPAL_AVAILABLE"
+            }
+          ],
+          "unbalancedTransactions": 0
+        },
+        "refundRecordId": 1,
+        "repeatRefundHttp": 400,
+        "allocations": [
+          {
+            "bucket": "BONUS_AVAILABLE",
+            "refundAmount": 5.0,
+            "paymentAmount": 5.0,
+            "sourceBatchId": 1,
+            "refundedAmount": 5.0,
+            "restoredBatchId": 1,
+            "paymentAllocationId": 1
+          },
+          {
+            "bucket": "PRINCIPAL_AVAILABLE",
+            "refundAmount": 35.0,
+            "paymentAmount": 35.0,
+            "sourceBatchId": null,
+            "refundedAmount": 35.0,
+            "restoredBatchId": null,
+            "paymentAllocationId": 2
+          }
+        ],
+        "reconciliation": {
+          "runRef": "SVR-RECON-20260919-36...",
+          "reconcileDate": "2026-09-19",
+          "providerEnv": "DEV",
+          "providerName": "DEV_STORED_VALUE",
+          "scopeType": "STORED_VALUE_FULL",
+          "status": "COMPLETED",
+          "differenceCount": 0,
+          "completedAt": "2026-09-19T13:49:41"
+        },
+        "externalPaymentRecords": 0,
+        "finalOrderStatus": "REFUNDED",
+        "activeOccupancy": 0
+      }
+    }
+  ],
+  "passed": true
+}

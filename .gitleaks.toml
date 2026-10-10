@@ -1,0 +1,22 @@
+title = "Shiguang public release secret detection"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+[[rules.allowlists]]
+description = "Synthetic C2 idempotency keys in the two verbatim historical reports"
+condition = "AND"
+paths = ['(?:^|/)(?:engineering/reports|frontend/public/engineering)/C2\.json$']
+regexTarget = "secret"
+regexes = ['^c2-[0-9a-f]{32}$']
+
+[[rules]]
+id = "jwt"
+[[rules.allowlists]]
+description = "Static fake JWT used solely to verify log sanitization"
+condition = "AND"
+paths = ['(?:^|/)backend/src/test/java/com/example/venue/funnel/FunnelEventServiceTest\.java$']
+regexTarget = "secret"
+regexes = ['^eyJhbGciOiJIUzI1NiJ9\.eyJyb2xlIjoiYWRtaW4ifQ\.testSignature$']

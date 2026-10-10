@@ -1,0 +1,23 @@
+{
+  "reviewedOn": "2026-10-10",
+  "exceptions": [
+    {
+      "id": "GHSA-j9f9-w8pj-32f8",
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "expiresOn": "2026-11-10",
+      "reason": "The advisory requires SSE with rendered view fragments. This application uses SseEmitter with JSON event data and has no FragmentsRendering usage. No public 6.2 patch was available at review time; upgrading to Spring 7 is a separate migration.",
+      "guardAbsent": ["FragmentsRendering"],
+      "reference": "https://github.com/advisories/GHSA-j9f9-w8pj-32f8"
+    },
+    {
+      "id": "GHSA-pc63-qcmh-9cmg",
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "expiresOn": "2026-11-10",
+      "reason": "The advisory requires XsltView rendering with a wildcard controller mapping and an implicit view name. Backend endpoints return REST/JSON and SSE data; the application has no XsltView or XsltViewResolver configuration. No public 6.2 patch was available at review time.",
+      "guardAbsent": ["XsltView", "XsltViewResolver"],
+      "reference": "https://github.com/advisories/GHSA-pc63-qcmh-9cmg"
+    }
+  ]
+}

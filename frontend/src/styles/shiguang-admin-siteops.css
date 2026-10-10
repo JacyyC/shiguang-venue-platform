@@ -1,0 +1,724 @@
+/* 拾光后台现场与资产面样式（SHIGUANG-BATCH-03-REFACTOR-20260914 S04）。
+   由冻结参考 reference/preview/f/styles.css 与 shared/base.css 机械迁移到 .sga-siteops 作用域：数值 1:1；
+   token 与 base.css :root 同名同值（明暗两套挂 html[data-theme]），作用域内自含定义；
+   只迁现场与资产正文类：履约已迁类（f-grid/f-rail/f-list/f-compare/f-ledger/f-money/f-workday/f-duty/f-summary）
+   与 .f-lab 审阅工具不迁入。 */
+
+.sga-siteops {
+  /* base.css 把这套字体挂在 :root 上；作用域面必须自带，否则正文会回落产品全局字体（拉丁与数字宽度差 5%）。 */
+  font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --canvas: #fafbf9;
+  --surface: #fff;
+  --ink: #263a33;
+  --muted: #5b6962;
+  --line: #d5dfd8;
+  --soft: #edf2ed;
+  --accent: #af3526;
+  --warning: #855117;
+  --display: 'Hiragino Sans GB', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --mono: 'SFMono-Regular', Consolas, monospace;
+  --motion-feedback: 180ms;
+  color-scheme: light;
+  max-width: 1650px;
+}
+
+html[data-theme='dark'] .sga-siteops {
+  --canvas: #202925;
+  --surface: #28352f;
+  --ink: #eff4ed;
+  --muted: #b8c6bd;
+  --line: #45574c;
+  --soft: #2e3d34;
+  --accent: #ffa38c;
+  --warning: #e5be87;
+  color-scheme: dark;
+}
+
+.sga-siteops h1,
+.sga-siteops h2,
+.sga-siteops h3 {
+  font-family: var(--display);
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.sga-siteops h1 {
+  font-size: 30px;
+  letter-spacing: 0;
+  margin: 0 0 9px;
+  font-weight: 650;
+}
+
+.sga-siteops h2 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+
+.sga-siteops h3 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.sga-siteops p {
+  margin: 0 0 12px;
+}
+
+.sga-siteops small {
+  font-size: 12px;
+}
+
+.sga-siteops button,
+.sga-siteops input,
+.sga-siteops select,
+.sga-siteops textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.sga-siteops button {
+  cursor: pointer;
+}
+
+.sga-siteops button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.sga-siteops button:focus-visible,
+.sga-siteops a:focus-visible,
+.sga-siteops input:focus-visible,
+.sga-siteops select:focus-visible,
+.sga-siteops textarea:focus-visible,
+.sga-siteops summary:focus-visible,
+.sga-siteops [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.sga-siteops input,
+.sga-siteops select,
+.sga-siteops textarea {
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  padding: 10px 12px;
+  min-height: 44px;
+}
+
+.sga-siteops input[type='checkbox'],
+.sga-siteops input[type='radio'] {
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+.sga-siteops textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.sga-siteops .muted {
+  color: var(--muted);
+}
+
+.sga-siteops .eyebrow {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.sga-siteops .row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sga-siteops .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: transparent;
+  text-decoration: none;
+  font-weight: 550;
+  line-height: 1.5;
+  transition: background var(--motion-feedback), color var(--motion-feedback);
+}
+
+.sga-siteops .btn:hover:not(:disabled) {
+  background: var(--soft);
+}
+
+.sga-siteops .btn.primary {
+  background: var(--ink);
+  color: var(--canvas);
+  border-color: var(--ink);
+}
+
+.sga-siteops .btn.primary:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--canvas);
+}
+
+.sga-siteops .badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: normal;
+}
+
+.sga-siteops .badge.warn,
+.sga-siteops .badge.warning {
+  color: var(--warning);
+}
+
+.sga-siteops .f-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.sga-siteops .f-heading p {
+  max-width: 650px;
+  color: var(--muted);
+}
+
+.sga-siteops .f-heading .date {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+.sga-siteops .f-heading .date strong {
+  display: block;
+  font-size: 21px;
+  color: var(--ink);
+}
+
+.sga-siteops .f-tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.sga-siteops .f-tabs button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 10px 0;
+  min-height: 46px;
+  color: var(--muted);
+}
+
+.sga-siteops .f-tabs button[aria-current='true'] {
+  border-bottom-color: var(--accent);
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.sga-siteops .f-time {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sga-siteops .f-pick {
+  display: block;
+  text-align: left;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  padding: 17px 13px;
+  position: relative;
+  /* 真实资产编号是一整串无空格字符，窄屏必须可断行，否则撑破视口。 */
+  overflow-wrap: break-word;
+  min-height: 78px;
+}
+
+.sga-siteops .f-pick strong,
+.sga-siteops .f-pick small {
+  display: block;
+}
+
+.sga-siteops .f-pick small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.sga-siteops .f-pick[aria-pressed='true'] {
+  background: var(--soft);
+  box-shadow: inset 2px 0 var(--accent);
+}
+
+.sga-siteops .f-pick:hover {
+  background: var(--soft);
+}
+
+.sga-siteops .f-detail {
+  min-width: 0;
+}
+
+.sga-siteops .f-detail h2 {
+  font-size: 26px;
+  margin: 8px 0 9px;
+}
+
+.sga-siteops .f-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  margin: 24px 0;
+  padding: 22px 0;
+  border-block: 1px solid var(--line);
+}
+
+.sga-siteops .f-facts dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sga-siteops .f-facts dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.sga-siteops .f-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 22px 0;
+}
+
+.sga-siteops .f-note {
+  border-left: 2px solid var(--line);
+  padding-left: 15px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sga-siteops .f-events {
+  padding: 0;
+  list-style: none;
+  margin: 22px 0;
+}
+
+.sga-siteops .f-events li {
+  padding: 0 0 20px 24px;
+  border-left: 1px solid var(--line);
+  position: relative;
+}
+
+.sga-siteops .f-events li:before {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  left: -4px;
+  top: 8px;
+}
+
+.sga-siteops .f-events small {
+  display: block;
+  color: var(--muted);
+}
+
+.sga-siteops .f-lines {
+  margin: 20px 0;
+}
+
+.sga-siteops .f-lines > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.sga-siteops .f-lines span:last-child {
+  text-align: right;
+}
+
+.sga-siteops .f-link {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sga-siteops .f-permission {
+  padding: 16px;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  margin: 20px 0;
+}
+
+.sga-siteops .f-pending {
+  color: var(--muted);
+}
+
+.sga-siteops .f-state {
+  padding: 48px 25px;
+  border-block: 1px solid var(--line);
+  text-align: center;
+}
+
+.sga-siteops .f-state p {
+  color: var(--muted);
+  max-width: 630px;
+  margin: 0 auto 20px;
+}
+
+.sga-siteops .f-state h2 {
+  margin-bottom: 10px;
+}
+
+.sga-siteops .f-shift-band {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr auto;
+  gap: 25px;
+  padding: 25px 0;
+  border-block: 1px solid var(--line);
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.sga-siteops .f-shift-band h2 {
+  margin: 4px 0;
+  font-size: 24px;
+}
+
+.sga-siteops .f-shift-band p {
+  margin: 2px 0;
+  color: var(--muted);
+}
+
+.sga-siteops .f-shift-time {
+  font-size: 26px;
+  letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sga-siteops .f-shift-grid {
+  display: grid;
+  grid-template-columns: minmax(400px, 1.7fr) minmax(220px, 1fr);
+  gap: 38px;
+}
+
+.sga-siteops .f-task {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+}
+
+.sga-siteops .f-task .row {
+  justify-content: space-between;
+}
+
+.sga-siteops .f-task h3 {
+  font-size: 18px;
+  margin: 4px 0;
+}
+
+.sga-siteops .f-task p {
+  margin: 6px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sga-siteops .f-task header {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 12px;
+}
+
+.sga-siteops .f-task .serial {
+  font-size: 20px;
+  color: var(--muted);
+  padding-top: 3px;
+}
+
+.sga-siteops .f-handover {
+  padding: 22px;
+  background: var(--soft);
+  align-self: start;
+}
+
+.sga-siteops .f-handover h3 {
+  font-size: 20px;
+}
+
+.sga-siteops .f-handover .btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.sga-siteops .f-incident {
+  border-top: 1px solid var(--line);
+  padding: 22px 0;
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 20px;
+}
+
+.sga-siteops .f-asset-top {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.sga-siteops .f-asset-dossier {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 38px;
+}
+
+.sga-siteops .f-asset-menu {
+  border-right: 1px solid var(--line);
+  padding-right: 22px;
+}
+
+.sga-siteops .f-asset-caption {
+  font-size: 38px;
+  color: var(--muted);
+  margin: 15px 0;
+  letter-spacing: 2px;
+  overflow-wrap: break-word;
+}
+
+.sga-siteops .f-asset-record {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+}
+
+.sga-siteops .f-asset-record h3 {
+  margin: 4px 0;
+}
+
+.sga-siteops .f-status-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sga-siteops .f-modal {
+  width: 620px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 28px;
+  max-width: min(660px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+}
+
+.sga-siteops .f-modal::backdrop {
+  background: #101d18a6;
+}
+
+.sga-siteops .f-modal h2 {
+  font-size: 24px;
+}
+
+.sga-siteops .f-modal .error-text {
+  color: var(--accent);
+}
+
+.sga-siteops .f-modal .modal-actions {
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 20px;
+}
+
+.sga-siteops .f-modal label {
+  display: grid;
+  gap: 5px;
+  margin: 15px 0;
+}
+
+.sga-siteops .f-modal .check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.sga-siteops .f-modal .check input {
+  flex: none;
+  margin-top: 3px;
+}
+
+.sga-siteops .f-modal .mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .sga-siteops .f-shift-band {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sga-siteops .f-shift-band > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .sga-siteops .f-shift-grid {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+  }
+
+  .sga-siteops .f-asset-dossier {
+    grid-template-columns: 200px 1fr;
+    gap: 25px;
+  }
+}
+
+@media (max-width: 980px) {
+  .sga-siteops .f-shift-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sga-siteops .f-asset-dossier {
+    grid-template-columns: 1fr;
+  }
+
+  .sga-siteops .f-asset-menu {
+    border-right: 0;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+    overflow: auto;
+  }
+
+  .sga-siteops .f-asset-menu .f-pick {
+    min-width: 185px;
+  }
+
+  .sga-siteops .f-handover {
+    max-width: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .sga-siteops h1 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 550px) {
+  .sga-siteops .f-heading {
+    display: block;
+  }
+
+  .sga-siteops .f-heading .date {
+    text-align: left;
+    margin-top: 18px;
+  }
+
+  .sga-siteops .f-heading .date strong {
+    display: inline;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+
+  .sga-siteops .f-tabs {
+    gap: 17px;
+    margin-bottom: 23px;
+  }
+
+  .sga-siteops .f-tabs button {
+    font-size: 13px;
+  }
+
+  .sga-siteops .f-detail h2 {
+    font-size: 23px;
+  }
+
+  .sga-siteops .f-shift-band {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .sga-siteops .f-shift-time {
+    font-size: 23px;
+  }
+
+  .sga-siteops .f-shift-grid {
+    gap: 25px;
+  }
+
+  .sga-siteops .f-incident {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .sga-siteops .f-incident .btn {
+    justify-self: start;
+  }
+
+  .sga-siteops .f-facts {
+    gap: 18px 12px;
+  }
+
+  .sga-siteops .f-modal {
+    padding: 22px 18px;
+  }
+
+  .sga-siteops .f-modal .mini-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sga-siteops .f-asset-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sga-siteops .f-task .row {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .sga-siteops .row {
+    gap: 8px;
+  }
+
+  .sga-siteops .btn {
+    padding: 9px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sga-siteops *,
+  .sga-siteops *::before,
+  .sga-siteops *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

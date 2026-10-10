@@ -1,0 +1,465 @@
+/* 拾光预约链路样式（SHIGUANG-BOOKING-REFACTOR-20260910）。由冻结参考
+   agent-workspace/docs/work-items/records/shiguang-booking-refactor-20260910/reference/preview/style.css
+   机械变换生成：预约链路全部规则逐条加 .sgv-booking 根作用域（页面渲染在 ShiguangLayout 的 .sgv-home 之内，
+   故 .sgv-booking 是 .sgv-home 的后代），数值 1:1，参考中的 var(--x) 原样保留；@keyframes 仍全局定义一次。
+   演示弹层、toast、页头页脚、目录卡片、:root/body 级规则不在本作用域。
+   共享工具类 .text-button / .primary-button / .eyebrow / .muted / .sr-only / .icon / .shell / .secondary-button
+   与元素级默认在 .sgv-home 下已有不同数值，此处按参考原值重声明，因此本文件必须在 shiguang.css 之后加载。
+   另补齐四条参考由元素级规则承担、而 .sgv-home 未覆盖的默认：.text-button/.seat/.stepper button 的 padding 归零
+   （参考 button{padding:0}）、textarea 的 font/color inherit、textarea 与 summary 的 focus-visible 描边。
+   刻意不使用全局 .sgv-booking button{padding:0}，以免波及本作用域内可能出现的 Element Plus 控件。
+   --gutter 例外：参考 :root 为 clamp(24px,4.5vw,88px)，本作用域沿用产品 .sgv-home 的 clamp(40px,4.5vw,88px)
+   以与共享页头 .sgv-home .header-inner 对齐，故 .shell 照抄不改，640px 分支的 :root{--gutter:21px} 不迁移。 */
+
+.sgv-booking { --subtle:#e0e7e1; --error-bg:#fbefeb; }
+.sgv-home[data-theme="dark"] .sgv-booking { --subtle:#37473e; --error-bg:#3b2e29; }
+
+/* 参考 23–27、17、21、19 行：元素级默认 */
+.sgv-booking h1,.sgv-booking h2,.sgv-booking h3 { margin:0; font-family:var(--display); }
+.sgv-booking h1 { font-size:38px; line-height:1.35; font-weight:750; }
+.sgv-booking h2 { font-size:21px; line-height:1.5; font-weight:700; }
+.sgv-booking h3 { font-size:16px; font-weight:650; line-height:1.6; }
+.sgv-booking button:disabled { cursor:not-allowed; opacity:.55; }
+.sgv-booking button,.sgv-booking a { touch-action:manipulation; }
+.sgv-booking textarea { font:inherit; color:inherit; }
+.sgv-booking textarea:focus-visible,.sgv-booking summary:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+
+/* 参考 28–34 行：共享工具类 */
+.sgv-booking .muted { color:var(--muted); }
+.sgv-booking .shell { width:min(100%,1560px); padding-inline:var(--gutter); margin-inline:auto; }
+.sgv-booking .icon { width:20px; height:20px; flex:none; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
+.sgv-booking .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+/* 面包屑（参考 61–72 行） */
+.sgv-booking .breadcrumb { height:62px; display:flex; align-items:center; justify-content:space-between; gap:20px; font-size:13px; }
+.sgv-booking .breadcrumb-left { display:flex; align-items:center; gap:16px; }
+.sgv-booking .breadcrumb-left .sep { color:var(--line); }
+.sgv-booking .back-link { display:inline-flex; align-items:center; gap:8px; min-height:44px; color:var(--muted); }
+.sgv-booking .back-link:hover { color:var(--accent); }
+.sgv-booking .back-link .icon { width:17px; height:17px; }
+.sgv-booking .text-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:0; font-weight:550; font-size:13px; }
+.sgv-booking .text-button:hover { color:var(--accent); }
+.sgv-booking .text-button .icon { width:17px; height:17px; transition:transform 180ms var(--ease); }
+.sgv-booking .text-button:hover .icon { transform:translateX(3px); }
+.sgv-booking .favorite { color:var(--muted); font-weight:400; }
+.sgv-booking .favorite.is-saved { color:var(--accent); }
+
+/* 详情页头（参考 73–85 行） */
+.sgv-booking .hero-band { background:var(--band); border-block:1px solid var(--line); }
+.sgv-booking .venue-hero { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(270px,1fr); align-items:center; min-height:262px; gap:48px; padding-block:28px; }
+.sgv-booking .eyebrow { color:var(--accent); font-size:13px; font-weight:550; }
+.sgv-booking .venue-hero h1 { margin-top:10px; }
+.sgv-booking .hero-description { max-width:620px; color:var(--muted); font-size:14px; line-height:1.9; margin-top:16px; }
+.sgv-booking .hero-meta { display:flex; align-items:center; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin-top:20px; }
+.sgv-booking .hero-meta span { display:inline-flex; align-items:center; gap:6px; }
+.sgv-booking .hero-meta .icon { width:16px; height:16px; }
+.sgv-booking .hero-meta .open-note { color:var(--success); }
+.sgv-booking .dot { width:5px; height:5px; border-radius:50%; background:currentColor; display:inline-block; }
+.sgv-booking .hero-art { position:relative; width:auto; top:auto; right:auto; height:224px; display:flex; align-items:center; justify-content:center; }
+.sgv-booking .hero-art .scene-illustration { width:345px; height:248px; max-width:100%; }
+.sgv-booking .art-caption { position:absolute; bottom:-6px; right:0; font-size:11px; color:var(--muted); }
+
+/* 布局（参考 86–87 行） */
+.sgv-booking .booking-layout { display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:64px; padding-top:28px; padding-bottom:44px; align-items:start; }
+.sgv-booking .booking-content { min-width:0; }
+
+/* 详情内容（参考 88–101 行） */
+.sgv-booking .section-tabs { display:flex; gap:30px; border-bottom:1px solid var(--line); margin-bottom:27px; }
+.sgv-booking .section-tabs a { padding:0 0 14px; font-size:14px; color:var(--muted); }
+.sgv-booking .section-tabs .current { color:var(--ink); font-weight:650; border-bottom:2px solid var(--ink); }
+.sgv-booking .section-tabs a:hover { color:var(--accent); }
+.sgv-booking .section-heading { display:flex; align-items:baseline; justify-content:space-between; gap:18px; margin-bottom:15px; }
+.sgv-booking .section-heading h2 { font-size:19px; }
+.sgv-booking .section-heading>p { font-size:12px; color:var(--muted); }
+.sgv-booking .space-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.sgv-booking .space-option { min-height:88px; border:1px solid var(--line); border-radius:6px; padding:14px; text-align:left; transition:background 180ms,border-color 180ms; position:relative; }
+.sgv-booking .space-option:hover { border-color:var(--ink); background:var(--soft); }
+.sgv-booking .space-option.is-selected { border-color:var(--accent); background:var(--soft); box-shadow:inset 3px 0 var(--accent); }
+.sgv-booking .space-option strong { font-size:14px; display:block; padding-right:20px; line-height:1.5; }
+.sgv-booking .space-option>span { display:flex; gap:6px; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted); margin-top:9px; }
+.sgv-booking .space-option .space-check { position:absolute; right:11px; top:15px; width:15px; height:15px; color:var(--accent); }
+
+/* 日期与时段（参考 102–128 行） */
+.sgv-booking .schedule { padding-top:29px; scroll-margin-top:24px; }
+.sgv-booking .month-label { font-family:var(--mono); font-size:13px; color:var(--muted); }
+.sgv-booking .date-strip { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; padding:4px 0 15px; }
+.sgv-booking .date-button { text-align:center; padding:9px 0 10px; border-bottom:2px solid transparent; border-radius:5px 5px 0 0; min-height:74px; transition:background 180ms; }
+.sgv-booking .date-button>span { display:block; font-size:12px; color:var(--muted); }
+.sgv-booking .date-button strong { font-family:var(--mono); font-size:20px; font-weight:500; display:block; margin-top:3px; line-height:1.5; }
+.sgv-booking .date-button.is-selected { background:var(--soft); border-bottom-color:var(--accent); }
+.sgv-booking .date-button.is-selected strong,.sgv-booking .date-button.is-selected>span { color:var(--accent); }
+.sgv-booking .date-button:hover { background:var(--soft); }
+.sgv-booking .slot-caption { display:flex; justify-content:space-between; gap:14px; align-items:center; margin:7px 0 14px; }
+.sgv-booking .slot-caption p { font-size:13px; color:var(--muted); }
+.sgv-booking .legend { display:flex; gap:13px; font-size:11px; color:var(--muted); flex:none; }
+.sgv-booking .legend span { display:flex; align-items:center; gap:5px; }
+.sgv-booking .legend i { width:8px; height:8px; border:1px solid var(--line); border-radius:2px; }
+.sgv-booking .legend .selected-key { border-color:var(--accent); background:var(--accent); }
+.sgv-booking .legend .unavailable-key { background:var(--subtle); }
+.sgv-booking .slot-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; }
+.sgv-booking .slot { text-align:left; min-height:75px; padding:12px 13px; border:1px solid var(--line); border-radius:5px; position:relative; transition:background 180ms,border-color 180ms; }
+.sgv-booking .slot strong { font-family:var(--mono); font-size:13px; font-weight:500; white-space:nowrap; }
+.sgv-booking .slot small { display:block; color:var(--muted); font-size:12px; margin-top:6px; }
+.sgv-booking .slot:hover:enabled { background:var(--soft); border-color:var(--ink); }
+.sgv-booking .slot.is-selected { background:var(--soft); border-color:var(--accent); box-shadow:inset 3px 0 var(--accent); }
+.sgv-booking .slot.is-selected small { color:var(--accent); }
+.sgv-booking .slot:disabled { opacity:1; background:var(--soft); border-color:transparent; color:var(--muted); }
+.sgv-booking .slot .slot-check { width:13px; height:13px; position:absolute; right:8px; bottom:12px; color:var(--accent); }
+.sgv-booking .help-line { display:flex; gap:8px; align-items:flex-start; color:var(--muted); font-size:12px; line-height:1.8; margin-top:14px; }
+.sgv-booking .help-line .icon { width:15px; height:15px; margin-top:3px; }
+
+/* 摘要侧栏（参考 129–156 行） */
+.sgv-booking .booking-summary { position:sticky; top:24px; margin-top:0; background:var(--soft); border:1px solid var(--line); border-radius:7px; padding:25px; }
+.sgv-booking .summary-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:19px; }
+.sgv-booking .summary-heading h2 { font-size:18px; }
+.sgv-booking .summary-heading .icon { color:var(--muted); width:18px; height:18px; }
+.sgv-booking .summary-date { font-size:13px; color:var(--muted); }
+.sgv-booking .summary-time { font-family:var(--mono); font-size:26px; line-height:1.4; font-weight:500; margin-top:9px; white-space:nowrap; }
+.sgv-booking .summary-time.is-empty { font-family:var(--display); font-size:23px; font-weight:600; }
+.sgv-booking .summary-duration { color:var(--muted); font-size:12px; margin-top:5px; }
+.sgv-booking .summary-place { padding:21px 0; margin-top:4px; border-bottom:1px solid var(--line); }
+.sgv-booking .summary-place strong { font-size:14px; display:block; }
+.sgv-booking .summary-place p { font-size:13px; color:var(--muted); margin-top:5px; }
+.sgv-booking .summary-lines { padding-top:15px; }
+.sgv-booking .cost-row { display:flex; justify-content:space-between; align-items:baseline; gap:12px; font-size:13px; margin:9px 0; }
+.sgv-booking .cost-row>span:first-child { color:var(--muted); }
+.sgv-booking .cost-row.discount { color:var(--success); }
+.sgv-booking .cost-row.discount>span:first-child { color:var(--success); }
+.sgv-booking .cost-total { display:flex; justify-content:space-between; align-items:baseline; margin:19px 0 2px; padding-top:18px; border-top:1px solid var(--line); }
+.sgv-booking .cost-total strong { font-size:29px; font-family:var(--mono); font-weight:550; }
+.sgv-booking .cost-total strong small { font-size:17px; margin-right:3px; font-weight:400; }
+.sgv-booking .fee-note { font-size:11px; color:var(--muted); line-height:1.8; margin:4px 0 17px; }
+.sgv-booking .primary-button { background:var(--action); color:var(--on-action); display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:50px; border-radius:5px; padding:12px 19px; font-size:14px; font-weight:600; width:100%; transition:background 180ms,transform 180ms; }
+.sgv-booking .primary-button:hover:enabled { background:var(--action-hover); }
+.sgv-booking .primary-button:active:enabled { transform:translateY(1px); }
+.sgv-booking .primary-button:disabled { background:var(--subtle); color:var(--muted); opacity:1; }
+.sgv-booking .primary-button .icon { width:18px; height:18px; }
+.sgv-booking .summary-trust { display:flex; gap:6px; justify-content:center; align-items:center; font-size:12px; color:var(--muted); margin-top:13px; }
+.sgv-booking .summary-trust .icon { width:14px; height:14px; }
+.sgv-booking .summary-micro-art { width:104px; height:74px; margin:19px auto -7px; opacity:.86; }
+
+/* 资源模式（参考 157–172 行） */
+.sgv-booking .resource-section { padding-top:28px; margin-top:23px; border-top:1px solid var(--line); }
+.sgv-booking .capacity-box { display:flex; gap:24px; align-items:center; justify-content:space-between; background:var(--soft); padding:18px 20px; border-radius:6px; }
+.sgv-booking .capacity-box p { color:var(--muted); font-size:13px; margin-top:3px; }
+.sgv-booking .stepper { display:flex; align-items:center; border:1px solid var(--line); background:var(--canvas); border-radius:5px; height:44px; flex:none; }
+.sgv-booking .stepper button { width:42px; height:42px; padding:0; font-size:20px; }
+.sgv-booking .stepper button:hover:enabled { background:var(--soft); }
+.sgv-booking .stepper output { width:33px; text-align:center; font-family:var(--mono); }
+.sgv-booking .seat-plan { border:1px solid var(--line); padding:18px 23px 20px; border-radius:6px; }
+.sgv-booking .window-label { border-top:3px double var(--line); color:var(--muted); font-size:12px; text-align:center; padding:8px 0 13px; }
+.sgv-booking .seats { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:13px; max-width:500px; margin:auto; }
+.sgv-booking .seat { min-height:46px; padding:0; border:1px solid var(--line); border-bottom-width:3px; border-radius:5px 5px 8px 8px; font-family:var(--mono); font-size:12px; position:relative; }
+.sgv-booking .seat:after { content:""; position:absolute; bottom:7px; left:9px; right:9px; border-top:1px solid var(--line); }
+.sgv-booking .seat:hover:enabled { background:var(--soft); border-color:var(--ink); }
+.sgv-booking .seat.is-selected { background:var(--soft); color:var(--accent); border-color:var(--accent); }
+.sgv-booking .seat:disabled { background:var(--soft); opacity:.5; }
+.sgv-booking .seat-note { font-size:12px; text-align:center; color:var(--muted); margin-top:17px; }
+
+/* 详情叙事（参考 173–183 行） */
+.sgv-booking .venue-about { border-top:1px solid var(--line); padding-top:28px; margin-top:33px; scroll-margin-top:25px; }
+.sgv-booking .venue-about>p { color:var(--muted); margin-top:13px; line-height:1.9; }
+.sgv-booking .facilities { display:flex; flex-wrap:wrap; gap:22px; margin-top:19px; color:var(--muted); font-size:13px; }
+.sgv-booking .facilities span { display:flex; align-items:center; gap:7px; }
+.sgv-booking .facilities .icon { width:16px; height:16px; }
+.sgv-booking .visit-guide { margin-top:27px; border-top:1px solid var(--line); scroll-margin-top:20px; }
+.sgv-booking .visit-guide summary { cursor:pointer; display:flex; align-items:center; justify-content:space-between; padding:19px 0; font-weight:600; list-style:none; }
+.sgv-booking .visit-guide summary::-webkit-details-marker { display:none; }
+.sgv-booking .visit-guide[open] summary .icon { transform:rotate(90deg); }
+.sgv-booking .visit-copy { color:var(--muted); font-size:13px; padding-bottom:20px; line-height:1.9; }
+.sgv-booking .visit-copy p+p { margin-top:9px; }
+
+/* 状态与动效（参考 184–194 行） */
+.sgv-booking .state-message { min-height:195px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:25px; background:var(--soft); border-radius:6px; }
+.sgv-booking .state-message .state-art { width:83px; height:61px; margin-bottom:10px; }
+.sgv-booking .state-message h3 { font-size:18px; }
+.sgv-booking .state-message p { color:var(--muted); margin-top:8px; font-size:13px; }
+.sgv-booking .state-message .text-button { margin-top:8px; }
+.sgv-booking .inline-error { background:var(--error-bg); border-left:3px solid var(--accent); padding:13px 15px; margin-top:15px; color:var(--accent); font-size:13px; line-height:1.8; }
+.sgv-booking .inline-error .text-button { min-height:30px; }
+.sgv-booking .page-enter { animation:page-arrive 400ms var(--ease) both; }
+.sgv-booking .change-enter { animation:change-arrive 220ms var(--ease) both; }
+@keyframes page-arrive { from { opacity:0; transform:translateY(9px); } to { opacity:1; transform:translateY(0); } }
+@keyframes change-arrive { from { opacity:.5; } to { opacity:1; } }
+
+/* 确认页（参考 195–232 行） */
+.sgv-booking .flow-heading { padding-block:16px 29px; display:flex; align-items:end; justify-content:space-between; gap:35px; border-bottom:1px solid var(--line); }
+.sgv-booking .flow-heading h1 { font-size:35px; margin-top:9px; }
+.sgv-booking .flow-heading p:not(.eyebrow) { color:var(--muted); margin-top:12px; }
+.sgv-booking .flow-steps { display:flex; align-items:center; gap:13px; font-size:12px; color:var(--muted); white-space:nowrap; padding-bottom:5px; }
+.sgv-booking .flow-steps .line { width:27px; height:1px; background:var(--line); }
+.sgv-booking .flow-steps .active { color:var(--accent); font-weight:650; }
+.sgv-booking .flow-steps .done { color:var(--success); }
+.sgv-booking .flow-steps .icon { width:13px; height:13px; }
+.sgv-booking .confirm-layout { padding-top:31px; padding-bottom:55px; }
+.sgv-booking .booking-recap { display:grid; grid-template-columns:110px minmax(0,1fr) auto; align-items:center; gap:21px; padding-bottom:25px; border-bottom:1px solid var(--line); }
+.sgv-booking .recap-art { width:110px; height:85px; background:var(--band); border-radius:5px; }
+.sgv-booking .booking-recap h2 { font-size:19px; }
+.sgv-booking .booking-recap p { color:var(--muted); font-size:13px; margin-top:6px; }
+.sgv-booking .recap-time { display:inline-block; font-family:var(--mono); margin-top:8px; font-size:16px; }
+.sgv-booking .confirm-section { padding:27px 0; border-bottom:1px solid var(--line); }
+.sgv-booking .confirm-section h2 { font-size:19px; }
+.sgv-booking .section-note { font-size:13px; color:var(--muted); margin-top:8px; line-height:1.8; }
+.sgv-booking .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:22px; }
+.sgv-booking .form-field { display:flex; flex-direction:column; gap:8px; font-size:13px; }
+.sgv-booking .form-field input,.sgv-booking .form-field textarea { width:100%; border:1px solid var(--line); background:var(--surface); border-radius:5px; min-height:46px; padding:11px 13px; outline-offset:3px; }
+.sgv-booking .form-field textarea { resize:vertical; min-height:77px; line-height:1.7; }
+.sgv-booking .form-field.full { grid-column:1/-1; }
+.sgv-booking .form-field em { font-style:normal; color:var(--muted); font-size:12px; }
+.sgv-booking .form-field input[aria-invalid="true"] { border-color:var(--accent); }
+.sgv-booking .form-error { color:var(--accent); font-size:12px; margin-top:10px; }
+.sgv-booking .coupon-option { width:100%; display:flex; align-items:center; gap:15px; justify-content:space-between; border:1px solid var(--line); padding:15px 17px; border-radius:5px; margin-top:18px; text-align:left; }
+.sgv-booking .coupon-option:hover { background:var(--soft); }
+.sgv-booking .coupon-option.is-selected { border-color:var(--accent); background:var(--soft); }
+.sgv-booking .coupon-option strong { font-size:14px; display:block; }
+.sgv-booking .coupon-option small { font-size:12px; color:var(--muted); display:block; margin-top:3px; }
+.sgv-booking .coupon-value { color:var(--accent); font-family:var(--mono); font-size:24px; flex:none; }
+.sgv-booking .coupon-check { width:18px; height:18px; border:1px solid var(--line); border-radius:50%; flex:none; }
+.sgv-booking .coupon-option.is-selected .coupon-check { border-color:var(--accent); background:var(--accent); color:var(--on-action); }
+.sgv-booking .coupon-check .icon { width:15px; height:15px; display:block; }
+.sgv-booking .policy-copy { display:grid; grid-template-columns:1fr 1fr; gap:23px; margin-top:18px; }
+.sgv-booking .policy-copy p { font-size:13px; color:var(--muted); line-height:1.8; margin-top:7px; }
+.sgv-booking .secondary-button { display:inline-flex; justify-content:center; align-items:center; gap:9px; min-height:48px; padding:11px 19px; border:1px solid var(--line); border-radius:5px; background:var(--canvas); font-size:14px; }
+.sgv-booking .secondary-button:hover { background:var(--soft); border-color:var(--ink); }
+
+/* 结果页（参考 233–255 行） */
+.sgv-booking .result-page { max-width:1170px; padding-block:43px 67px; margin:auto; }
+.sgv-booking .result-lead { display:grid; grid-template-columns:1.6fr 1fr; align-items:center; gap:40px; padding-bottom:33px; }
+.sgv-booking .result-lead h1 { margin-top:15px; font-size:37px; }
+.sgv-booking .result-lead>div>p { color:var(--muted); line-height:1.9; margin-top:15px; max-width:570px; }
+.sgv-booking .result-art { position:relative; top:auto; right:auto; width:260px; height:205px; justify-self:center; }
+.sgv-booking .result-status { display:inline-flex; align-items:center; gap:7px; color:var(--success); font-size:13px; }
+.sgv-booking .result-status .icon { width:17px; height:17px; }
+.sgv-booking .reservation-sheet { background:var(--band); border:1px solid var(--line); border-radius:7px; overflow:hidden; }
+.sgv-booking .sheet-main { padding:29px 33px; display:grid; grid-template-columns:1fr 1fr; gap:35px; }
+.sgv-booking .sheet-main .eyebrow { color:var(--muted); }
+.sgv-booking .sheet-main h2 { margin-top:9px; font-size:24px; }
+.sgv-booking .sheet-main p { margin-top:9px; color:var(--muted); font-size:13px; }
+.sgv-booking .sheet-when { border-left:1px solid var(--line); padding-left:35px; }
+.sgv-booking .sheet-when strong { display:block; font-family:var(--mono); font-size:31px; font-weight:500; margin-top:6px; }
+.sgv-booking .sheet-footer { border-top:1px solid var(--line); padding:15px 33px; display:flex; align-items:center; justify-content:space-between; gap:20px; color:var(--muted); font-size:13px; }
+.sgv-booking .sheet-footer strong { color:var(--ink); font-family:var(--mono); font-size:18px; font-weight:500; }
+.sgv-booking .status-timeline { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px; padding:30px 0; }
+.sgv-booking .timeline-step { border-top:2px solid var(--line); padding-top:16px; }
+.sgv-booking .timeline-step.current { border-color:var(--accent); }
+.sgv-booking .timeline-step p { margin-top:7px; color:var(--muted); font-size:13px; }
+.sgv-booking .timeline-step.current h3 { color:var(--accent); }
+.sgv-booking .result-actions { display:flex; gap:12px; align-items:center; margin-top:6px; }
+.sgv-booking .result-actions .primary-button { width:auto; min-width:200px; }
+
+/* 我的时间（参考 256–258、268–279 行） */
+.sgv-booking .catalog-heading { padding:42px 0 29px; display:flex; gap:25px; justify-content:space-between; align-items:end; }
+.sgv-booking .catalog-heading p { color:var(--muted); margin-top:12px; }
+.sgv-booking .catalog-heading h1 { font-size:35px; }
+.sgv-booking .trip-record { border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0; display:grid; grid-template-columns:126px 1fr auto; gap:28px; align-items:center; }
+.sgv-booking .trip-record .trip-art { width:126px; height:102px; background:var(--band); border-radius:5px; }
+.sgv-booking .trip-record h2 { font-size:21px; margin:6px 0; }
+.sgv-booking .trip-record p { color:var(--muted); font-size:13px; }
+.sgv-booking .trip-record .trip-state { color:var(--accent); font-size:12px; }
+.sgv-booking .trip-record strong { font-family:var(--mono); font-size:21px; font-weight:500; display:block; }
+.sgv-booking .time-page { min-height:650px; padding-bottom:60px; }
+.sgv-booking .time-empty { padding:28px 0 60px; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.sgv-booking .time-empty .empty-art { width:220px; height:170px; }
+.sgv-booking .time-empty h2 { font-size:26px; margin-top:14px; }
+.sgv-booking .time-empty p { margin-top:13px; color:var(--muted); line-height:1.9; }
+.sgv-booking .time-empty .text-button { margin-top:15px; }
+
+/* 移动端吸底（参考 298 行） */
+.sgv-booking .mobile-booking { display:none; }
+
+@media(min-width:1650px) {
+  .sgv-booking .venue-hero { min-height:285px; }
+  .sgv-booking .hero-art { height:242px; }
+  .sgv-booking .hero-art .scene-illustration { width:385px; height:277px; }
+  .sgv-booking .booking-layout { gap:74px; grid-template-columns:minmax(0,1fr) 355px; }
+}
+
+@media(max-width:1180px) {
+  .sgv-booking .booking-layout { gap:35px; grid-template-columns:minmax(0,1fr) 300px; }
+  .sgv-booking .booking-summary { padding:21px; }
+  .sgv-booking .slot-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .sgv-booking .space-list { gap:7px; }
+  .sgv-booking .space-option { padding:12px; }
+  .sgv-booking .space-option>span { flex-wrap:wrap; }
+  .sgv-booking .venue-hero { gap:30px; }
+  .sgv-booking h1 { font-size:34px; }
+  .sgv-booking .flow-steps { gap:8px; }
+  .sgv-booking .flow-steps .line { width:18px; }
+}
+
+@media(max-width:900px) {
+  .sgv-booking .venue-hero { grid-template-columns:1.6fr 1fr; gap:15px; min-height:248px; }
+  .sgv-booking .hero-description { font-size:13px; }
+  .sgv-booking .hero-art .scene-illustration { width:270px; }
+  .sgv-booking h1 { font-size:29px; }
+  .sgv-booking .booking-layout { gap:25px; grid-template-columns:minmax(0,1fr) 270px; }
+  .sgv-booking .space-list { grid-template-columns:1fr; }
+  .sgv-booking .space-option { min-height:65px; padding:10px 13px; }
+  .sgv-booking .space-option>span { margin-top:4px; }
+  .sgv-booking .space-option strong { font-size:13px; }
+  .sgv-booking .slot-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .sgv-booking .slot-caption { align-items:start; flex-direction:column; gap:6px; }
+  .sgv-booking .date-strip { gap:0; }
+  .sgv-booking .date-button strong { font-size:17px; }
+  .sgv-booking .date-button { min-height:68px; }
+  .sgv-booking .booking-summary { padding:19px; }
+  .sgv-booking .summary-time { font-size:23px; }
+  .sgv-booking .flow-heading { align-items:start; flex-direction:column; gap:20px; }
+  .sgv-booking .booking-recap { grid-template-columns:75px 1fr; gap:15px; }
+  .sgv-booking .recap-art { width:75px; height:72px; }
+  .sgv-booking .booking-recap>.text-button { grid-column:2; justify-self:start; margin-top:-8px; min-height:30px; }
+  .sgv-booking .form-grid { grid-template-columns:1fr; gap:16px; }
+  .sgv-booking .policy-copy { grid-template-columns:1fr; gap:15px; }
+  .sgv-booking .seats { grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; }
+}
+
+@media(max-width:640px) {
+  .sgv-booking .breadcrumb { height:55px; font-size:12px; }
+  .sgv-booking .breadcrumb-left { gap:9px; }
+  .sgv-booking .breadcrumb-left>.sep,.sgv-booking .breadcrumb-left>.muted { display:none; }
+  .sgv-booking .venue-hero { display:block; position:relative; min-height:0; padding-block:25px 22px; }
+  .sgv-booking .venue-hero h1 { font-size:28px; margin-top:8px; }
+  .sgv-booking .eyebrow { font-size:12px; }
+  .sgv-booking .hero-description { margin-top:14px; max-width:100%; font-size:13px; }
+  .sgv-booking .hero-art { height:178px; margin-top:3px; justify-content:flex-end; padding-right:15px; }
+  .sgv-booking .hero-art .scene-illustration { width:250px; height:180px; }
+  .sgv-booking .art-caption { right:0; bottom:-2px; font-size:10px; }
+  .sgv-booking .hero-meta { gap:10px 17px; margin-top:13px; font-size:12px; }
+  .sgv-booking .hero-meta .icon { width:14px; height:14px; }
+  .sgv-booking .booking-layout { display:flex; flex-direction:column; gap:26px; padding-block:24px 32px; }
+  .sgv-booking .booking-content { width:100%; }
+  .sgv-booking .section-tabs { margin-bottom:22px; }
+  .sgv-booking .section-heading { gap:10px; }
+  .sgv-booking .section-heading h2 { font-size:18px; }
+  .sgv-booking .section-heading>p { font-size:11px; }
+  .sgv-booking .space-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+  .sgv-booking .space-option { min-height:93px; padding:12px 9px; }
+  .sgv-booking .space-option strong { padding-right:0; font-size:12px; }
+  .sgv-booking .space-option .space-check { top:auto; bottom:8px; right:8px; width:11px; height:11px; }
+  .sgv-booking .space-option>span { display:block; line-height:1.8; margin-top:6px; font-size:11px; }
+  .sgv-booking .space-option>span>span { display:block; }
+  .sgv-booking .schedule { padding-top:26px; }
+  .sgv-booking .date-button { min-height:68px; }
+  .sgv-booking .date-button>span { font-size:11px; }
+  .sgv-booking .date-button strong { font-size:18px; }
+  .sgv-booking .slot-caption { flex-direction:row; align-items:center; gap:10px; }
+  .sgv-booking .legend { gap:7px; font-size:10px; }
+  .sgv-booking .slot-caption p { font-size:12px; }
+  .sgv-booking .slot-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .sgv-booking .slot { min-height:70px; }
+  .sgv-booking .booking-summary { position:static; width:100%; padding:23px; order:2; }
+  .sgv-booking .summary-micro-art { display:none; }
+  .sgv-booking .summary-time { font-size:29px; }
+  .sgv-booking .summary-place { padding:16px 0; }
+  .sgv-booking .venue-about { margin-top:26px; padding-top:24px; }
+  .sgv-booking .facilities { gap:12px 20px; font-size:12px; }
+  .sgv-booking .venue-about>p { font-size:13px; }
+  .sgv-booking .capacity-box { padding:15px; gap:10px; }
+  .sgv-booking .capacity-box strong { font-size:13px; }
+  .sgv-booking .capacity-box p { font-size:12px; }
+  .sgv-booking .seats { grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
+  .sgv-booking .seat-plan { padding:14px; }
+  .sgv-booking .seat { font-size:10px; min-height:41px; }
+  .sgv-booking .flow-heading { padding-top:5px; }
+  .sgv-booking .flow-heading h1 { font-size:29px; }
+  .sgv-booking .flow-heading>div>p:not(.eyebrow) { font-size:13px; }
+  .sgv-booking .flow-steps { font-size:11px; }
+  .sgv-booking .flow-steps .line { width:25px; }
+  .sgv-booking .confirm-layout { padding-top:24px; }
+  .sgv-booking .booking-recap { grid-template-columns:82px 1fr; }
+  .sgv-booking .recap-art { width:82px; height:75px; }
+  .sgv-booking .booking-recap h2 { font-size:18px; }
+  .sgv-booking .form-grid { grid-template-columns:1fr; }
+  .sgv-booking .policy-copy { grid-template-columns:1fr; }
+  .sgv-booking .result-page { padding-block:22px 35px; }
+  .sgv-booking .result-lead { grid-template-columns:1fr; padding-bottom:20px; gap:5px; }
+  .sgv-booking .result-lead h1 { font-size:29px; }
+  .sgv-booking .result-lead>div>p { font-size:13px; }
+  .sgv-booking .result-art { width:210px; height:151px; justify-self:end; margin-top:0; }
+  .sgv-booking .sheet-main { grid-template-columns:1fr; padding:24px; gap:20px; }
+  .sgv-booking .sheet-main h2 { font-size:22px; }
+  .sgv-booking .sheet-when { border-left:0; padding-left:0; border-top:1px solid var(--line); padding-top:17px; }
+  .sgv-booking .sheet-when strong { font-size:27px; }
+  .sgv-booking .sheet-footer { padding:15px 24px; flex-wrap:wrap; gap:6px; }
+  .sgv-booking .status-timeline { gap:14px; padding:26px 0; }
+  .sgv-booking .timeline-step h3 { font-size:13px; }
+  .sgv-booking .timeline-step p { font-size:12px; }
+  .sgv-booking .result-actions { flex-wrap:wrap; }
+  .sgv-booking .result-actions .primary-button { width:100%; }
+  .sgv-booking .result-actions .secondary-button { width:100%; }
+  .sgv-booking .catalog-heading { padding-top:28px; align-items:start; }
+  .sgv-booking .catalog-heading h1 { font-size:29px; }
+  .sgv-booking .catalog-heading p { font-size:13px; }
+  .sgv-booking .catalog-heading>.text-button { display:none; }
+  .sgv-booking .trip-record { grid-template-columns:90px 1fr; gap:17px; }
+  .sgv-booking .trip-record .trip-art { width:90px; height:85px; }
+  .sgv-booking .trip-record h2 { font-size:18px; }
+  .sgv-booking .trip-record>div:last-child { grid-column:2; }
+  .sgv-booking .trip-record strong { font-size:20px; }
+  .sgv-booking .time-page { min-height:570px; }
+  .sgv-booking .mobile-booking { display:flex; align-items:center; justify-content:space-between; gap:20px; position:fixed; bottom:0; left:0; right:0; z-index:40; background:var(--surface); border-top:1px solid var(--line); padding:11px 21px calc(11px + env(safe-area-inset-bottom)); }
+  .sgv-booking .mobile-booking .primary-button { width:auto; min-width:154px; min-height:46px; padding:10px 16px; font-size:13px; }
+  .sgv-booking .mobile-booking strong { display:block; font-family:var(--mono); font-size:22px; font-weight:500; }
+  .sgv-booking .mobile-booking p { font-size:11px; color:var(--muted); }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .sgv-booking *,.sgv-booking *::before,.sgv-booking *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+}
+
+/* ============ 产品侧补充（非冻结参考机械变换） ============
+   真实数据带来的额外元素：加载/错误容器、超出 7 日窗口的自定义日期、实拍图位、
+   到访评价列表、位置示意放大弹层、预约编号与折扣明细。数值全部取自上方同一套
+   冻结配色与尺度，只作用于 .sgv-booking 作用域，不向旧页面泄漏（ADR-0002 VD-08）。 */
+
+.sgv-booking .booking-loading { padding:34px 0 60px; }
+.sgv-booking .loading-actions { display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-top:10px; }
+.sgv-booking .loading-actions .primary-button { width:auto; min-width:190px; margin-top:0; }
+.sgv-booking .more-dates { display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding-bottom:12px; font-size:13px; color:var(--muted); }
+.sgv-booking .more-dates input { min-height:38px; margin-left:8px; padding:0 10px; border:1px solid var(--line); border-radius:5px; background:var(--surface); color:var(--ink); font:inherit; }
+.sgv-booking .venue-photo { margin:20px 0 0; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.sgv-booking .venue-photo img { display:block; width:100%; aspect-ratio:21/8; object-fit:cover; }
+.sgv-booking .venue-photo figcaption { padding:8px 12px; font-size:13px; color:var(--muted); background:var(--surface); }
+.sgv-booking .detail-loc-card { display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:center; width:100%; max-width:560px; margin-top:22px; padding:14px 16px; border:1px solid var(--line); border-radius:6px; background:var(--surface); text-align:left; }
+.sgv-booking .detail-loc-card:hover { border-color:var(--ink); background:var(--soft); }
+.sgv-booking .detail-loc-sketch { width:66px; height:66px; color:var(--muted); }
+.sgv-booking .detail-loc-sketch svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; }
+.sgv-booking .detail-loc-sketch .pin { stroke:var(--accent); }
+.sgv-booking .detail-loc-info { display:grid; gap:6px; min-width:0; }
+.sgv-booking .detail-loc-addr { display:flex; align-items:center; gap:6px; font-size:14px; color:var(--ink); }
+.sgv-booking .detail-loc-acts { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.sgv-booking .review-heading { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-top:26px; }
+.sgv-booking .review-heading h3 { font-size:16px; }
+.sgv-booking .review-heading .text-button { margin-left:auto; }
+.sgv-booking .review-list { display:grid; gap:14px; margin-top:14px; }
+.sgv-booking .review-row { border-top:1px solid var(--line); padding-top:12px; }
+.sgv-booking .review-row p { color:var(--muted); font-size:13px; line-height:1.8; margin-top:5px; }
+.sgv-booking .review-rating { font-family:var(--mono); font-size:13px; color:var(--accent); }
+.sgv-booking .sheet-serial { font-family:var(--mono); font-size:13px; }
+.sgv-booking .result-status.is-negative { color:var(--accent); }
+.sgv-booking .result-lead h1 { white-space:pre-line; }
+.sgv-booking .discount-lines { padding-top:0; }
+.sgv-booking .discount-lines .cost-row, .sgv-booking .discount-lines .cost-row>span:first-child { color:var(--success); }
+.sgv-booking .loc-lightbox { position:fixed; inset:0; z-index:80; display:grid; place-items:center; padding:20px; }
+.sgv-booking .loc-scrim { position:absolute; inset:0; background:#18291f70; }
+.sgv-booking .loc-panel { position:relative; width:min(640px,100%); overflow:hidden; border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.sgv-booking .loc-lb-head { display:flex; align-items:center; gap:10px; padding:14px 16px 10px; }
+.sgv-booking .loc-lb-head b { font-family:var(--display); font-size:18px; }
+.sgv-booking .loc-close { width:30px; height:30px; margin-left:auto; border-radius:50%; background:var(--soft); color:var(--muted); }
+.sgv-booking .loc-map { margin:0 14px; border:1px solid var(--line); border-radius:5px; }
+.sgv-booking .loc-map svg { display:block; width:100%; height:auto; }
+.sgv-booking .lm-paper { fill:var(--canvas); }
+.sgv-booking .lm-block { fill:color-mix(in srgb, var(--ink) 5%, transparent); }
+.sgv-booking .lm-road { fill:none; stroke:color-mix(in srgb, var(--ink) 14%, transparent); stroke-width:16; stroke-linecap:round; }
+.sgv-booking .lm-road-dash { fill:none; stroke:var(--canvas); stroke-width:2.5; stroke-dasharray:1 14; stroke-linecap:round; }
+.sgv-booking .lm-river { fill:none; stroke:color-mix(in srgb, var(--muted) 40%, transparent); stroke-width:20; stroke-linecap:round; opacity:.55; }
+.sgv-booking .lm-pin { fill:var(--accent); stroke:none; }
+.sgv-booking .lm-pin-hole { fill:var(--canvas); stroke:none; }
+.sgv-booking .lm-chip { fill:var(--surface); stroke:var(--line); }
+.sgv-booking .lm-chip-dot { fill:var(--accent); stroke:none; }
+.sgv-booking .lm-chip-text { fill:var(--ink); stroke:none; }
+.sgv-booking .loc-lb-foot { padding:12px 16px 16px; }
+.sgv-booking .seat-people { margin-bottom:18px; }
+.sgv-booking .submit-hint { color:var(--muted); font-size:13px; line-height:1.7; margin-top:10px; text-align:center; }
+.sgv-booking .hero-band .detail-loc-card { margin-top:22px; background:color-mix(in srgb, var(--surface) 72%, transparent); }
+@media(max-width:640px) { .sgv-booking { padding-bottom:96px; } }

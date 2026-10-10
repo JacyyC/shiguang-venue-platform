@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "frozenBeforeFormalMeasurement": "2026-09-19T11:47:07.394403+08:00",
+  "hardware": {
+    "cpu": "Apple M4",
+    "logicalCores": 10,
+    "ramBytes": 17179869184,
+    "os": "macOS 15.6",
+    "dockerCpus": 4,
+    "dockerRamBytes": 8307826688,
+    "dockerServer": "29.2.1"
+  },
+  "application": {
+    "rateLimitPerMinute": 1000000,
+    "hikariMaximumPoolSize": 10,
+    "tomcatMaxThreads": 200,
+    "jvmMaxHeap": "1024m"
+  },
+  "redisLockSeconds": 20,
+  "capacityPerSpace": 10000,
+  "shapes": [
+    "hotspot",
+    "distributed"
+  ],
+  "concurrency": [
+    1,
+    8
+  ],
+  "warmupSeconds": 3,
+  "durationSeconds": 20,
+  "repeats": 2,
+  "httpTimeoutSeconds": 60,
+  "thresholds": {
+    "oversell": 0,
+    "duplicateSeat": 0,
+    "partialWrite": 0,
+    "unexpected": 0,
+    "timeout": 0
+  },
+  "statistics": "nearest-rank percentiles across all responses; throughput includes drain, warmup excluded; latency and throughput observational, no SLA",
+  "isolation": "one fresh environment; new fixture per round; distributed has one venue and space per worker, hotspot shares one; previous S02 stacks stopped; other user processes are not stopped",
+  "rateLimitBoundary": "explicit isolated override from default90 to1000000 per path/IP/minute to expose transaction costs; does not represent default public endpoint throughput"
+}

@@ -1,0 +1,890 @@
+/* 拾光后台客服与公告面样式（SHIGUANG-BATCH-03-REFACTOR-20260914 S05/S06）。
+   由冻结参考 reference/preview/a/a.css 与 shared/base.css 机械迁移到 .sga-service / .sga-notice 作用域：数值 1:1；
+   token 与 a.css .a-preview 同名同值（明暗两套挂 html[data-theme]），作用域内自含定义；
+   两页共用的 a-* 基元挂在 :is(.sga-service,.sga-notice) 上，只写一次；
+   公告面专属块（a-compose/a-reading/a-audience/a-counts/a-delivery-layout/a-batch-menu/a-evidence/
+   表格与 a-scroll/a-versions/a-version/a-result-row/a-bar）随 S06 一并迁入；
+   a-meta 与 a-timeline 两组虽由客服面先引入，但 a.css 挂在面根上，故同样归入两面共用；
+   a-tools 审阅工具与只读情景不迁入。 */
+
+:is(.sga-service, .sga-notice) {
+  /* base.css 把字体挂在 :root、a.css 挂在 .a-preview 上；作用域面必须自带，否则会回落产品全局字体。 */
+  font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --a-bg: #fafbf9;
+  --a-surface: #fff;
+  --a-ink: #263a33;
+  --a-muted: #5b6962;
+  --a-line: #d5dfd8;
+  --a-soft: #edf2ed;
+  --a-accent: #af3526;
+  /* base.css 的标题走 --display、h1 字重 650；a.css 只改字号与行高，不重声明这两项。 */
+  --display: 'Hiragino Sans GB', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--a-ink);
+  color-scheme: light;
+  max-width: 1700px;
+}
+
+html[data-theme='dark'] :is(.sga-service, .sga-notice) {
+  --a-bg: #202925;
+  --a-surface: #28352f;
+  --a-ink: #eff4ed;
+  --a-muted: #b8c6bd;
+  --a-line: #45574c;
+  --a-soft: #2e3d34;
+  --a-accent: #ffa38c;
+  color-scheme: dark;
+}
+
+:is(.sga-service, .sga-notice) * {
+  box-sizing: border-box;
+}
+
+:is(.sga-service, .sga-notice) h1,
+:is(.sga-service, .sga-notice) h2,
+:is(.sga-service, .sga-notice) h3,
+:is(.sga-service, .sga-notice) p {
+  margin-top: 0;
+}
+
+:is(.sga-service, .sga-notice) h1,
+:is(.sga-service, .sga-notice) h2,
+:is(.sga-service, .sga-notice) h3 {
+  font-family: var(--display);
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+:is(.sga-service, .sga-notice) h1 {
+  letter-spacing: 0;
+  font-weight: 650;
+  font-size: 32px;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+:is(.sga-service, .sga-notice) h2 {
+  font-size: 21px;
+  line-height: 1.5;
+  /* base.css 的 h2/h3/p 下边距不被 a.css 覆盖，只写 a.css 会让裸标题与段落贴得更紧。 */
+  margin-bottom: 16px;
+}
+
+:is(.sga-service, .sga-notice) h3 {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+:is(.sga-service, .sga-notice) p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+:is(.sga-service, .sga-notice) small {
+  font-size: 12px;
+}
+
+:is(.sga-service, .sga-notice) button,
+:is(.sga-service, .sga-notice) input,
+:is(.sga-service, .sga-notice) select,
+:is(.sga-service, .sga-notice) textarea {
+  font: inherit;
+  color: inherit;
+  /* base.css 的控件上限不被 a.css 覆盖，窄屏下靠它压住长批次号。 */
+  max-width: 100%;
+}
+
+:is(.sga-service, .sga-notice) button {
+  cursor: pointer;
+}
+
+:is(.sga-service, .sga-notice) button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* 后台壳层（.sga-framework）对 button/input/select 有同形态焦点规则，必须按元素类型写才能与之同权重并由后加载取胜；
+   参考侧焦点环是 3px + offset 3px（a.css），与 F 组的 2px/4px 不同。 */
+:is(.sga-service, .sga-notice) button:focus-visible,
+:is(.sga-service, .sga-notice) a:focus-visible,
+:is(.sga-service, .sga-notice) input:focus-visible,
+:is(.sga-service, .sga-notice) select:focus-visible,
+:is(.sga-service, .sga-notice) textarea:focus-visible,
+:is(.sga-service, .sga-notice) summary:focus-visible,
+:is(.sga-service, .sga-notice) [tabindex]:focus-visible {
+  outline: 3px solid var(--a-accent);
+  outline-offset: 3px;
+}
+
+:is(.sga-service, .sga-notice) a {
+  color: var(--a-accent);
+}
+
+:is(.sga-service, .sga-notice) .a-btn {
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+  border-radius: 7px;
+  min-height: 44px;
+  padding: 10px 16px;
+  transition: background 0.18s, color 0.18s;
+}
+
+:is(.sga-service, .sga-notice) .a-btn:hover:not(:disabled) {
+  background: var(--a-soft);
+}
+
+:is(.sga-service, .sga-notice) .a-btn.primary {
+  background: var(--a-ink);
+  color: var(--a-bg);
+  border-color: var(--a-ink);
+}
+
+:is(.sga-service, .sga-notice) .a-btn.strong {
+  background: var(--a-accent);
+  color: var(--a-bg);
+  border-color: var(--a-accent);
+}
+
+:is(.sga-service, .sga-notice) .a-btn.danger {
+  color: var(--a-accent);
+}
+
+:is(.sga-service, .sga-notice) .a-muted {
+  color: var(--a-muted);
+}
+
+:is(.sga-service, .sga-notice) .a-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  color: var(--a-muted);
+  margin-bottom: 12px;
+}
+
+:is(.sga-service, .sga-notice) .a-intro {
+  max-width: 760px;
+  margin-bottom: 28px;
+  color: var(--a-muted);
+}
+
+:is(.sga-service, .sga-notice) .a-topline,
+:is(.sga-service, .sga-notice) .a-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+:is(.sga-service, .sga-notice) .a-topline {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+:is(.sga-service, .sga-notice) .a-pill {
+  display: inline-flex;
+  padding: 4px 9px;
+  border: 1px solid var(--a-line);
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+:is(.sga-service, .sga-notice) .a-pill.attention {
+  color: var(--a-accent);
+  border-color: var(--a-accent);
+}
+
+:is(.sga-service, .sga-notice) .a-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  border-bottom: 1px solid var(--a-line);
+  margin: 0 0 28px;
+}
+
+:is(.sga-service, .sga-notice) .a-tab {
+  min-height: 50px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 10px 0;
+  color: var(--a-muted);
+}
+
+:is(.sga-service, .sga-notice) .a-tab[aria-pressed='true'] {
+  color: var(--a-ink);
+  border-color: var(--a-accent);
+  font-weight: 600;
+}
+
+:is(.sga-service, .sga-notice) label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+
+:is(.sga-service, .sga-notice) input:not([type='checkbox']),
+:is(.sga-service, .sga-notice) textarea,
+:is(.sga-service, .sga-notice) select {
+  width: 100%;
+  border: 1px solid var(--a-line);
+  border-radius: 6px;
+  background: var(--a-surface);
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+:is(.sga-service, .sga-notice) textarea {
+  resize: vertical;
+  line-height: 1.7;
+  min-height: 112px;
+}
+
+:is(.sga-service, .sga-notice) .a-field {
+  margin-bottom: 20px;
+}
+
+:is(.sga-service, .sga-notice) .a-formgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+:is(.sga-service, .sga-notice) .a-check {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 10px;
+}
+
+:is(.sga-service, .sga-notice) .a-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--a-accent);
+}
+
+/* base.css 的复选框 min-height 20px 不被 a.css 覆盖，实测参考侧勾选框高 20px。 */
+:is(.sga-service, .sga-notice) input[type='checkbox'],
+:is(.sga-service, .sga-notice) input[type='radio'] {
+  min-height: 20px;
+  accent-color: var(--a-accent);
+}
+
+:is(.sga-service, .sga-notice) .a-notice {
+  border-left: 3px solid var(--a-accent);
+  background: var(--a-soft);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+:is(.sga-service, .sga-notice) .a-state {
+  padding: 58px 24px;
+  text-align: center;
+  border-block: 1px solid var(--a-line);
+  min-height: 250px;
+}
+
+:is(.sga-service, .sga-notice) .a-state h2 {
+  margin-bottom: 10px;
+}
+
+:is(.sga-service, .sga-notice) dialog {
+  background: var(--a-surface);
+  color: var(--a-ink);
+  border: 1px solid var(--a-line);
+  border-radius: 10px;
+  padding: 28px;
+  width: min(570px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+}
+
+:is(.sga-service, .sga-notice) dialog::backdrop {
+  background: rgba(14, 29, 22, 0.42);
+}
+
+:is(.sga-service, .sga-notice) .a-dialog-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+:is(.sga-service, .sga-notice) .a-error {
+  color: var(--a-accent);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+:is(.sga-service, .sga-notice) .a-linkbtn {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  padding: 3px 0;
+  color: var(--a-accent);
+  min-height: 44px;
+}
+
+:is(.sga-service, .sga-notice) .a-text-block {
+  max-width: 820px;
+}
+
+:is(.sga-service, .sga-notice) .a-miniheading {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--a-muted);
+}
+
+/* a.css 把这两组挂在面根上而不是某一页；公告面的触达卡片与投递记录弹层同样使用。 */
+:is(.sga-service, .sga-notice) .a-meta {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--a-muted);
+  margin: 0 0 22px;
+}
+
+:is(.sga-service, .sga-notice) .a-timeline {
+  padding: 0;
+  list-style: none;
+  margin: 30px 0;
+}
+
+:is(.sga-service, .sga-notice) .a-timeline li {
+  border-left: 1px solid var(--a-line);
+  padding: 0 0 24px 20px;
+  position: relative;
+}
+
+:is(.sga-service, .sga-notice) .a-timeline li:before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  background: var(--a-muted);
+  border-radius: 50%;
+}
+
+:is(.sga-service, .sga-notice) .a-timeline li:last-child {
+  padding-bottom: 4px;
+}
+
+:is(.sga-service, .sga-notice) .a-timeline p {
+  font-size: 14px;
+  margin: 7px 0 0;
+}
+
+:is(.sga-service, .sga-notice) .a-timeline small {
+  font-size: 12px;
+  color: var(--a-muted);
+}
+
+/* ---------- 客服面专属：三列工作区 ---------- */
+
+.sga-service .a-workspace {
+  display: grid;
+  grid-template-columns: 300px minmax(330px, 1fr) 235px;
+  border-top: 1px solid var(--a-line);
+  min-height: 580px;
+}
+
+.sga-service .a-queue {
+  border-right: 1px solid var(--a-line);
+  padding: 22px 20px 22px 0;
+}
+
+.sga-service .a-queue-head {
+  margin-bottom: 18px;
+}
+
+.sga-service .a-queue-head .a-row {
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sga-service .a-queue-head h2 {
+  margin: 0;
+}
+
+.sga-service .a-queue-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--a-line);
+  border-left: 3px solid transparent;
+  background: transparent;
+  padding: 20px 14px;
+  min-height: 120px;
+}
+
+.sga-service .a-queue-item[aria-pressed='true'] {
+  background: var(--a-soft);
+  border-left-color: var(--a-accent);
+}
+
+.sga-service .a-queue-item h3 {
+  margin: 12px 0 8px;
+}
+
+.sga-service .a-queue-item p {
+  font-size: 13px;
+  color: var(--a-muted);
+  margin: 0;
+}
+
+.sga-service .a-case {
+  padding: 27px 30px;
+  min-width: 0;
+}
+
+.sga-service .a-case h2 {
+  font-size: 24px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.sga-service .a-side {
+  padding: 27px 0 24px 23px;
+  border-left: 1px solid var(--a-line);
+  font-size: 14px;
+}
+
+.sga-service .a-side section {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--a-line);
+  margin-bottom: 24px;
+}
+
+.sga-service .a-side h3 {
+  margin-bottom: 12px;
+}
+
+.sga-service .a-side p {
+  margin-bottom: 8px;
+}
+
+.sga-service .a-side dl {
+  margin: 0;
+}
+
+.sga-service .a-side dt {
+  color: var(--a-muted);
+  font-size: 12px;
+  margin-top: 14px;
+}
+
+.sga-service .a-side dd {
+  margin: 5px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.sga-service .a-side .a-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.sga-service .a-mobile-back {
+  display: none;
+}
+
+.sga-service .a-reviews {
+  max-width: 920px;
+  margin: auto;
+}
+
+.sga-service .a-review {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 24px;
+  border-bottom: 1px solid var(--a-line);
+  padding: 28px 0;
+}
+
+.sga-service .a-rating {
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.sga-service .a-rating small {
+  font-size: 15px;
+  color: var(--a-muted);
+}
+
+/* ---------- 公告面专属：撰写与阅读预览、触达证据、实验对照 ---------- */
+
+.sga-notice .a-compose {
+  display: grid;
+  grid-template-columns: minmax(360px, 1.12fr) minmax(330px, 0.88fr);
+  gap: 70px;
+  padding: 10px 0 35px;
+  align-items: start;
+}
+
+.sga-notice .a-reading {
+  background: var(--a-soft);
+  padding: 35px 35px 28px;
+  min-height: 380px;
+  margin-top: 0;
+}
+
+.sga-notice .a-reading h2 {
+  font-size: 25px;
+  line-height: 1.6;
+  margin: 25px 0 22px;
+}
+
+.sga-notice .a-reading .a-reading-body {
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.sga-notice .a-reading footer {
+  border-top: 1px solid var(--a-line);
+  padding-top: 20px;
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--a-muted);
+}
+
+.sga-notice .a-audience {
+  margin-top: 30px;
+  padding: 26px 0;
+  border-block: 1px solid var(--a-line);
+}
+
+.sga-notice .a-counts {
+  display: flex;
+  gap: 35px;
+  flex-wrap: wrap;
+  margin: 22px 0;
+}
+
+.sga-notice .a-counts strong {
+  display: block;
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.sga-notice .a-counts span {
+  font-size: 13px;
+  color: var(--a-muted);
+}
+
+.sga-notice .a-delivery-layout {
+  display: grid;
+  grid-template-columns: 245px minmax(0, 1fr);
+  gap: 40px;
+}
+
+.sga-notice .a-batch-menu button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--a-line);
+  background: transparent;
+  min-height: 100px;
+  padding: 20px 12px;
+}
+
+.sga-notice .a-batch-menu button[aria-pressed='true'] {
+  background: var(--a-soft);
+  border-left: 3px solid var(--a-accent);
+}
+
+.sga-notice .a-batch-menu strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+
+.sga-notice .a-batch-menu small {
+  color: var(--a-muted);
+}
+
+.sga-notice .a-evidence {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-block: 1px solid var(--a-line);
+  margin: 24px 0 25px;
+}
+
+.sga-notice .a-evidence div {
+  padding: 24px 10px;
+  border-right: 1px solid var(--a-line);
+  /* 服务端批次号是 24 字符不可断行 token，min-content 会把其中一格 1fr 顶宽（实测 173.8×5 → 200.4+162.1×4）。 */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sga-notice .a-evidence div:last-child {
+  border: 0;
+}
+
+.sga-notice .a-evidence small {
+  font-size: 12px;
+  color: var(--a-muted);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.sga-notice .a-evidence strong {
+  font-size: 21px;
+  font-weight: 400;
+  display: block;
+}
+
+.sga-notice .a-evidence span {
+  font-size: 12px;
+  color: var(--a-muted);
+  display: block;
+  margin-top: 7px;
+  line-height: 1.6;
+}
+
+.sga-notice table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.sga-notice th {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--a-muted);
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--a-line);
+}
+
+.sga-notice td {
+  padding: 16px 10px;
+  border-bottom: 1px solid var(--a-line);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.sga-notice .a-scroll {
+  overflow: auto;
+}
+
+/* base.css 的表格继承项：a.css 只重写内距与字号，竖排对齐与按钮不断行仍来自 base.css。 */
+.sga-notice th,
+.sga-notice td {
+  vertical-align: top;
+}
+
+.sga-notice table button {
+  white-space: nowrap;
+}
+
+.sga-notice .a-versions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.sga-notice .a-version {
+  border-top: 2px solid var(--a-ink);
+  padding-top: 20px;
+}
+
+.sga-notice .a-version h3 {
+  font-size: 23px;
+  margin: 20px 0;
+}
+
+.sga-notice .a-result-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 95px;
+  gap: 15px;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.sga-notice .a-bar {
+  height: 10px;
+  background: var(--a-soft);
+}
+
+.sga-notice .a-bar span {
+  display: block;
+  height: 100%;
+  background: var(--a-muted);
+}
+
+/* ---------- 断点 ---------- */
+
+@media (min-width: 1500px) {
+  .sga-service .a-workspace {
+    grid-template-columns: 330px minmax(400px, 1fr) 265px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .sga-service .a-workspace {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .sga-service .a-side {
+    grid-column: 2;
+    border-left: 0;
+    border-top: 1px solid var(--a-line);
+    padding: 22px 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .sga-notice .a-compose {
+    gap: 35px;
+  }
+
+  .sga-notice .a-delivery-layout {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 25px;
+  }
+
+  .sga-notice .a-evidence {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 740px) {
+  :is(.sga-service, .sga-notice) h1 {
+    font-size: 28px;
+  }
+
+  :is(.sga-service, .sga-notice) .a-intro {
+    font-size: 14px;
+  }
+
+  :is(.sga-service, .sga-notice) .a-tabs {
+    gap: 22px;
+  }
+
+  :is(.sga-service, .sga-notice) dialog {
+    padding: 22px;
+  }
+
+  :is(.sga-service, .sga-notice) .a-topline {
+    gap: 0;
+  }
+
+  :is(.sga-service, .sga-notice) .a-notice {
+    font-size: 14px;
+  }
+
+  .sga-service .a-workspace {
+    display: block;
+    min-height: 0;
+  }
+
+  .sga-service .a-queue {
+    padding: 20px 0;
+    border: 0;
+  }
+
+  .sga-service .a-case,
+  .sga-service .a-side {
+    display: none;
+  }
+
+  .sga-service .a-workspace.show-detail .a-queue {
+    display: none;
+  }
+
+  .sga-service .a-workspace.show-detail .a-case {
+    display: block;
+    padding: 20px 0;
+  }
+
+  .sga-service .a-workspace.show-detail .a-side {
+    display: block;
+    padding: 20px 0;
+  }
+
+  .sga-service .a-mobile-back {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  :is(.sga-service, .sga-notice) .a-formgrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .sga-notice .a-compose,
+  .sga-notice .a-versions {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .sga-notice .a-reading {
+    padding: 24px;
+  }
+
+  .sga-notice .a-delivery-layout {
+    display: block;
+  }
+
+  .sga-notice .a-batch-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 26px;
+    gap: 12px;
+  }
+
+  .sga-notice .a-evidence {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sga-notice .a-evidence div {
+    padding: 18px 10px;
+  }
+
+  .sga-notice .a-evidence div:nth-child(2n) {
+    border: 0;
+  }
+
+  .sga-notice .a-counts {
+    gap: 24px;
+  }
+
+  .sga-notice td,
+  .sga-notice th {
+    white-space: nowrap;
+  }
+
+  .sga-notice .a-result-row {
+    grid-template-columns: 65px 1fr 74px;
+    font-size: 14px;
+  }
+
+  .sga-service .a-reviews .a-review {
+    grid-template-columns: 70px 1fr;
+    gap: 16px;
+  }
+
+  .sga-service .a-rating {
+    font-size: 31px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.sga-service, .sga-notice) *,
+  :is(.sga-service, .sga-notice) *::before,
+  :is(.sga-service, .sga-notice) *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

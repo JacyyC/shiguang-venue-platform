@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- F-04：站点图标从本地静态资源提供，复用仓内拾光字标；不引用外部 CDN -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>场地空间与活动平台</title>
+    <script>
+      // 与 stores/theme.ts 共用 sg-theme 键：首帧前应用主题，避免错误主题闪屏。
+      ;(function () {
+        try {
+          if (localStorage.getItem('sg-theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark')
+            document.documentElement.classList.add('dark')
+          }
+        } catch (error) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

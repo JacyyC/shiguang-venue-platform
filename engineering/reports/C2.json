@@ -1,0 +1,2205 @@
+{
+  "run": "sgrel-s06-final",
+  "head": "fe16256dd1e4c269f55ea6677bcc51b52cfc1542",
+  "productDiffSha256": "0e64ed636ca2259e9ab52898eb0fb970c0df83bc7e7aedbd046ee4e40720f9b2",
+  "sourceManifestSha256": "03f6022b4bf70dc374e74576802006f45946e15f07cb4f9cc08c6f356a2890c6",
+  "utc": "2026-09-19T05:48:16.785795+00:00",
+  "containers": [
+    {
+      "Id": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+      "Image": "sha256:b3b90af2a6552ae30c266fdb7d5dd55f3afb72404bb78d37fe8a23eb857fd3fb"
+    },
+    {
+      "Id": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+      "Image": "sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99"
+    }
+  ],
+  "limits": [
+    "closed-loop client and application share host; no production SLA",
+    "JVM ps %cpu is process lifetime average; Docker CPU is interval sample",
+    "no per-request DB lock wait or queue metric; no Redis outage claim",
+    "warmup excluded from formal distributions"
+  ],
+  "case": "C2",
+  "contract": {
+    "schema": 1,
+    "frozenBeforeFormalMeasurement": "2026-09-19T11:47:07.394403+08:00",
+    "hardware": {
+      "cpu": "Apple M4",
+      "logicalCores": 10,
+      "ramBytes": 17179869184,
+      "os": "macOS 15.6",
+      "dockerCpus": 4,
+      "dockerRamBytes": 8307826688,
+      "dockerServer": "29.2.1"
+    },
+    "application": {
+      "rateLimitPerMinute": 1000000,
+      "hikariMaximumPoolSize": 10,
+      "tomcatMaxThreads": 200,
+      "jvmMaxHeap": "1024m"
+    },
+    "redisLockSeconds": 20,
+    "capacityPerSpace": 10000,
+    "shapes": [
+      "hotspot",
+      "distributed"
+    ],
+    "concurrency": [
+      1,
+      8
+    ],
+    "warmupSeconds": 3,
+    "durationSeconds": 20,
+    "repeats": 2,
+    "httpTimeoutSeconds": 60,
+    "thresholds": {
+      "oversell": 0,
+      "duplicateSeat": 0,
+      "partialWrite": 0,
+      "unexpected": 0,
+      "timeout": 0
+    },
+    "statistics": "nearest-rank percentiles across all responses; throughput includes drain, warmup excluded; latency and throughput observational, no SLA",
+    "isolation": "one fresh environment; new fixture per round; distributed has one venue and space per worker, hotspot shares one; previous S02 stacks stopped; other user processes are not stopped",
+    "rateLimitBoundary": "explicit isolated override from default90 to1000000 per path/IP/minute to expose transaction costs; does not represent default public endpoint throughput"
+  },
+  "contractSha256": "935f4b3adcc19c4ff5525773acb080cfdb82da72a5d5b9ad79b12b2713d0614c",
+  "smokeOnly": false,
+  "results": [
+    {
+      "scenario": "EXCLUSIVE",
+      "passed": true,
+      "actual": {
+        "spaceId": 9,
+        "responses": [
+          {
+            "ms": 42.841,
+            "category": "success",
+            "http": 200,
+            "reason": null,
+            "id": 9,
+            "key": "c2-ac711718366b4d93b00bf293812a2615",
+            "spaceId": 9
+          },
+          {
+            "ms": 14.355,
+            "category": "conflict",
+            "http": 409,
+            "reason": "REDIS_SUBMISSION_BUSY",
+            "id": null,
+            "key": "c2-c04836e561df4f89a42a7dc59da90741",
+            "spaceId": 9
+          }
+        ],
+        "fullConflict": {
+          "ms": 15.01,
+          "category": "conflict",
+          "http": 409,
+          "reason": "EXCLUSIVE_OVERLAP",
+          "id": null,
+          "key": "c2-36c0d6dd9b254248a4ff47dc7277cfdb",
+          "spaceId": 9
+        },
+        "beforeRelease": {
+          "reservations": 1,
+          "occupancies": 1,
+          "quantity": 1,
+          "commands": 1,
+          "outboxFacts": 1,
+          "outboxReservations": 1
+        },
+        "adjacentOrOtherSeat": {
+          "ms": 38.638,
+          "category": "success",
+          "http": 200,
+          "reason": null,
+          "id": 10,
+          "key": "c2-e618c15a932d45a39fe38e9098f73e11",
+          "spaceId": 9
+        },
+        "cancelReplayHttp": 400,
+        "afterReleaseRebook": {
+          "ms": 40.896,
+          "category": "success",
+          "http": 200,
+          "reason": null,
+          "id": 11,
+          "key": "c2-e6ec72afd70a4d50a30a3c7072b0c27e",
+          "spaceId": 9
+        },
+        "final": {
+          "reservations": 3,
+          "occupancies": 2,
+          "quantity": 2,
+          "commands": 3,
+          "outboxFacts": 3,
+          "outboxReservations": 3
+        }
+      }
+    },
+    {
+      "scenario": "CAPACITY",
+      "passed": true,
+      "actual": {
+        "spaceId": 10,
+        "responses": [
+          {
+            "ms": 37.675,
+            "category": "success",
+            "http": 200,
+            "reason": null,
+            "id": 13,
+            "key": "c2-53638745e1f347a08a9c05c01e71b56d",
+            "spaceId": 10
+          },
+          {
+            "ms": 11.073,
+            "category": "conflict",
+            "http": 409,
+            "reason": "REDIS_SUBMISSION_BUSY",
+            "id": null,
+            "key": "c2-c26a9f63818e43da89bb5535e07b1243",
+            "spaceId": 10
+          }
+        ],
+        "fullConflict": {
+          "ms": 13.874,
+          "category": "conflict",
+          "http": 409,
+          "reason": "CAPACITY_EXCEEDED",
+          "id": null,
+          "key": "c2-f16f7cc75b0c4ba9917126c96c375c7a",
+          "spaceId": 10
+        },
+        "beforeRelease": {
+          "reservations": 2,
+          "occupancies": 2,
+          "quantity": 3,
+          "commands": 2,
+          "outboxFacts": 2,
+          "outboxReservations": 2
+        },
+        "adjacentOrOtherSeat": null,
+        "cancelReplayHttp": 400,
+        "afterReleaseRebook": {
+          "ms": 42.98,
+          "category": "success",
+          "http": 200,
+          "reason": null,
+          "id": 14,
+          "key": "c2-914392a4696c45bca996a1d508147b1b",
+          "spaceId": 10
+        },
+        "final": {
+          "reservations": 3,
+          "occupancies": 2,
+          "quantity": 3,
+          "commands": 3,
+          "outboxFacts": 3,
+          "outboxReservations": 3
+        }
+      }
+    },
+    {
+      "scenario": "ASSIGNED_SEAT",
+      "passed": true,
+      "actual": {
+        "spaceId": 11,
+        "responses": [
+          {
+            "ms": 13.866,
+            "category": "conflict",
+            "http": 409,
+            "reason": "REDIS_SUBMISSION_BUSY",
+            "id": null,
+            "key": "c2-a01859eeedd140eebca89b36dfe38925",
+            "spaceId": 11
+          },
+          {
+            "ms": 47.79,
+            "category": "success",
+            "http": 200,
+            "reason": null,
+            "id": 15,
+            "key": "c2-e8e63f9b889c4b7e9c56367d6dd2e7b8",
+            "spaceId": 11
+          }
+        ],
+        "fullConflict": {
+          "ms": 14.756,
+          "category": "conflict",
+          "http": 409,
+          "reason": "SEAT_ALREADY_ALLOCATED",
+          "id": null,
+          "key": "c2-5a62428149704496afb96687889e5943",
+          "spaceId": 11
+        },
+        "beforeRelease": {
+          "reservations": 1,
+          "occupancies": 1,
+          "quantity": 1,
+          "commands": 1,
+          "outboxFacts": 1,
+          "outboxReservations": 1
+        },
+        "adjacentOrOtherSeat": {
+          "ms": 54.268,
+          "category": "success",
+          "http": 200,
+          "reason": null,
+          "id": 16,
+          "key": "c2-2735b6a2809d4673aebe51f596c569db",
+          "spaceId": 11
+        },
+        "cancelReplayHttp": 400,
+        "afterReleaseRebook": {
+          "ms": 43.224,
+          "category": "success",
+          "http": 200,
+          "reason": null,
+          "id": 17,
+          "key": "c2-55831b77bfa64bff8966cc17de0d50c1",
+          "spaceId": 11
+        },
+        "final": {
+          "reservations": 3,
+          "occupancies": 2,
+          "quantity": 2,
+          "commands": 3,
+          "outboxFacts": 3,
+          "outboxReservations": 3
+        }
+      }
+    },
+    {
+      "scenario": "warmup-hotspot-2-0",
+      "phase": "warmup",
+      "shape": "hotspot",
+      "concurrency": 2,
+      "repeat": 0,
+      "seconds": 3,
+      "elapsedIncludingDrain": 3.059040416,
+      "samples": 185,
+      "counts": {
+        "success": 50,
+        "conflict": 135,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {
+        "REDIS_SUBMISSION_BUSY": 135
+      },
+      "p50ms": 18.913,
+      "p95ms": 78.914,
+      "p99ms": 156.549,
+      "completedPerSecond": 60.476481131918455,
+      "successPerSecond": 16.3449949005185,
+      "identityRows": 50,
+      "data": [
+        {
+          "venueId": 12,
+          "spaceId": 12,
+          "reservations": 50,
+          "occupancies": 50,
+          "quantity": 50,
+          "commands": 50,
+          "outboxFacts": 50,
+          "outboxReservations": 50
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "6.4 295504",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 545MB",
+              "CPUPerc": "52.60%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.30%",
+              "MemUsage": "499.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "3.26MB / 6.19MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "1.69%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "109kB / 37.8kB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "warmup-hotspot-2-0.jsonl"
+    },
+    {
+      "scenario": "formal-hotspot-1-1",
+      "phase": "formal",
+      "shape": "hotspot",
+      "concurrency": 1,
+      "repeat": 1,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.035874542,
+      "samples": 443,
+      "counts": {
+        "success": 443,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 42.77,
+      "p95ms": 66.078,
+      "p99ms": 97.658,
+      "completedPerSecond": 22.11034008380147,
+      "successPerSecond": 22.11034008380147,
+      "identityRows": 443,
+      "data": [
+        {
+          "venueId": 13,
+          "spaceId": 13,
+          "reservations": 443,
+          "occupancies": 443,
+          "quantity": 443,
+          "commands": 443,
+          "outboxFacts": 443,
+          "outboxReservations": 443
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "26.4 329792",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 569MB",
+              "CPUPerc": "23.60%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.32%",
+              "MemUsage": "500.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "4.67MB / 9.35MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.70%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "222kB / 80kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.98,
+          "jvmCpuPercentAndRssKiB": "72.5 337040",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 627MB",
+              "CPUPerc": "26.04%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.35%",
+              "MemUsage": "503.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "8.78MB / 21.8MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.71%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "282kB / 102kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 7.983,
+          "jvmCpuPercentAndRssKiB": "50.9 340320",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 689MB",
+              "CPUPerc": "30.22%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.38%",
+              "MemUsage": "505.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "12MB / 35.8MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.67%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "355kB / 128kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 11.959,
+          "jvmCpuPercentAndRssKiB": "48.0 334448",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 731MB",
+              "CPUPerc": "23.08%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.40%",
+              "MemUsage": "506.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "14.8MB / 51.2MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.72%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "427kB / 154kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 15.949,
+          "jvmCpuPercentAndRssKiB": "36.6 370224",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 774MB",
+              "CPUPerc": "25.26%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.42%",
+              "MemUsage": "508.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "17.6MB / 68.5MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.71%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "494kB / 178kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 19.965,
+          "jvmCpuPercentAndRssKiB": "34.1 351344",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 810MB",
+              "CPUPerc": "2.39%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.42%",
+              "MemUsage": "508.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "18.8MB / 76.1MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.33%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "536kB / 192kB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-hotspot-1-1.jsonl"
+    },
+    {
+      "scenario": "formal-hotspot-1-2",
+      "phase": "formal",
+      "shape": "hotspot",
+      "concurrency": 1,
+      "repeat": 2,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.035409374999997,
+      "samples": 405,
+      "counts": {
+        "success": 405,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 45.378,
+      "p95ms": 70.03,
+      "p99ms": 112.623,
+      "completedPerSecond": 20.214211370462703,
+      "successPerSecond": 20.214211370462703,
+      "identityRows": 405,
+      "data": [
+        {
+          "venueId": 14,
+          "spaceId": 14,
+          "reservations": 405,
+          "occupancies": 405,
+          "quantity": 405,
+          "commands": 405,
+          "outboxFacts": 405,
+          "outboxReservations": 405
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "2.6 317984",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 840MB",
+              "CPUPerc": "26.38%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.44%",
+              "MemUsage": "509.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "19.9MB / 78.5MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.77%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "564kB / 202kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.419,
+          "jvmCpuPercentAndRssKiB": "27.9 357584",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 890MB",
+              "CPUPerc": "26.82%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.46%",
+              "MemUsage": "511.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "22.8MB / 87.2MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.78%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "615kB / 220kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 7.426,
+          "jvmCpuPercentAndRssKiB": "30.7 361680",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 929MB",
+              "CPUPerc": "30.36%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.47%",
+              "MemUsage": "512.8MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "25.7MB / 98.8MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.73%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "688kB / 246kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 11.443,
+          "jvmCpuPercentAndRssKiB": "30.8 364112",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 990MB",
+              "CPUPerc": "26.68%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.48%",
+              "MemUsage": "513.7MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "27.8MB / 109MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.80%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "742kB / 264kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 15.453,
+          "jvmCpuPercentAndRssKiB": "37.1 358416",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.05GB",
+              "CPUPerc": "26.59%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.50%",
+              "MemUsage": "514.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "30.6MB / 124MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.73%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "805kB / 287kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 19.419,
+          "jvmCpuPercentAndRssKiB": "50.8 362416",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.09GB",
+              "CPUPerc": "5.16%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.51%",
+              "MemUsage": "515.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "32.4MB / 136MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.53%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "864kB / 307kB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-hotspot-1-2.jsonl"
+    },
+    {
+      "scenario": "formal-hotspot-8-1",
+      "phase": "formal",
+      "shape": "hotspot",
+      "concurrency": 8,
+      "repeat": 1,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.04225029199999,
+      "samples": 4553,
+      "counts": {
+        "success": 206,
+        "conflict": 4347,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {
+        "REDIS_SUBMISSION_BUSY": 4347
+      },
+      "p50ms": 28.074,
+      "p95ms": 89.069,
+      "p99ms": 144.967,
+      "completedPerSecond": 227.17009984738903,
+      "successPerSecond": 10.278286968715603,
+      "identityRows": 206,
+      "data": [
+        {
+          "venueId": 15,
+          "spaceId": 15,
+          "reservations": 206,
+          "occupancies": 206,
+          "quantity": 206,
+          "commands": 206,
+          "outboxFacts": 206,
+          "outboxReservations": 206
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "5.1 363056",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.14GB",
+              "CPUPerc": "83.60%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.56%",
+              "MemUsage": "519.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "34.5MB / 139MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "4.25%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "1.1MB / 389kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.504,
+          "jvmCpuPercentAndRssKiB": "134.0 366160",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.21GB",
+              "CPUPerc": "88.26%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.60%",
+              "MemUsage": "522.8MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "37.5MB / 145MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "4.31%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "1.57MB / 550kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 7.52,
+          "jvmCpuPercentAndRssKiB": "131.2 352544",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.3GB",
+              "CPUPerc": "93.43%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.62%",
+              "MemUsage": "524.3MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "41.1MB / 152MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "4.65%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "2MB / 700kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 11.55,
+          "jvmCpuPercentAndRssKiB": "114.3 299520",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.4GB",
+              "CPUPerc": "94.66%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.63%",
+              "MemUsage": "525.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "45MB / 160MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "3.84%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "2.24MB / 783kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 15.595,
+          "jvmCpuPercentAndRssKiB": "112.7 305920",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.5GB",
+              "CPUPerc": "85.51%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.65%",
+              "MemUsage": "527.1MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "49.4MB / 170MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "4.28%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "2.75MB / 958kB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 19.588,
+          "jvmCpuPercentAndRssKiB": "118.3 307600",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.59GB",
+              "CPUPerc": "32.93%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.68%",
+              "MemUsage": "528.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "52.4MB / 177MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "0.48%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "3.24MB / 1.13MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-hotspot-8-1.jsonl"
+    },
+    {
+      "scenario": "formal-hotspot-8-2",
+      "phase": "formal",
+      "shape": "hotspot",
+      "concurrency": 8,
+      "repeat": 2,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.144961083,
+      "samples": 4582,
+      "counts": {
+        "success": 217,
+        "conflict": 4365,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {
+        "REDIS_SUBMISSION_BUSY": 4365
+      },
+      "p50ms": 28.77,
+      "p95ms": 99.685,
+      "p99ms": 126.895,
+      "completedPerSecond": 227.45141979284708,
+      "successPerSecond": 10.771924507867267,
+      "identityRows": 217,
+      "data": [
+        {
+          "venueId": 16,
+          "spaceId": 16,
+          "reservations": 217,
+          "occupancies": 217,
+          "quantity": 217,
+          "commands": 217,
+          "outboxFacts": 217,
+          "outboxReservations": 217
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "0.0 316128",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.67GB",
+              "CPUPerc": "88.90%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.69%",
+              "MemUsage": "530MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "54.5MB / 181MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "3.82%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "3.37MB / 1.17MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.985,
+          "jvmCpuPercentAndRssKiB": "117.3 318064",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.77GB",
+              "CPUPerc": "82.12%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.71%",
+              "MemUsage": "531.7MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "58.5MB / 188MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 0B",
+              "CPUPerc": "4.72%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "3.84MB / 1.34MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 8.008,
+          "jvmCpuPercentAndRssKiB": "117.4 313520",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.85GB",
+              "CPUPerc": "93.87%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.73%",
+              "MemUsage": "533.2MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "61.7MB / 195MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "4.22%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.57MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "4.44MB / 1.54MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 12.01,
+          "jvmCpuPercentAndRssKiB": "117.8 240032",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 1.94GB",
+              "CPUPerc": "75.46%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.75%",
+              "MemUsage": "534.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "65.6MB / 203MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "4.27%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "4.93MB / 1.71MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 16.03,
+          "jvmCpuPercentAndRssKiB": "122.2 238848",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.08GB",
+              "CPUPerc": "80.39%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.77%",
+              "MemUsage": "536.2MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "70.9MB / 216MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "4.21%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.05%",
+              "MemUsage": "3.566MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.3MB / 1.84MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 20.053,
+          "jvmCpuPercentAndRssKiB": "94.9 206336",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.17GB",
+              "CPUPerc": "8.17%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.78%",
+              "MemUsage": "537.3MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "72.8MB / 221MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.42%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.559MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.63MB / 1.95MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-hotspot-8-2.jsonl"
+    },
+    {
+      "scenario": "warmup-distributed-2-0",
+      "phase": "warmup",
+      "shape": "distributed",
+      "concurrency": 2,
+      "repeat": 0,
+      "seconds": 3,
+      "elapsedIncludingDrain": 3.0465269999999975,
+      "samples": 91,
+      "counts": {
+        "success": 91,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 59.603,
+      "p95ms": 95.792,
+      "p99ms": 172.753,
+      "completedPerSecond": 29.870078289146978,
+      "successPerSecond": 29.870078289146978,
+      "identityRows": 91,
+      "data": [
+        {
+          "venueId": 17,
+          "spaceId": 17,
+          "reservations": 45,
+          "occupancies": 45,
+          "quantity": 45,
+          "commands": 45,
+          "outboxFacts": 45,
+          "outboxReservations": 45
+        },
+        {
+          "venueId": 18,
+          "spaceId": 18,
+          "reservations": 46,
+          "occupancies": 46,
+          "quantity": 46,
+          "commands": 46,
+          "outboxFacts": 46,
+          "outboxReservations": 46
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "21.5 136640",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.2GB",
+              "CPUPerc": "56.51%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.79%",
+              "MemUsage": "538.3MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "73.9MB / 223MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "1.16%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.67MB / 1.97MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "warmup-distributed-2-0.jsonl"
+    },
+    {
+      "scenario": "formal-distributed-1-1",
+      "phase": "formal",
+      "shape": "distributed",
+      "concurrency": 1,
+      "repeat": 1,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.0757785,
+      "samples": 349,
+      "counts": {
+        "success": 349,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 52.042,
+      "p95ms": 88.55,
+      "p99ms": 127.098,
+      "completedPerSecond": 17.38413282453779,
+      "successPerSecond": 17.38413282453779,
+      "identityRows": 349,
+      "data": [
+        {
+          "venueId": 19,
+          "spaceId": 19,
+          "reservations": 349,
+          "occupancies": 349,
+          "quantity": 349,
+          "commands": 349,
+          "outboxFacts": 349,
+          "outboxReservations": 349
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "6.7 208912",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.25GB",
+              "CPUPerc": "25.01%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.81%",
+              "MemUsage": "539.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "76.6MB / 229MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.76%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.73MB / 1.99MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.986,
+          "jvmCpuPercentAndRssKiB": "26.9 209808",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.33GB",
+              "CPUPerc": "27.99%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.83%",
+              "MemUsage": "541.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "79.8MB / 238MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.78%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.78MB / 2.01MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 7.993,
+          "jvmCpuPercentAndRssKiB": "35.2 210144",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.39GB",
+              "CPUPerc": "26.60%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.85%",
+              "MemUsage": "542.7MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "82.3MB / 248MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.80%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.559MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.84MB / 2.03MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 11.988,
+          "jvmCpuPercentAndRssKiB": "30.1 216656",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.44GB",
+              "CPUPerc": "28.26%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.87%",
+              "MemUsage": "544.1MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "84MB / 256MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.96%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.91MB / 2.05MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 15.992,
+          "jvmCpuPercentAndRssKiB": "30.3 210016",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.5GB",
+              "CPUPerc": "27.30%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.88%",
+              "MemUsage": "545.2MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "86.7MB / 270MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.67%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.559MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.95MB / 2.07MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 20.018,
+          "jvmCpuPercentAndRssKiB": "31.6 202144",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.55GB",
+              "CPUPerc": "0.58%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.89%",
+              "MemUsage": "545.8MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "87.9MB / 276MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.32%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.559MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "5.99MB / 2.08MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-distributed-1-1.jsonl"
+    },
+    {
+      "scenario": "formal-distributed-1-2",
+      "phase": "formal",
+      "shape": "distributed",
+      "concurrency": 1,
+      "repeat": 2,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.04834354100001,
+      "samples": 398,
+      "counts": {
+        "success": 398,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 47.44,
+      "p95ms": 68.148,
+      "p99ms": 106.067,
+      "completedPerSecond": 19.852014166959343,
+      "successPerSecond": 19.852014166959343,
+      "identityRows": 398,
+      "data": [
+        {
+          "venueId": 20,
+          "spaceId": 20,
+          "reservations": 398,
+          "occupancies": 398,
+          "quantity": 398,
+          "commands": 398,
+          "outboxFacts": 398,
+          "outboxReservations": 398
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "0.0 207264",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.57GB",
+              "CPUPerc": "28.05%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.90%",
+              "MemUsage": "546.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "88.7MB / 278MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.77%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.01MB / 2.09MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.35,
+          "jvmCpuPercentAndRssKiB": "33.6 210688",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.64GB",
+              "CPUPerc": "29.38%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.92%",
+              "MemUsage": "547.9MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "91.3MB / 285MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.80%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.06MB / 2.1MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 7.367,
+          "jvmCpuPercentAndRssKiB": "27.0 214352",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.7GB",
+              "CPUPerc": "36.91%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.93%",
+              "MemUsage": "549MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "94.1MB / 296MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.73%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.13MB / 2.13MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 11.361,
+          "jvmCpuPercentAndRssKiB": "28.7 214608",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.75GB",
+              "CPUPerc": "27.70%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.94%",
+              "MemUsage": "550.1MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "96.8MB / 308MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.71%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.19MB / 2.15MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 15.367,
+          "jvmCpuPercentAndRssKiB": "32.0 215616",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.81GB",
+              "CPUPerc": "27.74%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.95%",
+              "MemUsage": "551MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "98.9MB / 319MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.69%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.27MB / 2.18MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 19.412,
+          "jvmCpuPercentAndRssKiB": "32.5 216064",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.86GB",
+              "CPUPerc": "26.07%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.97%",
+              "MemUsage": "552MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "101MB / 334MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.23%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.559MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.31MB / 2.19MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-distributed-1-2.jsonl"
+    },
+    {
+      "scenario": "formal-distributed-8-1",
+      "phase": "formal",
+      "shape": "distributed",
+      "concurrency": 8,
+      "repeat": 1,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.107621667000018,
+      "samples": 1081,
+      "counts": {
+        "success": 1081,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 142.909,
+      "p95ms": 204.709,
+      "p99ms": 222.217,
+      "completedPerSecond": 53.760709143145576,
+      "successPerSecond": 53.760709143145576,
+      "identityRows": 1081,
+      "data": [
+        {
+          "venueId": 21,
+          "spaceId": 21,
+          "reservations": 135,
+          "occupancies": 135,
+          "quantity": 135,
+          "commands": 135,
+          "outboxFacts": 135,
+          "outboxReservations": 135
+        },
+        {
+          "venueId": 22,
+          "spaceId": 22,
+          "reservations": 135,
+          "occupancies": 135,
+          "quantity": 135,
+          "commands": 135,
+          "outboxFacts": 135,
+          "outboxReservations": 135
+        },
+        {
+          "venueId": 23,
+          "spaceId": 23,
+          "reservations": 136,
+          "occupancies": 136,
+          "quantity": 136,
+          "commands": 136,
+          "outboxFacts": 136,
+          "outboxReservations": 136
+        },
+        {
+          "venueId": 24,
+          "spaceId": 24,
+          "reservations": 135,
+          "occupancies": 135,
+          "quantity": 135,
+          "commands": 135,
+          "outboxFacts": 135,
+          "outboxReservations": 135
+        },
+        {
+          "venueId": 25,
+          "spaceId": 25,
+          "reservations": 134,
+          "occupancies": 134,
+          "quantity": 134,
+          "commands": 134,
+          "outboxFacts": 134,
+          "outboxReservations": 134
+        },
+        {
+          "venueId": 26,
+          "spaceId": 26,
+          "reservations": 135,
+          "occupancies": 135,
+          "quantity": 135,
+          "commands": 135,
+          "outboxFacts": 135,
+          "outboxReservations": 135
+        },
+        {
+          "venueId": 27,
+          "spaceId": 27,
+          "reservations": 135,
+          "occupancies": 135,
+          "quantity": 135,
+          "commands": 135,
+          "outboxFacts": 135,
+          "outboxReservations": 135
+        },
+        {
+          "venueId": 28,
+          "spaceId": 28,
+          "reservations": 136,
+          "occupancies": 136,
+          "quantity": 136,
+          "commands": 136,
+          "outboxFacts": 136,
+          "outboxReservations": 136
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "10.8 216720",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 2.93GB",
+              "CPUPerc": "107.16%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "6.99%",
+              "MemUsage": "553.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "104MB / 340MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "2.18%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.38MB / 2.22MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.332,
+          "jvmCpuPercentAndRssKiB": "118.0 222416",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.05GB",
+              "CPUPerc": "123.89%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.04%",
+              "MemUsage": "558MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "112MB / 358MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "1.99%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.52MB / 2.27MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 7.373,
+          "jvmCpuPercentAndRssKiB": "113.3 222848",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.17GB",
+              "CPUPerc": "116.53%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.08%",
+              "MemUsage": "561.2MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "118MB / 376MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "2.37%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.68MB / 2.32MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 11.388,
+          "jvmCpuPercentAndRssKiB": "119.6 217152",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.28GB",
+              "CPUPerc": "119.52%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.12%",
+              "MemUsage": "564.2MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "125MB / 395MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "1.91%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.83MB / 2.37MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 15.406,
+          "jvmCpuPercentAndRssKiB": "122.4 216384",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.39GB",
+              "CPUPerc": "112.13%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.16%",
+              "MemUsage": "567.1MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "131MB / 417MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "2.08%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "6.99MB / 2.43MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 19.427,
+          "jvmCpuPercentAndRssKiB": "131.5 214672",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.49GB",
+              "CPUPerc": "78.42%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.18%",
+              "MemUsage": "569.1MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "136MB / 434MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "0.63%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.559MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "7.14MB / 2.48MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-distributed-8-1.jsonl"
+    },
+    {
+      "scenario": "formal-distributed-8-2",
+      "phase": "formal",
+      "shape": "distributed",
+      "concurrency": 8,
+      "repeat": 2,
+      "seconds": 20,
+      "elapsedIncludingDrain": 20.075356916999993,
+      "samples": 1069,
+      "counts": {
+        "success": 1069,
+        "conflict": 0,
+        "rateLimit": 0,
+        "timeout": 0,
+        "unexpected": 0
+      },
+      "reasons": {},
+      "p50ms": 142.657,
+      "p95ms": 201.382,
+      "p99ms": 222.095,
+      "completedPerSecond": 53.2493646025671,
+      "successPerSecond": 53.2493646025671,
+      "identityRows": 1069,
+      "data": [
+        {
+          "venueId": 29,
+          "spaceId": 29,
+          "reservations": 134,
+          "occupancies": 134,
+          "quantity": 134,
+          "commands": 134,
+          "outboxFacts": 134,
+          "outboxReservations": 134
+        },
+        {
+          "venueId": 30,
+          "spaceId": 30,
+          "reservations": 134,
+          "occupancies": 134,
+          "quantity": 134,
+          "commands": 134,
+          "outboxFacts": 134,
+          "outboxReservations": 134
+        },
+        {
+          "venueId": 31,
+          "spaceId": 31,
+          "reservations": 134,
+          "occupancies": 134,
+          "quantity": 134,
+          "commands": 134,
+          "outboxFacts": 134,
+          "outboxReservations": 134
+        },
+        {
+          "venueId": 32,
+          "spaceId": 32,
+          "reservations": 133,
+          "occupancies": 133,
+          "quantity": 133,
+          "commands": 133,
+          "outboxFacts": 133,
+          "outboxReservations": 133
+        },
+        {
+          "venueId": 33,
+          "spaceId": 33,
+          "reservations": 133,
+          "occupancies": 133,
+          "quantity": 133,
+          "commands": 133,
+          "outboxFacts": 133,
+          "outboxReservations": 133
+        },
+        {
+          "venueId": 34,
+          "spaceId": 34,
+          "reservations": 133,
+          "occupancies": 133,
+          "quantity": 133,
+          "commands": 133,
+          "outboxFacts": 133,
+          "outboxReservations": 133
+        },
+        {
+          "venueId": 35,
+          "spaceId": 35,
+          "reservations": 134,
+          "occupancies": 134,
+          "quantity": 134,
+          "commands": 134,
+          "outboxFacts": 134,
+          "outboxReservations": 134
+        },
+        {
+          "venueId": 36,
+          "spaceId": 36,
+          "reservations": 134,
+          "occupancies": 134,
+          "quantity": 134,
+          "commands": 134,
+          "outboxFacts": 134,
+          "outboxReservations": 134
+        }
+      ],
+      "resources": [
+        {
+          "elapsed": 0.0,
+          "jvmCpuPercentAndRssKiB": "10.6 218704",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.54GB",
+              "CPUPerc": "114.34%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.20%",
+              "MemUsage": "570.5MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "138MB / 438MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "2.18%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "7.23MB / 2.51MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 3.979,
+          "jvmCpuPercentAndRssKiB": "111.9 218560",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.68GB",
+              "CPUPerc": "123.65%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.25%",
+              "MemUsage": "574.2MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "147MB / 458MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 4.1kB",
+              "CPUPerc": "2.04%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "7.35MB / 2.56MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 8.022,
+          "jvmCpuPercentAndRssKiB": "117.3 218976",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.8GB",
+              "CPUPerc": "122.20%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.29%",
+              "MemUsage": "577.6MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "154MB / 478MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 8.19kB",
+              "CPUPerc": "2.16%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "7.52MB / 2.62MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 12.035,
+          "jvmCpuPercentAndRssKiB": "117.3 219216",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 3.9GB",
+              "CPUPerc": "128.01%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.32%",
+              "MemUsage": "579.6MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "159MB / 494MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 8.19kB",
+              "CPUPerc": "2.17%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "7.73MB / 2.69MB",
+              "PIDs": "6"
+            }
+          ]
+        },
+        {
+          "elapsed": 16.062,
+          "jvmCpuPercentAndRssKiB": "125.7 222368",
+          "containers": [
+            {
+              "BlockIO": "67.6MB / 4.04GB",
+              "CPUPerc": "125.63%",
+              "Container": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+              "ID": "d83fc61d162a",
+              "MemPerc": "7.36%",
+              "MemUsage": "583.4MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-mysql",
+              "NetIO": "167MB / 521MB",
+              "PIDs": "45"
+            },
+            {
+              "BlockIO": "0B / 8.19kB",
+              "CPUPerc": "2.11%",
+              "Container": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+              "ID": "5c6da791460b",
+              "MemPerc": "0.04%",
+              "MemUsage": "3.562MiB / 7.737GiB",
+              "Name": "sgrel-s06-final-redis",
+              "NetIO": "7.84MB / 2.73MB",
+              "PIDs": "6"
+            }
+          ]
+        }
+      ],
+      "passed": true,
+      "raw": "formal-distributed-8-2.jsonl"
+    }
+  ],
+  "passed": true
+}

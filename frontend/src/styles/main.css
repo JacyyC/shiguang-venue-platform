@@ -1,0 +1,3013 @@
+/* ============================================================
+   拾光 Shiguang 设计基础层
+   - 视觉权威参照：agent-workspace/docs/work-items/records/v4-ui-ux-shiguang/design-preview.html（§01 Token / §02 字体）
+   - --sg-* 为唯一语义 Token 入口；组件与页面禁止散落硬编码色值
+   - 暖绢（light）/ 深咖墨（dark）在同一 DOM 上经 data-theme 映射
+   - V4 起（V4-UI-UX-SHIGUANG S02）：暖绢/深咖墨双主题画布、内容带 scrim、文字四档
+     「画布 + mesh 最坏混合」双口径 ≥4.5:1、字体三级（正文系统栈零改动 / 展示字站酷小薇 /
+     艺术字马善政）在本层一次落地全站生效
+   - V5 起（V5-UI-UX-SHIGUANG S02）：mesh 峰值振幅 0.10 → 0.16（预览 §01 定稿），
+     对比度验收口径修订为「画布裸底四档 + 内容带全档最坏混合」，弱档禁入无 scrim 裸底区
+   - V6 起（V6-UI-UX-SHIGUANG S01）：mesh 波浪/scrim/极光口味退役，常驻背景 = 纯纸底；
+     粒子墨尘仅存在于进场仪式（开场/散开/聚形/退场状态机见 ambient/dustEngine.ts），
+     本层新增 §进场编排（ps-block / sg-intro-el / intro-hint / intro-reveal 窗口）
+   ============================================================ */
+
+:root,
+:root[data-theme="light"] {
+  /* 工程阅读页配色统一由语义Token供页面使用。 */
+  --sg-engineering-canvas: #fafbf9;
+  --sg-engineering-surface: #ffffff;
+  --sg-engineering-ink: #263a33;
+  --sg-engineering-muted: #5b6962;
+  --sg-engineering-line: #d5dfd8;
+  --sg-engineering-soft: #edf2ed;
+  --sg-engineering-accent: #af3526;
+
+  color-scheme: light;
+
+  /* 画布与表面（预览 §01：暖绢 #F4EEE1，surface-tint 取代白卡） */
+  --sg-canvas: #F4EEE1;
+  --sg-surface: #FFFFFF;
+  --sg-surface-subtle: #EFE8D9;
+  --sg-skeleton: #E9E1CF;
+
+  /* 墨色四档（画布 14.41:1 / mesh 最坏混合 12.79:1 等双口径实测见 §01 Token 注释） */
+  --sg-ink: #241D14;
+  --sg-ink-muted: #5E5344;
+  --sg-ink-subtle: #6B6153;
+
+  /* 边界（发丝线族：hairline #DED4C0 / hairline-soft #E9E1CF） */
+  --sg-border: #DED4C0;
+  --sg-border-strong: color-mix(in srgb, var(--sg-ink) 12%, var(--sg-border));
+  --sg-border-soft: #E9E1CF;
+
+  /* 主色柿橙 */
+  --sg-primary: #9E3A15;
+  --sg-primary-hover: color-mix(in srgb, var(--sg-primary) 86%, var(--sg-ink));
+  --sg-primary-soft: #F7E4D8;
+  --sg-primary-soft-strong: #EFD5C4;
+  --sg-on-primary: #FFFFFF;
+
+  /* 松绿（辅助强调） */
+  --sg-pine: #2E5D4D;
+  /* 会员卡等品牌深松绿面：明暗同值（深底浅字双主题可读），渐变配方唯一来源 */
+  --sg-pine-deep: #2F5D4E;
+  /* 会员卡渐变暗端（§06 红线：原 color-mix 里的 #000000 硬编码上提为 Token） */
+  --sg-pine-deepest: #234439;
+  --sg-pine-soft: #E4EEE8;
+  --sg-pine-soft-strong: #D8E7DF;
+
+  /* 雾蓝（场景背景辅助色） */
+  --sg-mist: #4E6577;
+  --sg-mist-soft: #E9EEF2;
+
+  /* 蜜金（辅助强调） */
+  --sg-honey: #8A5A14;
+  --sg-honey-soft: #F6EAD4;
+  --sg-honey-soft-strong: #EFDDB9;
+
+  /* 语义色 */
+  --sg-success: #1F6B4A;
+  --sg-success-soft: #E2F0E9;
+  --sg-warning: #8F5B00;
+  --sg-warning-soft: #F8EEDA;
+  --sg-danger: #A93326;
+  --sg-danger-soft: #F8E5E2;
+  --sg-focus: var(--sg-primary);
+
+  /* 阴影（暖色低强度分层） */
+  --sg-shadow-1: 0 1px 2px rgba(35, 31, 26, 0.05), 0 2px 8px rgba(35, 31, 26, 0.05);
+  --sg-shadow-2: 0 2px 6px rgba(35, 31, 26, 0.07), 0 10px 28px rgba(35, 31, 26, 0.08);
+  --sg-shadow-overlay: 0 24px 72px rgba(35, 31, 26, 0.18);
+  /* mask 挖孔的「保留区」锚点：只取 alpha 通道，不是可见色（票据打孔透出真实背景） */
+  --sg-mask-ink: #000000;
+
+  /* 首字占位与装饰画布 */
+  --sg-hero-a: #E9DFCE;
+  --sg-hero-b: #F6F1E6;
+  --sg-hero-ink: #8C7B62;
+
+  /* 静谧晨光背景（R6 §00B）：顶部奶油晨光带两档，html 三层固定背景专用 */
+  --sg-dawn: #F4E3C6;
+  --sg-dawn-2: #F7EBD4;
+
+  /* ---- V6 背景体系（预览 §01 定稿）：常驻背景退役为纯纸底；
+     粒子墨尘仅存在于进场仪式（开场/散开/聚形/退场），引擎运行时解析
+     --sg-ink / --sg-primary 取色（见 ambient/dustEngine.ts），本层不再保留 mesh/scrim Token。 ---- */
+
+  /* ---- V4 立体 Token（预览 §02）：保留给品牌字标/章戳/艺术字标本，首页大字不用。
+     亮色为「顶高光 + 下落影」；渐变字必须 filter: drop-shadow，
+     禁止对 background-clip:text 元素用 text-shadow（影子透过透明字身把填充洗色）。 ---- */
+  --sg-bevel-hi: rgba(255, 255, 255, 0.6);
+  --sg-bevel-near: rgba(96, 30, 8, 0.24);
+  --sg-bevel-far: rgba(96, 30, 8, 0.18);
+  --sg-bevel-amb: rgba(96, 30, 8, 0.1);
+  /* 赤陶渐变字端点（品牌艺术字 .art-solid 专用，明暗同值）与混合基色（红线：类规则零硬编码 hex） */
+  --sg-art-hi: #b54a1c;
+  --sg-art-lo: #7c2c0f;
+  --sg-art-mix-light: #ffffff;
+  --sg-art-mix-dark: #000000;
+
+  /* 字体三级（预览 §02）：正文/表单/表格/kicker 一律 --sg-font-sans 系统栈零改动；
+     展示字 = 站酷小薇（单字重 400，禁合成粗体，html font-synthesis:none 兜底）；
+     艺术字 = 马善政（毛笔楷，仅品牌字标/章戳/短标，不进首页大字与页头 kicker），霞鹜文楷降回退。
+     --sg-font-serif 自 V4 起作为展示字载体的历史别名指向展示字栈（45 处展示层调用点一处切换）。 */
+  --sg-font-sans: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --sg-font-display: "ZCOOL XiaoWei Web", "ZCOOL XiaoWei", "Songti SC", "STSong", "Noto Serif SC", "Noto Serif CJK SC", serif;
+  --sg-font-art: "Ma Shan Zheng Web", "Ma Shan Zheng", "LXGW WenKai TC Web", "LXGW WenKai TC", "STXingkai", "Kaiti SC", serif;
+  /* V11 hero 艺术字：志莽行书（仅首页语气层——标语/大字/引语/注脚/时钟彩蛋；功能信息层仍走 sans） */
+  --sg-font-hero: "Zhi Mang Xing Web", "Zhi Mang Xing", "Ma Shan Zheng Web", "STXingkai", "Kaiti SC", serif;
+  --sg-font-serif: var(--sg-font-display);
+  --sg-font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* 间距 4/8 基线、字号四档、圆角三档与动效 */
+  --sg-space-1: 4px;
+  --sg-space-2: 8px;
+  --sg-space-3: 12px;
+  --sg-space-4: 16px;
+  --sg-space-5: 20px;
+  --sg-space-6: 24px;
+  --sg-space-8: 32px;
+  /* 字号四档只收敛正文层级；展示级大字（display 族）与 ≤10px 装饰微字不在此列 */
+  --sg-fz-xs: 12px;
+  --sg-fz-sm: 13px;
+  --sg-fz-base: 15px;
+  --sg-fz-lg: 18px;
+  /* V5 KPI 半档（预览 §02 升档清单：后台 KPI 标签/单位 13 → 13.5px，配合两行制） */
+  --sg-fz-kpi: 13.5px;
+  /* 圆角三档：卡面 12 / 控件 8 / 章 2；浮层（message/message-box/dropdown 等）按卡面档 */
+  --sg-radius-card: 12px;
+  --sg-radius-control: 8px;
+  --sg-radius-stamp: 2px;
+  --sg-motion-instant: 100ms;
+  --sg-motion-fast: 160ms;
+  --sg-motion-base: 240ms;
+  --sg-motion-slow: 400ms;
+  --sg-motion-max: 500ms;
+  --sg-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --sg-ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --sg-ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  /* 终版动效语言统一曲线（R6 §00C） */
+  --sg-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* ---- V3 Apple 骨 × 拾光皮（V3-UI-UX-SHIGUANG S01 Token 基座）----
+     弹簧曲线 / 玻璃材质族 / 第四档圆角 / 聚焦环 / 柔光 / 媒体上文字 / 页头高变量。
+     玻璃亮暗同构：暗色取炭棕半透明，材质层换、画布血统不换（预览 §05 不取冷灰）。 */
+  --sg-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 第四档圆角（玻璃面 16~18px 档，预览 --ax-radius 定稿 18） */
+  --sg-radius-glass: 18px;
+  --sg-glass: rgba(255, 253, 248, 0.68);
+  --sg-glass-strong: rgba(255, 253, 248, 0.8);
+  --sg-glass-blur: 22px;
+  /* 顶部 1px 内高光与弥散浮影 */
+  --sg-sheen: rgba(255, 255, 255, 0.55);
+  --sg-shadow-float: 0 24px 80px rgba(35, 31, 26, 0.14);
+  /* 柿橙聚焦环（填充式输入 / 可选块选中） */
+  --sg-ring: color-mix(in srgb, var(--sg-primary) 55%, transparent);
+  /* 柔光斑（登录页光野 / 空态卡背光） */
+  --sg-glow-primary: rgba(158, 58, 21, 0.22);
+  --sg-glow-mist: rgba(90, 113, 132, 0.16);
+  /* 「媒体上文字」Token 族：媒体/海报上的文字与压暗幕（红线整改样板） */
+  --sg-media-veil: rgba(22, 17, 12, 0.5);
+  --sg-media-ink: #fff8ef;
+  --sg-media-ink-muted: rgba(255, 248, 239, 0.78);
+  /* 页头高变量（吸顶偏移与 sticky 对位的唯一合法来源） */
+  --user-header-h: 68px;
+  --admin-header-h: 68px;
+
+  /* ---- Element Plus 映射 ---- */
+  --el-color-primary: var(--sg-primary);
+  --el-color-primary-light-3: color-mix(in srgb, var(--sg-primary) 70%, var(--sg-surface));
+  --el-color-primary-light-4: color-mix(in srgb, var(--sg-primary) 60%, var(--sg-surface));
+  --el-color-primary-light-5: color-mix(in srgb, var(--sg-primary) 50%, var(--sg-surface));
+  --el-color-primary-light-6: color-mix(in srgb, var(--sg-primary) 40%, var(--sg-surface));
+  --el-color-primary-light-7: color-mix(in srgb, var(--sg-primary) 30%, var(--sg-surface));
+  --el-color-primary-light-8: color-mix(in srgb, var(--sg-primary) 20%, var(--sg-surface));
+  --el-color-primary-light-9: var(--sg-primary-soft);
+  --el-color-primary-dark-2: var(--sg-primary-hover);
+  --el-color-success: var(--sg-success);
+  --el-color-success-light-3: color-mix(in srgb, var(--sg-success) 70%, var(--sg-surface));
+  --el-color-success-light-4: color-mix(in srgb, var(--sg-success) 60%, var(--sg-surface));
+  --el-color-success-light-5: color-mix(in srgb, var(--sg-success) 50%, var(--sg-surface));
+  --el-color-success-light-6: color-mix(in srgb, var(--sg-success) 40%, var(--sg-surface));
+  --el-color-success-light-7: color-mix(in srgb, var(--sg-success) 30%, var(--sg-surface));
+  --el-color-success-light-8: color-mix(in srgb, var(--sg-success) 20%, var(--sg-surface));
+  --el-color-success-light-9: var(--sg-success-soft);
+  --el-color-success-dark-2: color-mix(in srgb, var(--sg-success) 80%, var(--sg-ink));
+  --el-color-warning: var(--sg-warning);
+  --el-color-warning-light-3: color-mix(in srgb, var(--sg-warning) 70%, var(--sg-surface));
+  --el-color-warning-light-4: color-mix(in srgb, var(--sg-warning) 60%, var(--sg-surface));
+  --el-color-warning-light-5: color-mix(in srgb, var(--sg-warning) 50%, var(--sg-surface));
+  --el-color-warning-light-6: color-mix(in srgb, var(--sg-warning) 40%, var(--sg-surface));
+  --el-color-warning-light-7: color-mix(in srgb, var(--sg-warning) 30%, var(--sg-surface));
+  --el-color-warning-light-8: color-mix(in srgb, var(--sg-warning) 20%, var(--sg-surface));
+  --el-color-warning-light-9: var(--sg-warning-soft);
+  --el-color-warning-dark-2: color-mix(in srgb, var(--sg-warning) 80%, var(--sg-ink));
+  --el-color-danger: var(--sg-danger);
+  --el-color-danger-light-3: color-mix(in srgb, var(--sg-danger) 70%, var(--sg-surface));
+  --el-color-danger-light-4: color-mix(in srgb, var(--sg-danger) 60%, var(--sg-surface));
+  --el-color-danger-light-5: color-mix(in srgb, var(--sg-danger) 50%, var(--sg-surface));
+  --el-color-danger-light-6: color-mix(in srgb, var(--sg-danger) 40%, var(--sg-surface));
+  --el-color-danger-light-7: color-mix(in srgb, var(--sg-danger) 30%, var(--sg-surface));
+  --el-color-danger-light-8: color-mix(in srgb, var(--sg-danger) 20%, var(--sg-surface));
+  --el-color-danger-light-9: var(--sg-danger-soft);
+  --el-color-danger-dark-2: color-mix(in srgb, var(--sg-danger) 80%, var(--sg-ink));
+  --el-color-error: var(--sg-danger);
+  --el-color-error-light-3: color-mix(in srgb, var(--sg-danger) 70%, var(--sg-surface));
+  --el-color-error-light-4: color-mix(in srgb, var(--sg-danger) 60%, var(--sg-surface));
+  --el-color-error-light-5: color-mix(in srgb, var(--sg-danger) 50%, var(--sg-surface));
+  --el-color-error-light-6: color-mix(in srgb, var(--sg-danger) 40%, var(--sg-surface));
+  --el-color-error-light-7: color-mix(in srgb, var(--sg-danger) 30%, var(--sg-surface));
+  --el-color-error-light-8: color-mix(in srgb, var(--sg-danger) 20%, var(--sg-surface));
+  --el-color-error-light-9: var(--sg-danger-soft);
+  --el-color-error-dark-2: color-mix(in srgb, var(--sg-danger) 80%, var(--sg-ink));
+  --el-color-info: var(--sg-pine);
+  --el-color-info-light-3: color-mix(in srgb, var(--sg-pine) 70%, var(--sg-surface));
+  --el-color-info-light-4: color-mix(in srgb, var(--sg-pine) 60%, var(--sg-surface));
+  --el-color-info-light-5: color-mix(in srgb, var(--sg-pine) 50%, var(--sg-surface));
+  --el-color-info-light-6: color-mix(in srgb, var(--sg-pine) 40%, var(--sg-surface));
+  --el-color-info-light-7: color-mix(in srgb, var(--sg-pine) 30%, var(--sg-surface));
+  --el-color-info-light-8: color-mix(in srgb, var(--sg-pine) 20%, var(--sg-surface));
+  --el-color-info-light-9: var(--sg-pine-soft);
+  --el-color-info-dark-2: color-mix(in srgb, var(--sg-pine) 80%, var(--sg-ink));
+  --el-text-color-primary: var(--sg-ink);
+  --el-text-color-regular: var(--sg-ink);
+  --el-text-color-secondary: var(--sg-ink-muted);
+  --el-text-color-placeholder: var(--sg-ink-subtle);
+  --el-text-color-disabled: var(--sg-ink-subtle);
+  --el-border-color: var(--sg-border);
+  --el-border-color-light: var(--sg-border);
+  --el-border-color-lighter: var(--sg-border-soft);
+  --el-border-color-extra-light: var(--sg-border-soft);
+  --el-border-color-dark: var(--sg-border-strong);
+  --el-border-color-darker: var(--sg-border-strong);
+  --el-fill-color: var(--sg-surface-subtle);
+  --el-fill-color-light: var(--sg-surface-subtle);
+  --el-fill-color-lighter: var(--sg-surface);
+  --el-fill-color-extra-light: var(--sg-surface);
+  --el-fill-color-blank: var(--sg-surface);
+  --el-fill-color-dark: var(--sg-border);
+  --el-fill-color-darker: var(--sg-border-strong);
+  --el-bg-color: var(--sg-surface);
+  --el-bg-color-page: var(--sg-canvas);
+  --el-bg-color-overlay: var(--sg-surface);
+  --el-border-radius-base: var(--sg-radius-control);
+  --el-box-shadow-light: var(--sg-shadow-1);
+  --el-box-shadow: var(--sg-shadow-2);
+  --el-box-shadow-dark: var(--sg-shadow-overlay);
+  --el-font-family: var(--sg-font-sans);
+  --el-disabled-bg-color: var(--sg-surface-subtle);
+  --el-disabled-text-color: var(--sg-ink-subtle);
+  --el-disabled-border-color: var(--sg-border);
+}
+
+:root[data-theme="dark"] {
+  --sg-engineering-canvas: #202925;
+  --sg-engineering-surface: #28352f;
+  --sg-engineering-ink: #eff4ed;
+  --sg-engineering-muted: #b8c6bd;
+  --sg-engineering-line: #45574c;
+  --sg-engineering-soft: #2e3d34;
+  --sg-engineering-accent: #ffa38c;
+
+  color-scheme: dark;
+
+  --sg-canvas: #161210;
+  --sg-surface: #1E1915;
+  --sg-surface-subtle: #231D16;
+  --sg-skeleton: #241E16;
+
+  --sg-ink: #F8F4EB;
+  --sg-ink-muted: #D2C9BB;
+  --sg-ink-subtle: #B4A996;
+
+  --sg-border: #312920;
+  --sg-border-strong: color-mix(in srgb, var(--sg-ink) 14%, var(--sg-border));
+  --sg-border-soft: #241E16;
+
+  --sg-primary: #F0916A;
+  --sg-primary-hover: color-mix(in srgb, var(--sg-primary) 84%, #ffffff);
+  --sg-primary-soft: #3A2A21;
+  --sg-primary-soft-strong: #4A3527;
+  --sg-on-primary: #201812;
+
+  --sg-pine: #8FCCB4;
+  --sg-pine-deep: #35695A;
+  --sg-pine-deepest: #234439;
+  --sg-pine-soft: #22312B;
+  --sg-pine-soft-strong: var(--sg-pine-soft);
+
+  /* 雾蓝（场景背景辅助色） */
+  --sg-mist: #9FB4C4;
+  --sg-mist-soft: #29333A;
+
+  --sg-honey: #E0B36B;
+  --sg-honey-soft: #33291A;
+  --sg-honey-soft-strong: var(--sg-honey-soft);
+
+  --sg-success: #63C79B;
+  --sg-success-soft: #1F3229;
+  --sg-warning: #E5B45F;
+  --sg-warning-soft: #33290F;
+  --sg-danger: #F08A7C;
+  --sg-danger-soft: #3A211D;
+  --sg-focus: #E8A585;
+
+  --sg-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 10px rgba(0, 0, 0, 0.25);
+  --sg-shadow-2: 0 2px 8px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --sg-shadow-overlay: 0 24px 72px rgba(0, 0, 0, 0.55);
+  --sg-mask-ink: #000000;
+
+  --sg-hero-a: #2A241D;
+  --sg-hero-b: #211C16;
+  --sg-hero-ink: #6B5F4E;
+
+  /* 灯下同构晨光：炭棕晨色 + 余烬柔光（R6 §00B 同一构成自动映射） */
+  --sg-dawn: #2B2013;
+  --sg-dawn-2: #241B10;
+
+  /* V3 玻璃材质族暗色同构（半径/blur/弹簧与亮色共用，不随主题重复声明） */
+  --sg-glass: rgba(38, 33, 27, 0.62);
+  --sg-glass-strong: rgba(42, 36, 29, 0.76);
+  --sg-sheen: rgba(255, 240, 220, 0.12);
+  --sg-shadow-float: 0 24px 80px rgba(0, 0, 0, 0.5);
+  --sg-ring: color-mix(in srgb, var(--sg-primary) 60%, transparent);
+  --sg-glow-primary: rgba(240, 145, 106, 0.2);
+  --sg-glow-mist: rgba(159, 180, 196, 0.12);
+
+  /* V6 背景体系暗色同构：粒子引擎运行时取色（--sg-ink 暗值 #F8F4EB 等），无常驻背景动画 */
+
+  /* V4 立体 Token 暗色同构：底高光 + 上浮影（预览 §02） */
+  --sg-bevel-hi: rgba(255, 255, 255, 0.1);
+  --sg-bevel-near: rgba(0, 0, 0, 0.55);
+  --sg-bevel-far: rgba(0, 0, 0, 0.4);
+  --sg-bevel-amb: rgba(0, 0, 0, 0.28);
+  --sg-media-veil: rgba(10, 8, 6, 0.55);
+  --sg-media-ink: #f3ede3;
+  --sg-media-ink-muted: rgba(243, 237, 227, 0.75);
+
+  --sg-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Element Plus 暗色补齐（覆盖 element-plus/theme-chalk/dark）
+     EP 官方暗色变量挂在 html.dark（特异性 0,1,1），会击穿 :root（0,1,0）上的拾光亮色映射；
+     本块 :root[data-theme="dark"]（0,2,0）必须补齐全族颜色变量才能稳定压回拾光语义。
+     light 梯度按 EP 暗色惯例向画布色混合（步数越高越暗），light-9 落到拾光 soft Token。 */
+  --el-color-primary: var(--sg-primary);
+  --el-color-primary-light-3: color-mix(in srgb, var(--sg-primary) 70%, var(--sg-canvas));
+  --el-color-primary-light-4: color-mix(in srgb, var(--sg-primary) 60%, var(--sg-canvas));
+  --el-color-primary-light-5: color-mix(in srgb, var(--sg-primary) 50%, var(--sg-canvas));
+  --el-color-primary-light-6: color-mix(in srgb, var(--sg-primary) 40%, var(--sg-canvas));
+  --el-color-primary-light-7: color-mix(in srgb, var(--sg-primary) 30%, var(--sg-canvas));
+  --el-color-primary-light-8: color-mix(in srgb, var(--sg-primary) 20%, var(--sg-canvas));
+  --el-color-primary-light-9: var(--sg-primary-soft);
+  --el-color-primary-dark-2: var(--sg-primary-hover);
+  --el-color-success: var(--sg-success);
+  --el-color-success-light-3: color-mix(in srgb, var(--sg-success) 70%, var(--sg-canvas));
+  --el-color-success-light-4: color-mix(in srgb, var(--sg-success) 60%, var(--sg-canvas));
+  --el-color-success-light-5: color-mix(in srgb, var(--sg-success) 50%, var(--sg-canvas));
+  --el-color-success-light-6: color-mix(in srgb, var(--sg-success) 40%, var(--sg-canvas));
+  --el-color-success-light-7: color-mix(in srgb, var(--sg-success) 30%, var(--sg-canvas));
+  --el-color-success-light-8: color-mix(in srgb, var(--sg-success) 20%, var(--sg-canvas));
+  --el-color-success-light-9: var(--sg-success-soft);
+  --el-color-success-dark-2: color-mix(in srgb, var(--sg-success) 80%, var(--sg-ink));
+  --el-color-warning: var(--sg-warning);
+  --el-color-warning-light-3: color-mix(in srgb, var(--sg-warning) 70%, var(--sg-canvas));
+  --el-color-warning-light-4: color-mix(in srgb, var(--sg-warning) 60%, var(--sg-canvas));
+  --el-color-warning-light-5: color-mix(in srgb, var(--sg-warning) 50%, var(--sg-canvas));
+  --el-color-warning-light-6: color-mix(in srgb, var(--sg-warning) 40%, var(--sg-canvas));
+  --el-color-warning-light-7: color-mix(in srgb, var(--sg-warning) 30%, var(--sg-canvas));
+  --el-color-warning-light-8: color-mix(in srgb, var(--sg-warning) 20%, var(--sg-canvas));
+  --el-color-warning-light-9: var(--sg-warning-soft);
+  --el-color-warning-dark-2: color-mix(in srgb, var(--sg-warning) 80%, var(--sg-ink));
+  --el-color-danger: var(--sg-danger);
+  --el-color-danger-light-3: color-mix(in srgb, var(--sg-danger) 70%, var(--sg-canvas));
+  --el-color-danger-light-4: color-mix(in srgb, var(--sg-danger) 60%, var(--sg-canvas));
+  --el-color-danger-light-5: color-mix(in srgb, var(--sg-danger) 50%, var(--sg-canvas));
+  --el-color-danger-light-6: color-mix(in srgb, var(--sg-danger) 40%, var(--sg-canvas));
+  --el-color-danger-light-7: color-mix(in srgb, var(--sg-danger) 30%, var(--sg-canvas));
+  --el-color-danger-light-8: color-mix(in srgb, var(--sg-danger) 20%, var(--sg-canvas));
+  --el-color-danger-light-9: var(--sg-danger-soft);
+  --el-color-danger-dark-2: color-mix(in srgb, var(--sg-danger) 80%, var(--sg-ink));
+  --el-color-error: var(--sg-danger);
+  --el-color-error-light-3: color-mix(in srgb, var(--sg-danger) 70%, var(--sg-canvas));
+  --el-color-error-light-4: color-mix(in srgb, var(--sg-danger) 60%, var(--sg-canvas));
+  --el-color-error-light-5: color-mix(in srgb, var(--sg-danger) 50%, var(--sg-canvas));
+  --el-color-error-light-6: color-mix(in srgb, var(--sg-danger) 40%, var(--sg-canvas));
+  --el-color-error-light-7: color-mix(in srgb, var(--sg-danger) 30%, var(--sg-canvas));
+  --el-color-error-light-8: color-mix(in srgb, var(--sg-danger) 20%, var(--sg-canvas));
+  --el-color-error-light-9: var(--sg-danger-soft);
+  --el-color-error-dark-2: color-mix(in srgb, var(--sg-danger) 80%, var(--sg-ink));
+  --el-color-info: var(--sg-pine);
+  --el-color-info-light-3: color-mix(in srgb, var(--sg-pine) 70%, var(--sg-canvas));
+  --el-color-info-light-4: color-mix(in srgb, var(--sg-pine) 60%, var(--sg-canvas));
+  --el-color-info-light-5: color-mix(in srgb, var(--sg-pine) 50%, var(--sg-canvas));
+  --el-color-info-light-6: color-mix(in srgb, var(--sg-pine) 40%, var(--sg-canvas));
+  --el-color-info-light-7: color-mix(in srgb, var(--sg-pine) 30%, var(--sg-canvas));
+  --el-color-info-light-8: color-mix(in srgb, var(--sg-pine) 20%, var(--sg-canvas));
+  --el-color-info-light-9: var(--sg-pine-soft);
+  --el-color-info-dark-2: color-mix(in srgb, var(--sg-pine) 80%, var(--sg-ink));
+  /* 暗色下拾光主色为亮柿橙，实心填充上的白色文字对比不足；
+     接管 --el-color-white 使按钮/复选/单选/徽标等实心件文字随主题转为暖深墨。 */
+  --el-color-white: var(--sg-on-primary);
+  --el-bg-color: var(--sg-surface);
+  --el-bg-color-page: var(--sg-canvas);
+  --el-bg-color-overlay: var(--sg-surface);
+  --el-fill-color: var(--sg-surface-subtle);
+  --el-fill-color-light: var(--sg-surface-subtle);
+  --el-fill-color-lighter: var(--sg-surface);
+  --el-fill-color-extra-light: var(--sg-surface);
+  --el-fill-color-blank: var(--sg-surface);
+  --el-fill-color-dark: var(--sg-border);
+  --el-fill-color-darker: var(--sg-border-strong);
+  --el-text-color-primary: var(--sg-ink);
+  --el-text-color-regular: var(--sg-ink);
+  --el-text-color-secondary: var(--sg-ink-muted);
+  --el-text-color-placeholder: var(--sg-ink-subtle);
+  --el-text-color-disabled: var(--sg-ink-subtle);
+  --el-border-color: var(--sg-border);
+  --el-border-color-light: var(--sg-border);
+  --el-border-color-lighter: var(--sg-border-soft);
+  --el-border-color-extra-light: var(--sg-border-soft);
+  --el-border-color-dark: var(--sg-border-strong);
+  --el-border-color-darker: var(--sg-border-strong);
+  --el-disabled-bg-color: var(--sg-surface-subtle);
+  --el-disabled-text-color: var(--sg-ink-subtle);
+  --el-disabled-border-color: var(--sg-border);
+  --el-box-shadow-light: var(--sg-shadow-1);
+  --el-box-shadow: var(--sg-shadow-2);
+  --el-box-shadow-dark: var(--sg-shadow-overlay);
+  --el-mask-color: rgba(23, 20, 18, 0.7);
+}
+
+/* --el-color-white 被暗色接管后，开关圆点需按轨道状态显式钉住，
+   否则关闭态圆点（原白色）会沉入深色轨道。 */
+:root[data-theme="dark"] .el-switch__core .el-switch__action {
+  background-color: var(--sg-ink);
+}
+
+:root[data-theme="dark"] .el-switch.is-checked .el-switch__core .el-switch__action {
+  background-color: var(--sg-on-primary);
+}
+
+:root {
+  --sidebar-width: 248px;
+}
+
+/* ============ 基础 ============ */
+
+/* ---- 全站层级表（UX-FIX-ROUND-20260828 S01；新增浮层前先对表入座） ----
+   内容流 0 ｜ 卡片悬停浮起 10 ｜ 吸底确认条 / 移动端底栏 30 ｜
+   全局下拉面板（SgDropdown 根与 panel）60 —— 只压页内内容、压不过页头 ｜
+   页头 .user-header 90 —— 实底晨纸 + 底部发丝线，唯一允许盖过页内浮层的元素 ｜
+   Element Plus 弹窗遮罩 2000 / 轻提示 3000 沿用现值，全站最高。
+   页内控件不得持有 ≥90 的层级；吸底件一律 ≤30，与页头在矮视口不相遇。 */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  margin: 0;
+}
+
+/* V3 背景系统（V6-UI-UX-SHIGUANG S01 起为纯纸底 + 进场粒子画布）：
+   html 只保留平底画布色做兜底；粒子画布统一由挂载于 App.vue 的 .sg-bg-field
+   固定层承载（路由级单例，不随页面重挂载），编排由 useIntroCeremony 驱动。 */
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  /* 锚点跳转让位吸顶页头（UX-FIX-ROUND S01）：76 = 页头高 68 + 8 余量，落点不藏头 */
+  scroll-padding-top: 76px;
+  font-variant-numeric: tabular-nums;
+  font-synthesis: none;
+  background-color: var(--sg-canvas);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100dvh;
+  background: transparent;
+  color: var(--sg-ink);
+  font-family: var(--sg-font-sans);
+  font-size: var(--sg-fz-base);
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  transition: color var(--sg-motion-base) var(--sg-ease-standard);
+}
+
+/* ============ V6 背景系统（V6-UI-UX-SHIGUANG S01，预览 §01 定稿） ============
+   html 只保留平底画布色做兜底；粒子墨尘由挂载于 App.vue 的 .sg-bg-field 固定画布承载
+   （路由级单例，不随页面重挂载），引擎见 ambient/dustEngine.ts：
+   进场仪式期间呈现（开场漂浮 → 聚形 → 交接退场），其余时间画布清空 = 纯纸底。
+   V3 三口味（流动 mesh / 晨曦极光 / 纯净）与内容带 scrim 随 V6 退役（结论登记 Evidence）；
+   细噪点纸纹颗粒常驻（静态纹理，非动画）。 */
+.sg-bg-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--sg-canvas);
+}
+
+.sg-bg-field::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 260px 260px;
+}
+
+.sg-bg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+/* ============ V6 进场编排（V6-UI-UX-SHIGUANG S01，预览 §01 状态机） ============
+   body 状态类由 useIntroCeremony 驱动：intro-wait（空白进场）/ intro-gather（聚形中）/
+   scattered（散开漂浮）/ reveal-hero（真字交接）/ intro-done（分层浮现）/ intro-reveal
+   （浮现窗口：--sg-irvd 生效期，settle 后移除、回归常规 --rvd 滚动渐入）。
+   真实 DOM 文本始终在 DOM，进场期仅视觉隐藏（粒子层 aria-hidden 纯装饰）。 */
+.ps-block {
+  transition: opacity 0.55s var(--sg-ease);
+}
+
+body.intro-wait .ps-block,
+body.intro-gather .ps-block,
+body.scattered .ps-block,
+body.intro-wait .rv,
+body.intro-gather .rv,
+body.scattered .rv,
+body.intro-wait .rv.in,
+body.intro-gather .rv.in,
+body.scattered .rv.in,
+body.intro-wait .sg-intro-el,
+body.intro-gather .sg-intro-el,
+body.scattered .sg-intro-el {
+  opacity: 0;
+}
+
+/* 聚形交接：hero 五段＋实况＋四格先亮（.55s 淡入） */
+body.reveal-hero .ps-block {
+  opacity: 1;
+}
+
+/* intro-reveal 窗口：区块按同族节奏（--sg-irvd）分层浮现；窗口关闭后回常规滚动渐入 */
+body.intro-reveal .rv {
+  transition-delay: var(--sg-irvd, var(--rvd, 0ms));
+}
+
+/* 页头/页脚/移动端底栏/返回顶部等 chrome 件的进场位（0ms 随页头、页脚 620ms） */
+.user-header,
+.mobile-tabbar,
+.back-to-top {
+  --sg-irvd: 0ms;
+}
+
+.user-footer {
+  --sg-irvd: 620ms;
+}
+
+/* chrome 件：intro-done 起按位浮现 */
+body.intro-done .sg-intro-el {
+  opacity: 1;
+  transition: opacity 0.7s var(--sg-ease) var(--sg-irvd, 0ms);
+}
+
+/* 呼吸引导钮：玻璃胶囊 + 柿橙呼吸圆点，wait/scattered 态显示 */
+.intro-hint {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border-radius: 999px;
+  border: 1px solid var(--sg-border);
+  background: var(--sg-glass-strong);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 40px color-mix(in srgb, var(--sg-ink) 12%, transparent);
+  color: var(--sg-ink);
+  font: 600 14.5px/1 var(--sg-font-sans);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.intro-hint i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sg-primary);
+  animation: introHintDot 1.8s var(--sg-ease) infinite;
+}
+
+body.intro-wait .intro-hint,
+body.scattered .intro-hint {
+  display: inline-flex;
+  animation: introHintBreath 2.8s var(--sg-ease) infinite;
+}
+
+body.intro-gather .intro-hint {
+  display: none;
+}
+
+@keyframes introHintDot {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes introHintBreath {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* reduced-motion 直接成品不播：控制器不注编排类，此处仅兜底隐藏引导钮 */
+  .intro-hint {
+    display: none !important;
+  }
+}
+
+/* 「动效 关」（html.no-motion）同 reduced-motion：引导钮不出现 */
+html.no-motion .intro-hint {
+  display: none !important;
+}
+
+/* ============ V6 详情页返回键（S03，预览 §03/§04 back-row） ============
+   page-stack 栅格子元素默认拉伸：el-button 返回键被拉成通栏热区。
+   back-row 作为栅格子元素承载，链接本体贴左（帖子/小组/活动三详情页共用）。 */
+.back-row {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.back-link {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+  cursor: pointer;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.back-link:hover {
+  color: var(--sg-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+select,
+input[type="checkbox"] {
+  touch-action: manipulation;
+}
+
+button,
+.el-button,
+.clickable,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+.el-button:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+/* 填充式输入/文本域的焦点语言走柿橙 ring（见 Element Plus 细节段），不再叠 outline */
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 3000;
+  transform: translateY(-140%);
+  padding: 10px 14px;
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-ink);
+  color: var(--sg-canvas);
+  font-weight: 700;
+  transition: transform var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.route-view {
+  min-width: 0;
+}
+
+.route-enter-active,
+.route-leave-active {
+  transition: opacity var(--sg-motion-base) var(--sg-ease-standard), transform var(--sg-motion-base) var(--sg-ease-standard);
+}
+
+.route-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.route-leave-to {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+
+/* ============ 拾光排版与通用件（页面迁移时采用） ============ */
+
+/* ---- V4 立体与参差原子类（预览 §02 原式）----
+   禁则一：行内字重混排全站禁用（.art-mix 已弃用，子集只有 400/700，混排读作坏字）。
+   禁则二：background-clip:text 渐变字只准 filter: drop-shadow，禁 text-shadow。 */
+
+/* 立体：渐变填充 + 四层阴影（顶高光 / 近影 / 远影 / 环境影） */
+.art-solid {
+  background: linear-gradient(168deg, var(--sg-art-hi) 0%, var(--sg-primary) 55%, var(--sg-art-lo) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 var(--sg-bevel-hi))
+    drop-shadow(0 2px 1px var(--sg-bevel-near))
+    drop-shadow(0 7px 16px var(--sg-bevel-far))
+    drop-shadow(0 18px 38px var(--sg-bevel-amb));
+}
+
+:root[data-theme='dark'] .art-solid {
+  background: linear-gradient(
+    168deg,
+    color-mix(in srgb, var(--sg-primary) 82%, var(--sg-art-mix-light) 18%) 0%,
+    var(--sg-primary) 46%,
+    color-mix(in srgb, var(--sg-primary) 78%, var(--sg-art-mix-dark) 22%) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* 参差：字号跳跃 / 基线错位 / 微旋转（艺术字与品牌字标/章戳标本专用，不进信息层级） */
+.art-stack {
+  line-height: 1;
+}
+
+.art-stack .l1 {
+  display: block;
+  font-family: var(--sg-font-art);
+  font-weight: 400;
+  font-size: clamp(76px, 14vw, 156px);
+  letter-spacing: 0;
+  transform: rotate(-1.2deg) translateY(2px);
+  transform-origin: left bottom;
+}
+
+.art-stack .l2 {
+  display: block;
+  margin-left: clamp(8px, 3vw, 44px);
+  margin-top: 2px;
+  font-family: var(--sg-font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 5.2vw, 50px);
+  letter-spacing: 0.3em;
+  line-height: 1.5;
+  color: var(--sg-ink-muted);
+}
+
+.art-stack .l3 {
+  display: block;
+  margin-left: clamp(16px, 6vw, 92px);
+  margin-top: 6px;
+  font-family: var(--sg-font-display);
+  font-weight: 400;
+  font-size: clamp(20px, 3.4vw, 34px);
+  letter-spacing: 0.04em;
+  transform: rotate(0.7deg);
+}
+
+.sg-serif {
+  font-family: var(--sg-font-serif);
+}
+
+.sg-mono {
+  font-family: var(--sg-font-mono);
+}
+
+.sg-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.sg-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+
+.sg-kicker::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--sg-border);
+}
+
+.sg-display-xl {
+  font-family: var(--sg-font-serif);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+.sg-display-l {
+  font-family: var(--sg-font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.sg-display-m {
+  font-family: var(--sg-font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.sg-card {
+  background: var(--sg-surface);
+  border: 0;
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-1);
+}
+
+.sg-link {
+  padding-bottom: 1px;
+  color: var(--sg-primary);
+  text-decoration: none;
+  background: linear-gradient(var(--sg-primary), var(--sg-primary)) no-repeat left bottom / 0% 1px;
+  transition: background-size var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-link:hover {
+  background-size: 100% 1px;
+}
+
+/* .sg-link 落原生 <button> 时重置 UA 按钮皮肤：默认边框/底色即行程卡
+   「闸门」竖线杂讯的根因（UX-FIX-ROUND-20260828 S02）。下划线动画仍走 background-image。 */
+button.sg-link {
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sg-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 20px;
+  border: 1px solid var(--sg-border-strong);
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-surface);
+  color: var(--sg-ink);
+  font-size: var(--sg-fz-base);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sg-btn-ghost:hover {
+  border-color: var(--sg-primary);
+  color: var(--sg-primary);
+}
+
+.sg-btn-ghost:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-btn-ghost:disabled {
+  cursor: not-allowed;
+  border-color: var(--sg-border);
+  background: var(--sg-surface-subtle);
+  color: var(--sg-ink-subtle);
+}
+
+/* 新按钮体系：墨底主钮与安静文字钮（描边幽灵为上方 .sg-btn-ghost）。
+   柿橙不再作任何按钮实底；按钮属控件层，圆角走控件档 Token。 */
+.sg-btn-primary,
+.sg-btn-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 17px;
+  border: 0;
+  border-radius: var(--sg-radius-control);
+  font-size: var(--sg-fz-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sg-btn-primary {
+  background: var(--sg-ink);
+  color: var(--sg-canvas);
+}
+
+.sg-btn-primary:hover {
+  background: color-mix(in srgb, var(--sg-ink) 86%, var(--sg-canvas));
+}
+
+.sg-btn-primary:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-btn-primary:disabled {
+  cursor: not-allowed;
+  background: var(--sg-surface-subtle);
+  color: var(--sg-ink-subtle);
+}
+
+.sg-btn-text {
+  padding: 5px 9px;
+  background: none;
+  color: var(--sg-ink-muted);
+}
+
+.sg-btn-text:hover {
+  background: var(--sg-primary-soft);
+  color: var(--sg-primary);
+}
+
+.sg-btn-text:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-btn-sm {
+  padding: 5px 13px;
+  font-size: var(--sg-fz-sm);
+}
+
+/* ============ 搜索行与状态件（用户端统一语言） ============ */
+
+.sg-searchrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* tab 内嵌搜索行：嵌套吃不到 page-stack 栅格间距，用此修饰类补 16px 下缘间距 */
+.sg-searchrow--embedded {
+  margin-bottom: 16px;
+}
+
+.sg-search-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 280px;
+  max-width: 420px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-1);
+  color: var(--sg-ink);
+  font: inherit;
+  cursor: text;
+  transition: box-shadow var(--sg-motion-fast) var(--sg-ease-standard), transform var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-search-pill > svg {
+  flex: 0 0 auto;
+  color: var(--sg-ink-subtle);
+}
+
+.sg-search-pill input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--sg-ink);
+  font: inherit;
+}
+
+.sg-search-pill input::placeholder {
+  color: var(--sg-ink-subtle);
+}
+
+.sg-search-pill:focus-within {
+  box-shadow: var(--sg-shadow-1), 0 0 0 2px var(--sg-focus);
+  transform: translateY(-1px);
+}
+
+.sg-search-pill > button {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--sg-ink-subtle);
+  cursor: pointer;
+}
+
+.sg-search-pill > button:hover {
+  background: var(--sg-surface-subtle);
+  color: var(--sg-danger);
+}
+
+.sg-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sg-surface);
+  box-shadow: 0 0 0 1px var(--sg-border) inset;
+  color: var(--sg-ink-muted);
+  font: inherit;
+  font-size: var(--sg-fz-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--sg-motion-fast) var(--sg-ease-standard), color var(--sg-motion-fast) var(--sg-ease-standard), box-shadow var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-chip:hover,
+.sg-chip:focus-visible {
+  color: var(--sg-primary);
+  box-shadow: 0 0 0 1px var(--sg-primary) inset;
+}
+
+.sg-chip:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-chip.is-on,
+.sg-chip[aria-pressed='true'] {
+  background: var(--sg-primary-soft);
+  box-shadow: 0 0 0 1px var(--sg-primary) inset;
+  color: var(--sg-primary);
+  font-weight: 600;
+}
+
+/* ============ 筛选索引栏（V11 spec §2 + 用户后续定稿：默认收起成一行摘要，点开弹出；
+   选中放大走 transform scale——布局属性零参与，消除字号动画引发的整行重排抖动） ============ */
+.sg-indexrail {
+  padding-top: 12px;
+  border-top: 1px solid var(--sg-border-soft);
+}
+
+/* 收起态：单行筛选摘要条 */
+.sg-indexrail-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--sg-ink-muted);
+  font: inherit;
+  font-size: var(--sg-fz-base);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-indexrail-toggle:hover {
+  color: var(--sg-primary);
+}
+
+.sg-indexrail-toggle:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+  border-radius: var(--sg-radius-control);
+  color: var(--sg-primary);
+}
+
+.sg-indexrail-toggle-label {
+  letter-spacing: 0.24em;
+}
+
+.sg-indexrail-toggle-summary {
+  overflow: hidden;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sg-indexrail-toggle.is-open .sg-indexrail-toggle-summary {
+  color: var(--sg-primary);
+}
+
+.sg-indexrail-toggle .sg-indexrail-acc-caret {
+  margin-left: auto;
+}
+
+.sg-indexrail-toggle.is-open .sg-indexrail-acc-caret {
+  transform: rotate(180deg);
+}
+
+/* 弹出态：轻量下落浮现（仅合成器属性）；收起为瞬时 v-show */
+.sg-indexrail-body {
+  animation: sg-indexrail-open var(--sg-motion-base) var(--sg-ease-standard);
+}
+
+@keyframes sg-indexrail-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 桌面 rail */
+.sg-indexrail-rail {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px 0 6px;
+}
+
+.sg-indexrail-dims {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 0 0 96px;
+  padding-right: 8px;
+  border-right: 1px solid var(--sg-border-soft);
+}
+
+.sg-indexrail-dim {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: var(--sg-radius-control);
+  background: transparent;
+  color: var(--sg-ink-subtle);
+  font: inherit;
+  font-size: var(--sg-fz-base);
+  letter-spacing: 0.24em;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard), background-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-indexrail-dim::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  border-radius: var(--sg-radius-stamp);
+  background: var(--sg-border);
+  transition: background-color var(--sg-motion-base) var(--sg-ease-standard), width var(--sg-motion-base) var(--sg-ease-standard);
+}
+
+.sg-indexrail-dim:hover,
+.sg-indexrail-dim.on {
+  color: var(--sg-primary);
+}
+
+.sg-indexrail-dim.on::before {
+  width: 22px;
+  background: var(--sg-primary);
+}
+
+.sg-indexrail-dim:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-indexrail-panel {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  align-content: center;
+  justify-content: flex-start;
+  column-gap: 40px;
+  row-gap: 2px;
+  min-width: 0;
+  padding: 2px 4px;
+  min-height: 88px;
+}
+
+.sg-indexrail-opt {
+  position: relative;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--sg-ink-muted);
+  font: inherit;
+  font-size: var(--sg-fz-base);
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+  transform-origin: left center;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard), transform var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+.sg-indexrail-opt::after {
+  content: "";
+  position: absolute;
+  right: 1px;
+  bottom: 0;
+  left: 1px;
+  height: 0;
+  border-radius: var(--sg-radius-stamp);
+  background: var(--sg-primary);
+  transition: height var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+.sg-indexrail-opt:hover {
+  color: var(--sg-primary);
+}
+
+.sg-indexrail-opt:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 3px;
+  border-radius: var(--sg-radius-stamp);
+}
+
+/* 选中态：同族字放大走 scale（字族/字重/布局尺寸零变化）+ 赤陶墨线 */
+.sg-indexrail-opt.on {
+  color: var(--sg-ink);
+  transform: translateY(-2px) scale(1.47);
+}
+
+.sg-indexrail-opt.on::after {
+  height: 2px;
+}
+
+
+/* 维度选项区下的扩展槽（如时间自定义日期行） */
+.sg-indexrail-extra {
+  flex: 1 1 100%;
+  margin-top: 8px;
+  padding: 10px 14px;
+  border: 1px dashed var(--sg-border);
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface-subtle);
+}
+
+/* ---- 移动手风琴形态（组件 ≤640px 渲染，与桌面 rail 同一组件单一 DOM） ---- */
+.sg-indexrail-acc {
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface);
+}
+
+.sg-indexrail-acc-dim {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  border-top: 1px solid var(--sg-border-soft);
+  background: transparent;
+  color: var(--sg-ink-muted);
+  font: inherit;
+  font-size: var(--sg-fz-base);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard), background-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-indexrail-acc-dim.is-first {
+  border-top: 0;
+}
+
+.sg-indexrail-acc-dim:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: -2px;
+}
+
+.sg-indexrail-acc-nm {
+  letter-spacing: 0.18em;
+}
+
+.sg-indexrail-acc-val {
+  max-width: 130px;
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sg-indexrail-acc-caret {
+  flex: 0 0 auto;
+  color: var(--sg-ink-subtle);
+  transition: transform var(--sg-motion-base) var(--sg-ease-standard);
+}
+
+.sg-indexrail-acc-dim[aria-expanded='true'] .sg-indexrail-acc-caret {
+  transform: rotate(180deg);
+}
+
+.sg-indexrail-acc-panel {
+  padding: 4px 6px 8px;
+}
+
+.sg-indexrail-acc-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--sg-radius-control);
+  background: transparent;
+  color: var(--sg-ink-muted);
+  font: inherit;
+  font-size: var(--sg-fz-base);
+  text-align: left;
+  cursor: pointer;
+  transform-origin: left center;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard), background-color var(--sg-motion-fast) var(--sg-ease-standard), transform var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+.sg-indexrail-acc-opt::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border: 1px solid var(--sg-border);
+  border-radius: 50%;
+}
+
+.sg-indexrail-acc-opt:hover {
+  background: var(--sg-surface-subtle);
+  color: var(--sg-primary);
+}
+
+.sg-indexrail-acc-opt:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: -2px;
+}
+
+.sg-indexrail-acc-opt.on {
+  color: var(--sg-ink);
+  transform: scale(1.2);
+}
+
+.sg-indexrail-acc-opt.on::before {
+  border-color: var(--sg-primary);
+  background: var(--sg-primary);
+}
+
+.sg-indexrail-acc .sg-indexrail-extra {
+  flex: 0 0 auto;
+}
+
+/* ============ 分区带（类型横线标题：发现社区 / 场馆共用一级结构） ============ */
+
+.sg-secband {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: 26px 0 14px;
+}
+
+.sg-secband-orn {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--sg-primary);
+  border-radius: var(--sg-radius-stamp);
+  transform: rotate(45deg);
+}
+
+.sg-secband h4 {
+  margin: 0;
+  font-family: var(--sg-font-serif);
+  font-size: var(--sg-fz-lg);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sg-secband-cnt {
+  flex: none;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+  white-space: nowrap;
+}
+
+.sg-secband-rule {
+  flex: 1;
+  height: 1px;
+  min-width: 24px;
+  background: var(--sg-border-strong);
+}
+
+.sg-secband-more {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sg-primary);
+  font: inherit;
+  /* 链接形态（发现页活动横条「去活动广场 →」等）与按钮形态共用 */
+  text-decoration: none;
+  font-size: var(--sg-fz-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sg-secband-more:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .sg-section-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sg-state-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-danger-soft);
+  color: color-mix(in srgb, var(--sg-danger) 78%, var(--sg-ink));
+  font-size: var(--sg-fz-sm);
+  line-height: 1.5;
+}
+
+.sg-state-error > button:last-child,
+.sg-state-error > .retry:last-child {
+  margin-left: auto;
+  flex: none;
+}
+
+.sg-state-error button,
+.sg-state-error .retry {
+  border: 0;
+  background: transparent;
+  color: var(--sg-danger);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.sg-details > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.sg-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.sg-details > summary::before {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  content: '';
+  transform: rotate(-45deg);
+  transition: transform var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-details[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.sg-details > summary:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 3px;
+}
+
+.sg-section-label {
+  display: block;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+}
+
+/* 落定卡只提供基础几何与动效归属，业务文案/按钮由流程页注入。 */
+.sg-landing-card {
+  width: min(560px, 100%);
+  padding: 36px 36px 30px;
+  border: 0;
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-2);
+  text-align: center;
+}
+
+.sg-landing-stamp {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--sg-success);
+  border-radius: 50%;
+  color: var(--sg-success);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.sg-landing-stamp::after {
+  position: absolute;
+  inset: -2px;
+  border: 2px solid transparent;
+  border-top-color: var(--sg-success);
+  border-radius: inherit;
+  content: '';
+  transform: rotate(-45deg);
+  animation: sg-landing-stamp-arc var(--sg-motion-max) var(--sg-ease-enter) both;
+}
+
+@keyframes sg-landing-stamp-arc {
+  from { opacity: 0; transform: rotate(-45deg) scale(0.84); }
+  to { opacity: 1; transform: rotate(315deg) scale(1); }
+}
+
+/* ============ 动效包（100-500ms；reduced-motion 下全部退化为即时变化） ============ */
+
+.sg-mask-line {
+  display: block;
+  overflow: hidden;
+}
+
+.sg-mask-line > span {
+  display: inline-block;
+  transform: translateY(115%);
+}
+
+.sg-stagger {
+  --sg-stagger-gap: 40ms;
+}
+
+.sg-stagger--dense {
+  --sg-stagger-gap: 30ms;
+}
+
+.sg-stagger--loose {
+  --sg-stagger-gap: 60ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* sg-rise 一族用 backwards 收尾：终态与自然态相同，forwards 无视觉收益，
+     却会让 transform 永久生效、把 page-stack 子元素变成 z-auto 永久层叠上下文，
+     树序在后的卡片区将整体盖住页头内的浮层下拉（行程/场馆页头实测缺陷）。 */
+  .sg-rise {
+    animation: sg-rise var(--sg-motion-base) var(--sg-ease-enter) backwards;
+  }
+
+  .sg-rise-2,
+  .sg-rise-3,
+  .sg-rise-4 {
+    animation: sg-rise var(--sg-motion-base) var(--sg-ease-enter) backwards;
+  }
+
+  .sg-rise-2 {
+    animation-delay: 60ms;
+  }
+
+  .sg-rise-3 {
+    animation-delay: 120ms;
+  }
+
+  .sg-rise-4 {
+    animation-delay: 180ms;
+  }
+
+  .sg-mask-line > span {
+    animation: sg-mask-reveal var(--sg-motion-slow) var(--sg-ease-enter) both;
+  }
+
+  .sg-mask-line:nth-child(2) > span {
+    animation-delay: 70ms;
+  }
+
+  .sg-stagger > *,
+  .sg-stagger--dense > *,
+  .sg-stagger--loose > * {
+    animation: sg-rise var(--sg-motion-base) var(--sg-ease-enter) backwards;
+  }
+
+  .sg-stagger > *:nth-child(1),
+  .sg-stagger--dense > *:nth-child(1),
+  .sg-stagger--loose > *:nth-child(1) { animation-delay: var(--sg-stagger-gap); }
+  .sg-stagger > *:nth-child(2),
+  .sg-stagger--dense > *:nth-child(2),
+  .sg-stagger--loose > *:nth-child(2) { animation-delay: calc(var(--sg-stagger-gap) * 2); }
+  .sg-stagger > *:nth-child(3),
+  .sg-stagger--dense > *:nth-child(3),
+  .sg-stagger--loose > *:nth-child(3) { animation-delay: calc(var(--sg-stagger-gap) * 3); }
+  .sg-stagger > *:nth-child(4),
+  .sg-stagger--dense > *:nth-child(4),
+  .sg-stagger--loose > *:nth-child(4) { animation-delay: calc(var(--sg-stagger-gap) * 4); }
+  .sg-stagger > *:nth-child(5),
+  .sg-stagger--dense > *:nth-child(5),
+  .sg-stagger--loose > *:nth-child(5) { animation-delay: calc(var(--sg-stagger-gap) * 5); }
+  .sg-stagger > *:nth-child(6),
+  .sg-stagger--dense > *:nth-child(6),
+  .sg-stagger--loose > *:nth-child(6) { animation-delay: calc(var(--sg-stagger-gap) * 6); }
+  .sg-stagger > *:nth-child(n + 7),
+  .sg-stagger--dense > *:nth-child(n + 7),
+  .sg-stagger--loose > *:nth-child(n + 7) { animation-delay: calc(var(--sg-stagger-gap) * 7); }
+
+  .user-main .page-stack > * {
+    animation: sg-rise var(--sg-motion-base) var(--sg-ease-enter) backwards;
+  }
+
+  .sg-lift {
+    transition: transform var(--sg-motion-fast) var(--sg-ease-standard), box-shadow var(--sg-motion-fast) var(--sg-ease-standard);
+  }
+
+  .sg-btn-ghost {
+    transition: border-color var(--sg-motion-fast) var(--sg-ease-standard), color var(--sg-motion-fast) var(--sg-ease-standard);
+  }
+
+  .sg-kicker::after {
+    transform-origin: left center;
+    animation: sg-rule-grow var(--sg-motion-base) var(--sg-ease-enter) both;
+  }
+
+  /* 盖章签名动作：语义章全族（.sg-tag）挂载即落章（V3 起 StatusTag 视觉委托本族） */
+  .sg-tag {
+    animation: sg-stamp-in var(--sg-motion-instant) var(--sg-ease-enter) both;
+  }
+}
+
+.sg-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sg-shadow-2);
+}
+
+@keyframes sg-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes sg-mask-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(115%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sg-rule-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes sg-stamp-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ============ 终版动效语言（R6 §00C 五项；只动 transform/opacity） ============ */
+
+/* ① 渐入：进入视口上浮淡入 500ms；同批元素以 --rvd 交错 90ms；只播一次（配 v-reveal 指令加 .in） */
+.rv {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 500ms var(--sg-ease), transform 500ms var(--sg-ease);
+  transition-delay: var(--rvd, 0ms);
+}
+
+.rv.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ② 收拉：details 展开时内容下滑淡入 280ms，收起瞬时（.sg-fold-body 置于 details 内容容器） */
+@keyframes sg-fold-open {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* ④ 数字跳动：倒计时每秒走字 180ms 淡变（opacity 0.35→1），不翻牌 */
+@keyframes sg-tick {
+  from {
+    opacity: 0.35;
+  }
+}
+
+/* ⑤ 弹层：fade + scale(.96→1)，200ms 开 / 150ms 关（Vue transition 名 sg-pop，就近出现） */
+.sg-pop-enter-active {
+  transition: opacity 200ms var(--sg-ease), transform 200ms var(--sg-ease);
+}
+
+.sg-pop-leave-active {
+  transition: opacity 150ms var(--sg-ease), transform 150ms var(--sg-ease);
+}
+
+.sg-pop-enter-from,
+.sg-pop-leave-to {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sg-fold-body {
+    animation: sg-fold-open 280ms var(--sg-ease);
+  }
+
+  .sg-tick {
+    animation: sg-tick 180ms var(--sg-ease);
+  }
+
+  /* Element Plus 弹窗就近出现：接管 EP 内置动画为统一时长与缩放语言 */
+  .dialog-fade-enter-active {
+    animation: none;
+    transition: opacity 200ms var(--sg-ease);
+  }
+
+  .dialog-fade-enter-from {
+    opacity: 0;
+  }
+
+  .dialog-fade-leave-active {
+    animation: none;
+    transition: opacity 150ms var(--sg-ease);
+  }
+
+  .dialog-fade-leave-to {
+    opacity: 0;
+  }
+
+  .dialog-fade-enter-active .el-overlay-dialog,
+  .dialog-fade-leave-active .el-overlay-dialog {
+    animation: none;
+  }
+
+  .dialog-fade-enter-active .el-dialog {
+    transition: opacity 200ms var(--sg-ease), transform 200ms var(--sg-ease);
+  }
+
+  .dialog-fade-enter-from .el-dialog {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  .dialog-fade-leave-active .el-dialog {
+    transition: opacity 150ms var(--sg-ease), transform 150ms var(--sg-ease);
+  }
+
+  .dialog-fade-leave-to .el-dialog {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  /* 轻提示沿用 EP 方向语义（顶部滑入淡出），时长统一为 200ms 开 / 150ms 关，默认居中位补 0.96 缩放 */
+  .el-message {
+    transition: opacity 200ms var(--sg-ease), transform 200ms var(--sg-ease), top 200ms var(--sg-ease);
+  }
+
+  .el-message-fade-leave-active {
+    transition-duration: 150ms;
+  }
+
+  .el-message-fade-enter-from.is-center,
+  .el-message-fade-leave-to.is-center {
+    transform: translate(-50%, -100%) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 渐入底态透明必须在 reduce 下还原为可见，JS 未挂上也内容先行 */
+  .rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============ 语义章全局族（R6 §00 规则二；与 StatusTag 同视觉语言，供视图内非枚举章使用） ============ */
+
+.sg-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 8px 1px 7px;
+  border: 1px solid;
+  border-radius: var(--sg-radius-stamp);
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+  font-weight: 600;
+  line-height: 1.9;
+  white-space: nowrap;
+}
+
+.sg-tag::before {
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.sg-tag--success {
+  color: var(--sg-success);
+  border-color: color-mix(in srgb, var(--sg-success) 45%, transparent);
+  background: var(--sg-success-soft);
+}
+
+.sg-tag--warning {
+  color: var(--sg-warning);
+  border-color: color-mix(in srgb, var(--sg-warning) 45%, transparent);
+  background: var(--sg-warning-soft);
+}
+
+.sg-tag--danger {
+  color: var(--sg-danger);
+  border-color: color-mix(in srgb, var(--sg-danger) 45%, transparent);
+  background: var(--sg-danger-soft);
+}
+
+.sg-tag--honey {
+  color: var(--sg-honey);
+  border-color: color-mix(in srgb, var(--sg-honey) 45%, transparent);
+  background: var(--sg-honey-soft);
+}
+
+.sg-tag--pine {
+  color: var(--sg-pine);
+  border-color: color-mix(in srgb, var(--sg-pine) 45%, transparent);
+  background: var(--sg-pine-soft);
+}
+
+.sg-tag--mist {
+  color: var(--sg-mist);
+  border-color: color-mix(in srgb, var(--sg-mist) 45%, transparent);
+  background: var(--sg-mist-soft);
+}
+
+.sg-tag--primary {
+  color: var(--sg-primary);
+  border-color: color-mix(in srgb, var(--sg-primary) 45%, transparent);
+  background: var(--sg-primary-soft);
+}
+
+.sg-tag--neutral {
+  color: var(--sg-ink-muted);
+  border-color: var(--sg-border-strong);
+  background: var(--sg-surface-subtle);
+}
+
+/* 未知枚举兜底章：实底章（V3 去虚线档，灯下不再发虚） */
+.sg-tag--unknown {
+  color: var(--sg-ink-subtle);
+  border-color: var(--sg-border-strong);
+  background: var(--sg-surface-subtle);
+}
+
+/* 纯文字标签（规则二的「纯文字」形态）：无章形，仅弱化字重的行内标注 */
+.sg-tag-text {
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+  font-weight: 500;
+}
+
+/* ============ V3 Apple 骨全局原子件（V3-UI-UX-SHIGUANG S01，预览 §06 杠杆 L1/L5） ============ */
+
+/* 弹簧按压：hover/展开/指示器一律 --sg-ease-spring；按压统一缩放 0.97（reduce 全静态） */
+.sg-press {
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+/* 玻璃材质层：半透明 + blur + 顶部 1px 内高光 + 大弥散阴影 + 第四档圆角。
+   性能预算：同屏玻璃面 ≤3~4，长列表/数据表一律实底白卡（plan 执行规则）。 */
+.sg-glass {
+  background: var(--sg-glass);
+  -webkit-backdrop-filter: blur(var(--sg-glass-blur)) saturate(1.25);
+  backdrop-filter: blur(var(--sg-glass-blur)) saturate(1.25);
+  border-radius: var(--sg-radius-glass);
+  box-shadow: var(--sg-shadow-float), inset 0 1px 0 var(--sg-sheen);
+}
+
+/* inset 分组卡：整组一卡、发丝线分隔、整行 hover 染 7% 柿橙（macOS 系统设置语言） */
+.sg-group-card {
+  overflow: hidden;
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-2), inset 0 1px 0 var(--sg-sheen);
+}
+
+.sg-group-cap {
+  padding: 9px 16px 5px;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.sg-group-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  color: var(--sg-ink);
+  font-size: var(--sg-fz-sm);
+  font-weight: 600;
+  transition: background-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-group-row + .sg-group-row {
+  box-shadow: 0 -1px 0 var(--sg-border-soft);
+}
+
+.sg-group-row:hover {
+  background: color-mix(in srgb, var(--sg-primary) 7%, transparent);
+}
+
+/* ---- V4 三级表面原子类（预览 §05）：无底线分区（默认）/ 极浅 tint 可点 / 玻璃悬浮 ---- */
+
+/* 表面二档：可点卡片/区块用 3.5% 极浅 tint，无描边，hover 加深到 6% 表达可交互 */
+.sg-surface-tint {
+  border-radius: var(--sg-radius-card);
+  background: color-mix(in srgb, var(--sg-ink) 3.5%, transparent);
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring), background-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-surface-tint:hover {
+  background: color-mix(in srgb, var(--sg-ink) 6%, transparent);
+}
+
+/* 行式列表：无卡底 + 发丝线 + 错落缩进（偶数行额外左缩进，打破整齐队列） */
+.sg-rows {
+  display: grid;
+}
+
+.sg-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: clamp(12px, 2vw, 20px);
+  align-items: center;
+  padding: 15px 2px;
+  border-bottom: 1px solid var(--sg-border-soft);
+  color: inherit;
+  transition: background-color var(--sg-motion-fast) var(--sg-ease-standard), padding-left var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+.sg-row:last-child {
+  border-bottom: 0;
+}
+
+.sg-row:hover {
+  background: color-mix(in srgb, var(--sg-ink) 3%, transparent);
+  padding-left: 10px;
+}
+
+.sg-row:nth-child(even) {
+  padding-left: 14px;
+}
+
+.sg-row:nth-child(even):hover {
+  padding-left: 22px;
+}
+
+/* KPI 一大两小（打破三等分）：主指标占 1.6fr，主色数字，次指标各 1fr */
+.kpi-uneven {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: clamp(10px, 1.6vw, 18px);
+}
+
+.kpi-uneven > * {
+  padding: 15px 17px;
+  border-radius: var(--sg-radius-card);
+  background: color-mix(in srgb, var(--sg-ink) 3%, transparent);
+}
+
+.kpi-uneven > *:first-child {
+  background: color-mix(in srgb, var(--sg-primary) 7%, transparent);
+}
+
+.kpi-uneven .lb {
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  letter-spacing: 0.1em;
+}
+
+.kpi-uneven .vl {
+  margin-top: 5px;
+  font-family: var(--sg-font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-size: clamp(20px, 2.6vw, 25px);
+}
+
+.kpi-uneven > *:first-child .vl {
+  font-size: clamp(26px, 3.6vw, 34px);
+  color: var(--sg-primary);
+}
+
+.kpi-uneven .sub {
+  margin-top: 4px;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+}
+
+@media (max-width: 640px) {
+  .kpi-uneven {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 安静提示条：合并社区/活动重复警告条（warning 档供提醒语义） */
+.sg-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface-subtle);
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+  line-height: 1.6;
+}
+
+.sg-note--warning {
+  background: var(--sg-warning-soft);
+  color: color-mix(in srgb, var(--sg-warning) 80%, var(--sg-ink));
+}
+
+/* 分段控件：滑块随选中项位移，弹簧曲线（S03 反馈页等接入） */
+.sg-seg {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sg-ink) 6%, transparent);
+}
+
+.sg-seg-item {
+  position: relative;
+  z-index: 1;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--sg-ink-muted);
+  font: inherit;
+  font-size: var(--sg-fz-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-seg-item.is-on {
+  color: var(--sg-ink);
+}
+
+.sg-seg-item:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.sg-seg-ind {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  border-radius: 999px;
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-1);
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+/* 胶囊按钮：墨底主操作 / ghost 次操作（auth 五页与空态主按钮槽统一语言） */
+.sg-btn-capsule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sg-ink);
+  color: var(--sg-canvas);
+  font-size: var(--sg-fz-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring), background-color var(--sg-motion-fast) var(--sg-ease-standard), color var(--sg-motion-fast) var(--sg-ease-standard), border-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-btn-capsule:hover {
+  background: color-mix(in srgb, var(--sg-ink) 86%, var(--sg-canvas));
+}
+
+.sg-btn-capsule--ghost {
+  border: 1px solid var(--sg-border-strong);
+  background: transparent;
+  color: var(--sg-ink);
+}
+
+.sg-btn-capsule--ghost:hover {
+  border-color: var(--sg-primary);
+  background: transparent;
+  color: var(--sg-primary);
+}
+
+.sg-btn-capsule:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+/* 可选块：时段格/座位钮统一可选块语言（S02 TimeSlotGrid 并入，交互合同零变更） */
+.sg-pick-block {
+  padding: 9px 6px;
+  border: 0;
+  border-radius: var(--sg-radius-control);
+  text-align: center;
+  background: color-mix(in srgb, var(--sg-ink) 6%, transparent);
+  color: var(--sg-ink);
+  font: inherit;
+  font-size: var(--sg-fz-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring), box-shadow var(--sg-motion-fast) var(--sg-ease-standard), background-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.sg-pick-block small {
+  display: block;
+  color: var(--sg-ink-subtle);
+  font-weight: 400;
+}
+
+.sg-pick-block.is-on {
+  background: var(--sg-primary-soft);
+  box-shadow: 0 0 0 2px var(--sg-ring);
+}
+
+.sg-pick-block:disabled {
+  cursor: not-allowed;
+  color: var(--sg-ink-subtle);
+}
+
+/* 票据打孔边：mask 挖孔透出真实背景，杜绝实色补底穿帮（红线整改件） */
+.sg-ticket-edge {
+  /* 孔位可覆写：默认横排票据左右缘 62% 高（F2），竖撕票据可改上下缘（核销凭证竖撕） */
+  --sg-ticket-hole: 8px;
+  --sg-ticket-hole-a: 0 62%;
+  --sg-ticket-hole-b: 100% 62%;
+  -webkit-mask-image: radial-gradient(circle var(--sg-ticket-hole) at var(--sg-ticket-hole-a), transparent 96%, var(--sg-mask-ink)),
+    radial-gradient(circle var(--sg-ticket-hole) at var(--sg-ticket-hole-b), transparent 96%, var(--sg-mask-ink));
+  -webkit-mask-composite: source-in;
+  mask-image: radial-gradient(circle var(--sg-ticket-hole) at var(--sg-ticket-hole-a), transparent 96%, var(--sg-mask-ink)),
+    radial-gradient(circle var(--sg-ticket-hole) at var(--sg-ticket-hole-b), transparent 96%, var(--sg-mask-ink));
+  mask-composite: intersect;
+}
+
+/* App Store 式横向轨道：右缘露下一张、隐藏滚动条、卡距 14px、snap 对齐（预览 §04.2） */
+.sg-rail {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.sg-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.sg-rail > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+/* 对焦进场（预览 §03 3.1）：opacity 0 + blur(14px) + scale(1.035) → 清晰，620ms；
+   backwards 收尾不残留 transform/filter 层叠上下文（同 sg-rise 纪律）。reduce 全静态。 */
+@keyframes sg-focus-in {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+    filter: blur(14px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sg-focus-in {
+    animation: sg-focus-in 620ms var(--sg-ease) backwards;
+  }
+
+  .sg-press:active,
+  .sg-btn-capsule:active,
+  .sg-pick-block:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ============ 既有页面结构类（Token 化维持，S02-S04 逐页迁移） ============ */
+
+.page-shell {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.admin-page,
+.page-stack {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+.admin-page > *,
+.page-stack > *,
+.filter-bar > *,
+.desktop-table {
+  min-width: 0;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.page-head-main {
+  min-width: 0;
+}
+
+.page-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--sg-primary);
+  font-size: var(--sg-fz-sm);
+  font-weight: 700;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+.section-desc {
+  margin: 8px 0 0;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-base);
+  line-height: 1.6;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 14px;
+  background: var(--sg-surface);
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-1);
+}
+
+/* 用户端卡片语言：V4 框材质（预览 §05）——.data-panel 全站去描边去白底，
+   分区靠发丝线与留白；需要底的可点区块用三级表面原子类（.sg-surface-tint），
+   玻璃只留真正悬浮物（同屏 ≤3，空态零玻璃）。管理端 118 处自动跟随换材质。
+   圆角三档已全局收敛（卡 12 / 控件 8 / 章 2），用户端不再单独覆写卡面档。 */
+.user-layout .data-panel {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.user-layout .email-summary {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* 玻璃配额（预览 §05 三级表面）：玻璃只留给真正悬浮物（顶栏/浮层/抽屉/吸底栏），
+   同屏 ≤3 层；空态不再默认挂玻璃（EmptyState 已降级，/community 同屏 7 层元凶清除）。
+   .data-panel.sg-glass 接管规则是 V3 玻璃白名单的绕过通道，必须继续压过本默认规则。 */
+.data-panel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 18px;
+  box-shadow: none;
+}
+
+/* 玻璃工具类必须压过结构卡类：.data-panel 等既有结构类定义在本文件后段，
+   与 .sg-glass 同为 (0,1,0) 特异性但源序在后，会把半透明底、第四档圆角和大弥散阴影
+   一并盖回实底白卡——管理端 KPI / 待办 / 空态卡的玻璃白名单因此静默失效
+   （S05 走查实测：KPI 卡计算样式为 rgb(255,255,255) + 12px + --sg-shadow-1）。 */
+.data-panel.sg-glass {
+  background: var(--sg-glass);
+  border-radius: var(--sg-radius-glass);
+  box-shadow: var(--sg-shadow-float), inset 0 1px 0 var(--sg-sheen);
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.panel-title h2,
+.data-panel h2 {
+  margin: 0;
+  font-family: var(--sg-font-serif);
+  font-size: var(--sg-fz-lg);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.muted-text {
+  color: var(--sg-ink-muted);
+}
+
+.desktop-table {
+  overflow-x: auto;
+}
+
+.table-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.kpi-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 118px;
+}
+
+.kpi-card::after {
+  display: none;
+}
+
+.kpi-card span {
+  display: block;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+  font-weight: 700;
+}
+
+.kpi-card strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--sg-ink);
+  font-family: var(--sg-font-serif);
+  font-size: 30px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+/* 上下文条 KPI 数字行：一行衬线等宽大数字收进单卡，无顶边条与盒中盒。
+   V5（预览 §03）：标签收紧为直接子选择器、数字行改 inline-flex baseline ——
+   SgCountNumber 根元素已由 strong 改 span（消除嵌套 strong 命中 .kpi-item strong
+   的结构怪癖：单位换行、行数不一致），单位 small 与数字同行 nowrap，
+   标签/单位字号升档 13 → 13.5px，全项统一「标签行 + 数字行」两行制。 */
+.kpi-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  padding: 16px 20px;
+}
+
+.kpi-strip .kpi-item {
+  min-width: 96px;
+}
+
+.kpi-strip .kpi-item > span {
+  display: block;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-kpi);
+  font-weight: 500;
+}
+
+.kpi-strip .kpi-item > strong {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-top: 6px;
+  color: var(--sg-ink);
+  font-family: var(--sg-font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.kpi-strip .kpi-item > strong small {
+  color: var(--sg-ink-subtle);
+  font-family: var(--sg-font-sans);
+  font-size: var(--sg-fz-kpi);
+  font-weight: 400;
+}
+
+/* 直挂 kpi-item 的 small 是说明性注脚（观测样本口径等长句），独占一行不与数字同行 */
+.kpi-strip .kpi-item > small {
+  display: block;
+  margin-top: 2px;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+  font-weight: 400;
+}
+
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.status-region {
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius-card);
+  padding: 12px;
+  background: var(--sg-surface);
+}
+
+/* ============ Element Plus 细节 ============ */
+
+.el-button {
+  font-weight: 600;
+  letter-spacing: 0;
+  transition: border-color var(--sg-motion-fast) var(--sg-ease-standard), background-color var(--sg-motion-fast) var(--sg-ease-standard), color var(--sg-motion-fast) var(--sg-ease-standard), box-shadow var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.el-button:hover {
+  box-shadow: var(--sg-shadow-1);
+}
+
+.el-button.is-text:hover {
+  box-shadow: none;
+}
+
+/* danger 全局描边化：非 plain/text/link 的 danger 按钮收敛为红描边 ghost；
+   plain danger 保持 EP 软底描边形态。实心底按钮统一为下方墨色主操作。 */
+.el-button--danger:not(.is-plain):not(.is-text):not(.is-link):not(.is-disabled) {
+  --el-button-text-color: var(--sg-danger);
+  --el-button-bg-color: var(--sg-surface);
+  --el-button-border-color: color-mix(in srgb, var(--sg-danger) 55%, transparent);
+  --el-button-hover-text-color: var(--sg-danger);
+  --el-button-hover-bg-color: var(--sg-danger-soft);
+  --el-button-hover-border-color: var(--sg-danger);
+  --el-button-active-text-color: var(--sg-danger);
+  --el-button-active-bg-color: var(--sg-danger-soft);
+  --el-button-active-border-color: var(--sg-danger);
+}
+
+/* 主操作全局换装：type=primary 实底由柿橙统一切换为墨底纸字（柿橙不再作任何按钮实底），
+   与 .sg-btn-primary 同语言、hover 为令牌混合色；plain / text / link 变体非实底，
+   维持既有形态作链接类强调（组件层统一切换，不逐页手改）。 */
+.el-button--primary:not(.is-plain):not(.is-text):not(.is-link) {
+  --el-button-text-color: var(--sg-canvas);
+  --el-button-bg-color: var(--sg-ink);
+  --el-button-border-color: var(--sg-ink);
+  --el-button-hover-text-color: var(--sg-canvas);
+  --el-button-hover-bg-color: color-mix(in srgb, var(--sg-ink) 86%, var(--sg-canvas));
+  --el-button-hover-border-color: color-mix(in srgb, var(--sg-ink) 86%, var(--sg-canvas));
+  --el-button-active-text-color: var(--sg-canvas);
+  --el-button-active-bg-color: color-mix(in srgb, var(--sg-ink) 78%, var(--sg-canvas));
+  --el-button-active-border-color: color-mix(in srgb, var(--sg-ink) 78%, var(--sg-canvas));
+  --el-button-disabled-text-color: var(--sg-ink-subtle);
+  --el-button-disabled-bg-color: var(--sg-surface-subtle);
+  --el-button-disabled-border-color: var(--sg-surface-subtle);
+}
+
+/* V3 填充式表单（S01 全局覆写，预览 §01/L1）：无描边、6% 墨底、hover 加深、
+   聚焦转玻璃亮底 + 2px 柿橙 ring；一处改全站表单跟随。 */
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  box-shadow: none;
+  background-color: color-mix(in srgb, var(--sg-ink) 6%, transparent);
+  transition: background-color var(--sg-motion-fast) var(--sg-ease-standard), box-shadow var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.el-input__wrapper:hover,
+.el-select__wrapper:hover {
+  box-shadow: none;
+  background-color: color-mix(in srgb, var(--sg-ink) 9%, transparent);
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  outline: none;
+  background-color: var(--sg-glass-strong);
+  box-shadow: 0 0 0 2px var(--sg-ring);
+}
+
+.el-table {
+  --el-table-header-bg-color: var(--sg-surface-subtle);
+  --el-table-header-text-color: var(--sg-ink-muted);
+  /* V3：行 hover 由灰底换 7% 柿橙浅染（预览 L1） */
+  --el-table-row-hover-bg-color: color-mix(in srgb, var(--sg-primary) 7%, transparent);
+  --el-table-border-color: var(--sg-border);
+  --el-table-tr-bg-color: var(--sg-surface);
+  --el-table-bg-color: var(--sg-surface);
+  border-radius: var(--sg-radius-card);
+}
+
+.el-table th.el-table__cell {
+  font-weight: 700;
+}
+
+.el-pagination {
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.el-dialog {
+  max-width: calc(100vw - 24px);
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-overlay);
+}
+
+/* Element Plus 浮层只改外观，不改组件结构与交互合同。 */
+.el-message {
+  border: 0;
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-2);
+  font-weight: 500;
+}
+
+.el-message-box {
+  border: 1px solid var(--sg-border-soft);
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-overlay);
+  background: var(--sg-surface);
+}
+
+.el-select-dropdown,
+.el-picker-panel {
+  overflow: hidden;
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-2);
+  background: var(--sg-surface);
+}
+
+.el-select-dropdown__item:hover,
+.el-select-dropdown__item.hover,
+.el-picker-panel__content .el-date-table td.available:hover,
+.el-picker-panel__content .el-date-table td.current:not(.disabled) span:hover {
+  background: var(--sg-surface-subtle);
+}
+
+.el-dropdown-menu {
+  overflow: hidden;
+  border: 1px solid var(--sg-border-soft);
+  border-radius: var(--sg-radius-card);
+  box-shadow: var(--sg-shadow-overlay);
+  background: var(--sg-surface);
+}
+
+.el-dropdown-menu__item {
+  border-radius: var(--sg-radius-control);
+}
+
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background: var(--sg-surface-subtle);
+  color: var(--sg-primary);
+}
+
+.el-dropdown-menu__group-label {
+  padding: 10px 12px 4px;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+
+.field-label,
+.filter-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-xs);
+  font-weight: 700;
+}
+
+.inline-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-surface-subtle);
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+  line-height: 1.5;
+}
+
+.inline-feedback.is-error {
+  border-color: color-mix(in srgb, var(--sg-danger) 45%, transparent);
+  background: var(--sg-danger-soft);
+  color: color-mix(in srgb, var(--sg-danger) 80%, var(--sg-ink));
+}
+
+/* R-11 全站用户侧弹窗范式：字段分组（小节标 + 同组并排）、必填星标、
+   静默说明行与 footer 右对齐「ghost 取消 + 墨底动词主操作」。 */
+.sg-dialog-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.sg-fset {
+  display: grid;
+  gap: 10px;
+}
+
+.sg-fset + .sg-fset {
+  margin-top: 16px;
+}
+
+.sg-fset-cap {
+  margin: 0;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.sg-fgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .sg-fgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sg-field {
+  display: grid;
+  gap: 6px;
+}
+
+.field-req {
+  color: var(--sg-danger);
+  font-style: normal;
+}
+
+.sg-dialog-note {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface-subtle);
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+  line-height: 1.6;
+}
+
+.skeleton-block,
+.skeleton-line {
+  overflow: hidden;
+  background: var(--sg-skeleton);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: var(--sg-radius-control);
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.54;
+  }
+}
+
+.el-tabs__header {
+  margin-bottom: 14px;
+}
+
+/* ============ 动效退化 ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .sg-mask-line > span {
+    transform: none;
+  }
+
+  .sg-lift:hover {
+    transform: none;
+    box-shadow: var(--sg-shadow-1);
+  }
+}
+
+/* ============ 响应式 ============ */
+
+@media (max-width: 640px) {
+  :root {
+    /* 移动端页头收窄到 60px，与两布局 min-height 同步 */
+    --user-header-h: 60px;
+    --admin-header-h: 60px;
+  }
+
+  .page-shell {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .page-head,
+  .toolbar {
+    display: grid;
+  }
+
+  .filter-bar {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .sg-searchrow {
+    align-items: stretch;
+  }
+
+  .sg-search-pill {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .desktop-table {
+    overflow-x: auto;
+  }
+
+  .kpi-grid,
+  .content-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .el-pagination {
+    justify-content: flex-start;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions .el-button {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .el-button:not(.is-circle):not(.el-button--small),
+  .sg-btn-primary,
+  .sg-btn-text,
+  .sg-btn-ghost,
+  .el-input__wrapper,
+  .el-select__wrapper {
+    min-height: 44px;
+  }
+
+  .el-dialog {
+    width: calc(100% - 20px) !important;
+    margin-top: max(10px, env(safe-area-inset-top));
+  }
+
+  .sg-display-xl {
+    font-size: 32px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1200px) {
+  .filter-bar {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+}
+
+/* 时段格（日历库存/场地时段通用）：无描边+状态软底（预览 §08 日历处方；状态色底由页面注入） */
+.sg-slot-cell {
+  border: 0;
+  border-radius: var(--sg-radius-control);
+  background: color-mix(in srgb, var(--sg-ink) 4%, transparent);
+}
+
+/* 管理端筛选「常用+更多」两级 details（AdminFilterBar 与页内 el-form 共用） */
+.admin-filter-more {
+  grid-column: 1 / -1;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+}
+
+.admin-filter-more > summary {
+  width: fit-content;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.admin-filter-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-filter-more > summary::after {
+  content: ' ▾';
+  display: inline-block;
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring);
+}
+
+.admin-filter-more[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+.admin-filter-more > summary:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.admin-filter-more-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: end;
+  padding-top: 10px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .admin-filter-more[open] .admin-filter-more-body {
+    animation: sg-rise var(--sg-motion-base) var(--sg-ease-enter) both;
+  }
+}

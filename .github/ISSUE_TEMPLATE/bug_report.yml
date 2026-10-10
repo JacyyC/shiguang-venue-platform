@@ -1,0 +1,28 @@
+name: 缺陷报告
+description: 提供可复现的问题
+title: "[Bug] "
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: 版本与环境
+      description: 项目版本、系统、Java/Node/Docker 版本和启动方式。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 最小复现步骤
+      description: 使用合成数据。不要提交 token、口令、完整个人信息或真实支付回调。
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 预期结果与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏日志或截图

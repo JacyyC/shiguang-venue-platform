@@ -1,0 +1,26 @@
+[
+  {
+    "case": "C1",
+    "url": "/engineering/C1.json",
+    "run": "sgrel-s06-final",
+    "head": "fe16256dd1e4c269f55ea6677bcc51b52cfc1542",
+    "sha256": "b40daa101a51aa7623e07940baed8fb2e956b31a8b0e7f517942916479737d6c",
+    "source": "engineering/reports/C1.json"
+  },
+  {
+    "case": "C2",
+    "url": "/engineering/C2.json",
+    "run": "sgrel-s06-final",
+    "head": "fe16256dd1e4c269f55ea6677bcc51b52cfc1542",
+    "sha256": "4a94fc17d83620ef407ba4637c8c3f470e616c806fd5ff88b4415469fa1e497f",
+    "source": "engineering/reports/C2.json"
+  },
+  {
+    "case": "C3",
+    "url": "/engineering/C3.json",
+    "run": "sgrel-s06-final",
+    "head": "fe16256dd1e4c269f55ea6677bcc51b52cfc1542",
+    "sha256": "168be2e3cb548280cfcffae1677f612b5ef62cece065efe98f94a110b095db7d",
+    "source": "engineering/reports/C3.json"
+  }
+]

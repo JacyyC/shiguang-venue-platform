@@ -1,0 +1,9 @@
+package com.example.venue.siteops.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.venue.siteops.entity.AssetInspectionRecord;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface AssetInspectionRecordMapper extends BaseMapper<AssetInspectionRecord> {
+}

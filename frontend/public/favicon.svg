@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 226 96" role="img" aria-label="拾光">
+  <!-- 拾光字标取自仓内品牌符号表（ShiguangSymbols.vue 的 #sgv-brand-sign），仅做静态取色，不重绘品牌 -->
+  <g fill="#263a33" stroke="none"><path d="M13 3h10v20h9v9h-9v9l9-4v10l-9 4v22c0 6-3 9-9 9H5L2 72h9c2 0 2-1 2-2V55L1 60V49l12-5V32H1v-9h12Z" /><path d="M58 2h10c5 12 13 21 25 29l-5 9c-11-7-20-16-26-27-5 10-13 20-25 28l-6-8C45 24 53 14 58 2ZM44 34h35v9H44Z" /><path fill-rule="evenodd" d="M40 50h43v31H40Zm10 9v13h23V59Z" /><path d="M139 2h10v32h31v10h-22v24c0 3 1 4 4 4h8c3 0 4-3 4-13l10 4c-1 13-4 19-11 19h-16c-6 0-9-3-9-10V44h-13c-1 18-11 31-31 39l-6-10c17-5 25-15 26-29h-23V34h38ZM109 9l9-5 13 20-9 6ZM166 4l10 5-13 21-8-6Z" /></g>
+  <path fill="#af3526" stroke="none" d="M199 68h15v15h-15Z" />
+</svg>

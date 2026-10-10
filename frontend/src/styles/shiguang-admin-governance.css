@@ -1,0 +1,334 @@
+/* 拾光后台 G 组平台治理面样式（SHIGUANG-BATCH-04-REFACTOR-20260914 S07）。
+   由冻结参考 reference/preview/g/g.css 与 shared/base.css 机械迁移到 .sga-gov 作用域：
+   数值 1:1，不重排、不改写；token 与字体挂作用域根（明暗两套挂 html[data-theme]），作用域内自含定义；
+   g-* 基元与同族其它预览页（广告/投放/分析）共处同一张 g.css，故一并迁入但本面不引用；
+   预览壳 .shell-*、.page、.user-preview 与审阅工具 .review-lab、版本徽标 .g-version 不迁入。
+   生成脚本：verification/s07/gen-gov-css.py（--check 可复核未被手工改过）。 */
+
+.sga-gov { font-family:"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;font-synthesis:none;--canvas:#fafbf9;--surface:#fff;--ink:#263a33;--muted:#5b6962;--line:#d5dfd8;--soft:#edf2ed;--band:#e9efea;--accent:#af3526;--action:#b73527;--action-hover:#922a20;--on-action:#fff;--success:#34654c;--warning:#855117;--display:"Hiragino Sans GB","PingFang SC","Microsoft YaHei",sans-serif;--mono:"SFMono-Regular",Consolas,monospace;--ease:cubic-bezier(.22,.75,.25,1);--motion-feedback:180ms;color-scheme:light;background:var(--canvas);color:var(--ink) }
+html[data-theme='dark'] .sga-gov { --canvas:#202925;--surface:#28352f;--ink:#eff4ed;--muted:#b8c6bd;--line:#45574c;--soft:#2e3d34;--band:#29362f;--accent:#ffa38c;--action:#b73527;--action-hover:#922a20;--success:#b6d7b7;--warning:#e5be87;color-scheme:dark }
+.sga-gov * { box-sizing:border-box }
+.sga-gov { margin:0;background:var(--canvas);color:var(--ink);font-size:14px;line-height:1.65 }
+.sga-gov a { color:inherit;text-underline-offset:4px }
+.sga-gov button, .sga-gov input, .sga-gov textarea, .sga-gov select { font:inherit;color:inherit }
+.sga-gov button, .sga-gov a, .sga-gov input, .sga-gov select, .sga-gov textarea { -webkit-tap-highlight-color:transparent }
+.sga-gov button { cursor:pointer }
+.sga-gov button:disabled { cursor:not-allowed;opacity:.52 }
+.sga-gov button:focus-visible, .sga-gov a:focus-visible, .sga-gov input:focus-visible, .sga-gov textarea:focus-visible, .sga-gov select:focus-visible, .sga-gov summary:focus-visible, .sga-gov [tabindex]:focus-visible { outline:2px solid var(--accent);outline-offset:4px }
+.sga-gov button, .sga-gov a { touch-action:manipulation }
+.sga-gov input, .sga-gov select, .sga-gov textarea { max-width:100%;border:1px solid var(--line);border-radius:5px;background:var(--surface);padding:10px 12px;min-height:44px }
+.sga-gov input[type=checkbox], .sga-gov input[type=radio] { min-height:20px;width:20px;height:20px;accent-color:var(--accent) }
+.sga-gov textarea { width:100%;resize:vertical }
+.sga-gov h1, .sga-gov h2, .sga-gov h3 { font-family:var(--display);line-height:1.4;text-wrap:balance }
+.sga-gov h1 { font-size:30px;letter-spacing:0;margin:0 0 9px;font-weight:650 }
+.sga-gov h2 { font-size:20px;margin:0 0 16px }
+.sga-gov h3 { font-size:16px;margin:0 0 10px }
+.sga-gov p { margin:0 0 12px }
+.sga-gov svg { vertical-align:middle }
+.sga-gov .muted { color:var(--muted) }
+.sga-gov .eyebrow { font-size:13px;color:var(--muted);margin-bottom:8px }
+.sga-gov .row { display:flex;align-items:center;gap:12px;flex-wrap:wrap }
+.sga-gov .stack { display:grid;gap:16px }
+.sga-gov .btn { display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:44px;padding:9px 16px;border:1px solid var(--line);border-radius:5px;background:transparent;text-decoration:none;font-weight:550;line-height:1.5;transition:background var(--motion-feedback),color var(--motion-feedback) }
+.sga-gov .btn:hover:not(:disabled) { background:var(--soft) }
+.sga-gov .btn.primary { background:var(--ink);color:var(--canvas);border-color:var(--ink) }
+.sga-gov .btn.primary:hover:not(:disabled) { background:var(--accent);border-color:var(--accent);color:var(--canvas) }
+.sga-gov .btn.danger { color:var(--accent) }
+.sga-gov .badge { display:inline-flex;align-items:center;min-height:26px;border:1px solid var(--line);border-radius:4px;padding:2px 8px;font-size:12px;line-height:1.6;white-space:normal }
+.sga-gov .badge.success { color:var(--success) }
+.sga-gov .badge.warn, .sga-gov .badge.warning { color:var(--warning) }
+.sga-gov .badge.danger, .sga-gov .badge.error { color:var(--accent) }
+.sga-gov .tabs { display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--line);margin-bottom:24px }
+.sga-gov .tabs button, .sga-gov .tabs a { background:transparent;border:0;border-bottom:2px solid transparent;min-height:46px;padding:10px 14px;text-decoration:none;color:var(--muted) }
+.sga-gov .tabs .active, .sga-gov .tabs [aria-selected=true], .sga-gov .tabs [aria-current=page] { color:var(--ink);border-bottom-color:var(--accent);font-weight:650 }
+.sga-gov .field { display:grid;gap:7px;margin-bottom:16px }
+.sga-gov .field>span, .sga-gov .field>label { font-weight:550 }
+.sga-gov .notice { background:var(--soft);border-left:2px solid var(--accent);padding:14px 18px;margin-bottom:20px }
+.sga-gov .empty { text-align:center;padding:56px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line) }
+.sga-gov .empty p { color:var(--muted) }
+.sga-gov .table-wrap { overflow:auto;max-width:100% }
+.sga-gov table { width:100%;border-collapse:collapse;text-align:left }
+.sga-gov th { font-weight:550;color:var(--muted);font-size:13px }
+.sga-gov th, .sga-gov td { padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top }
+.sga-gov table button { white-space:nowrap }
+.sga-gov small { font-size:12px }
+.sga-gov hr { border:0;border-top:1px solid var(--line);margin:24px 0 }
+.sga-gov [hidden] { display:none!important }
+.sga-gov summary { cursor:pointer;min-height:44px;padding:10px 0 }
+.sga-gov .sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap }
+.sga-gov .brand-stop { fill:var(--accent) }
+.sga-gov dialog { color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:min(660px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow:auto }
+.sga-gov dialog::backdrop { background:#101d18a6 }
+.sga-gov .g-head { display:flex;justify-content:space-between;gap:24px;margin:22px 0 36px }
+.sga-gov .g-head p { max-width:740px;color:var(--muted) }
+.sga-gov .g-kicker { color:var(--accent);font-size:13px;margin-bottom:10px }
+.sga-gov .g-tabs { display:flex;gap:24px;border-bottom:1px solid var(--line);margin:0 0 30px;flex-wrap:wrap }
+.sga-gov .g-tabs button { border:0;border-bottom:2px solid transparent;background:none;padding:12px 0;min-height:46px;color:var(--muted) }
+.sga-gov .g-tabs button[aria-pressed=true] { border-bottom-color:var(--accent);color:var(--ink);font-weight:650 }
+.sga-gov .g-toolbar { display:flex;justify-content:space-between;gap:24px;align-items:end;margin:24px 0 }
+.sga-gov .g-toolbar p { color:var(--muted);margin:6px 0 0 }
+.sga-gov .g-tools { display:flex;gap:12px;align-items:end;flex-wrap:wrap }
+.sga-gov .g-tools .field { margin:0 }
+.sga-gov .g-tools label { font-size:13px }
+.sga-gov .g-state { border:1px solid var(--line);padding:3px 9px;border-radius:4px;font-size:12px;display:inline-block;white-space:normal }
+.sga-gov .g-state[data-state=HIDDEN], .sga-gov .g-state[data-state=REJECTED], .sga-gov .g-state[data-state=SUSPENDED] { color:var(--accent) }
+.sga-gov .g-muted { color:var(--muted) }
+.sga-gov .g-note { padding:16px 18px;background:var(--soft);border-left:2px solid var(--accent);color:var(--muted);margin:20px 0 }
+.sga-gov .g-list { border-top:1px solid var(--line) }
+.sga-gov .g-report { display:grid;grid-template-columns:100px minmax(0,1fr) 185px 104px;gap:24px;padding:24px 0;border-bottom:1px solid var(--line);align-items:center }
+.sga-gov .g-report h3 { font-size:17px;margin:0 0 5px }
+.sga-gov .g-report p { margin:4px 0;color:var(--muted) }
+.sga-gov .g-report .g-tag { font-size:24px;font-weight:500 }
+.sga-gov .g-report small { font-size:13px;color:var(--muted) }
+.sga-gov .g-detail-top { margin-bottom:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap }
+.sga-gov .g-reading { display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:48px;align-items:start }
+.sga-gov .g-reading article { max-width:760px }
+.sga-gov .g-reading h2 { font-size:26px }
+.sga-gov .g-reading .g-copy { font-size:16px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere }
+.sga-gov .g-reading aside { border-left:1px solid var(--line);padding-left:24px }
+.sga-gov .g-meta { display:grid;grid-template-columns:100px minmax(0,1fr);gap:11px 16px;margin:22px 0 }
+.sga-gov .g-meta dt { color:var(--muted) }
+.sga-gov .g-meta dd { margin:0;overflow-wrap:anywhere }
+.sga-gov .g-section { border-top:1px solid var(--line);padding-top:26px;margin-top:30px }
+.sga-gov .g-section h3 { font-size:18px }
+.sga-gov .g-actions { display:flex;gap:10px;flex-wrap:wrap }
+.sga-gov .g-empty { padding:60px 24px;border-block:1px solid var(--line);text-align:center }
+.sga-gov .g-empty h2 { margin-bottom:10px }
+.sga-gov .g-empty p { color:var(--muted) }
+.sga-gov .g-form-grid { display:grid;grid-template-columns:1fr 1fr;gap:0 18px }
+.sga-gov .g-dialog { width:620px }
+.sga-gov .g-dialog-header { display:flex;justify-content:space-between;gap:20px;margin-bottom:20px }
+.sga-gov .g-dialog-header h2 { margin:5px 0 }
+.sga-gov .g-dialog .g-actions { margin-top:26px;justify-content:flex-end }
+.sga-gov .g-error { color:var(--accent);background:var(--soft);padding:12px 16px;margin:16px 0;overflow-wrap:anywhere }
+.sga-gov .g-error:empty { display:none }
+.sga-gov .g-audit { border-top:1px solid var(--line);display:grid;grid-template-columns:140px minmax(0,1fr) 130px;gap:22px;padding:21px 0 }
+.sga-gov .g-audit h3 { margin-bottom:5px }
+.sga-gov .g-audit p { margin-bottom:5px }
+.sga-gov .g-source-layout { display:grid;grid-template-columns:310px minmax(0,1fr);gap:40px }
+.sga-gov .g-source-list button { display:block;width:100%;border:0;border-top:1px solid var(--line);background:none;text-align:left;padding:20px 14px;min-height:96px }
+.sga-gov .g-source-list button[aria-pressed=true] { background:var(--soft);box-shadow:inset 2px 0 var(--accent) }
+.sga-gov .g-source-list h3 { margin:7px 0 4px }
+.sga-gov .g-source-list p { margin:0;color:var(--muted) }
+.sga-gov .g-proof { border-block:1px solid var(--line);padding:24px 0 }
+.sga-gov .g-proof h2 { font-size:27px;margin:12px 0 }
+.sga-gov .g-proof p { max-width:680px;font-size:15px }
+.sga-gov .g-commercial-head { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end;margin-bottom:28px }
+.sga-gov .g-commercial-head select { min-width:240px;font-size:18px }
+.sga-gov .g-campaign { display:grid;grid-template-columns:minmax(0,1fr) 220px 110px;gap:20px;align-items:center;border-top:1px solid var(--line);padding:20px 0 }
+.sga-gov .g-campaign[aria-current=true] { border-left:2px solid var(--accent);padding-left:18px;background:linear-gradient(90deg,var(--soft),transparent) }
+.sga-gov .g-campaign h3 { font-size:17px;margin-bottom:6px }
+.sga-gov .g-campaign p { color:var(--muted);margin:0 }
+.sga-gov .g-plan { border-top:2px solid var(--ink);margin-top:34px;padding-top:28px }
+.sga-gov .g-plan-header { display:flex;justify-content:space-between;align-items:start;gap:24px }
+.sga-gov .g-plan-header h2 { font-size:25px;margin-bottom:8px }
+.sga-gov .g-creative { display:grid;grid-template-columns:minmax(0,1fr) 235px;gap:40px;border-top:1px solid var(--line);padding:26px 0 }
+.sga-gov .g-creative h3 { font-size:21px;max-width:680px;margin:12px 0 }
+.sga-gov .g-creative p { max-width:700px }
+.sga-gov .g-creative aside { border-left:1px solid var(--line);padding-left:22px }
+.sga-gov .g-lifecycle { font-size:13px;color:var(--muted);margin:14px 0 }
+.sga-gov .g-lifecycle strong { color:var(--ink) }
+.sga-gov .g-measure { display:grid;grid-template-columns:190px minmax(0,1fr) 100px;gap:24px;align-items:center;border-bottom:1px solid var(--line);padding:24px 0 }
+.sga-gov .g-measure-bar { background:var(--soft);height:20px;border-radius:2px;overflow:hidden }
+.sga-gov .g-measure-bar i { display:block;background:var(--ink);height:100%;min-width:2px }
+.sga-gov .g-measure strong { font:28px var(--mono);text-align:right }
+.sga-gov .g-analysis-layout { display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:48px }
+.sga-gov .g-analysis-side { border-left:1px solid var(--line);padding-left:28px }
+.sga-gov .g-analysis-side dl { grid-template-columns:1fr auto }
+.sga-gov .g-readonly { margin-bottom:24px }
+.sga-gov .g-summary-link { padding:8px 0;display:inline-block }
+.sga-gov .g-find { max-width:730px;border-bottom:1px solid var(--line);padding:25px 0;display:grid;grid-template-columns:160px 1fr auto;gap:16px;align-items:end }
+.sga-gov .g-find .field { margin-bottom:0 }
+
+@media(max-width:800px) {
+  .sga-gov h1 { font-size:26px }
+}
+
+@media(max-width:420px) {
+  .sga-gov .row { gap:8px }
+}
+
+@media(max-width:420px) {
+  .sga-gov .btn { padding:9px 12px }
+}
+
+@media(max-width:420px) {
+  .sga-gov th { padding:12px 8px }
+  .sga-gov td { padding:12px 8px }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .sga-gov * { animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important }
+  .sga-gov *::before { animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important }
+  .sga-gov *::after { animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important }
+}
+
+@media(max-width:1150px) {
+  .sga-gov .g-reading { grid-template-columns:minmax(0,1fr) 230px;gap:28px }
+}
+
+@media(max-width:1150px) {
+  .sga-gov .g-source-layout { grid-template-columns:260px minmax(0,1fr);gap:28px }
+}
+
+@media(max-width:1150px) {
+  .sga-gov .g-report { grid-template-columns:80px minmax(0,1fr) 130px 98px;gap:16px }
+}
+
+@media(max-width:1150px) {
+  .sga-gov .g-creative { grid-template-columns:minmax(0,1fr) 210px;gap:26px }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-reading { grid-template-columns:1fr }
+  .sga-gov .g-analysis-layout { grid-template-columns:1fr }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-reading aside { border-left:0;border-top:1px solid var(--line);padding:24px 0 }
+  .sga-gov .g-analysis-side { border-left:0;border-top:1px solid var(--line);padding:24px 0 }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-source-layout { grid-template-columns:1fr }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-source-list { display:flex;overflow:auto;gap:8px }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-source-list button { min-width:230px;max-width:260px;border-bottom:1px solid var(--line) }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-report { grid-template-columns:65px minmax(0,1fr) 100px }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-report .g-report-meta { grid-column:2 }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-report>.btn { grid-column:3;grid-row:1/3 }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-creative { grid-template-columns:1fr }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-creative aside { border-left:0;padding-left:0 }
+}
+
+@media(max-width:950px) {
+  .sga-gov .g-campaign { grid-template-columns:minmax(0,1fr) 180px 90px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-head { display:block;margin:14px 0 32px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-tabs { gap:18px;margin-bottom:20px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-toolbar { align-items:start;flex-direction:column;gap:16px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-report { grid-template-columns:54px minmax(0,1fr);gap:10px 14px;padding:22px 0 }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-report .g-tag { font-size:20px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-report>.btn { grid-column:2;grid-row:auto;justify-self:start }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-report .g-report-meta { grid-column:2 }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-reading h2 { font-size:23px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-form-grid { grid-template-columns:1fr }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-dialog { padding:22px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-commercial-head { grid-template-columns:1fr }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-commercial-head select { min-width:0;width:100% }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-campaign { grid-template-columns:1fr auto;gap:12px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-campaign>p { grid-row:2 }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-campaign>button { grid-column:2;grid-row:1/3 }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-plan-header { flex-direction:column;gap:12px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-find { grid-template-columns:1fr 1fr }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-find>button { grid-column:1/3 }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-find input { min-width:0;width:100% }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-audit { grid-template-columns:1fr;gap:8px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-measure { grid-template-columns:120px minmax(0,1fr) 65px;gap:12px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-measure strong { font-size:24px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-tools { width:100% }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-meta { grid-template-columns:90px 1fr }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-tabs button { font-size:13px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-reading { gap:25px }
+}
+
+@media(max-width:600px) {
+  .sga-gov .g-source-layout { gap:24px }
+}

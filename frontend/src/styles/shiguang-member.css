@@ -1,0 +1,423 @@
+/* 拾光会员中心接入样式（SHIGUANG-MEMBER-REFACTOR-20260912 S04）。
+   由冻结参考 reference/preview/style.css 机械迁移到 .sgv-member 作用域：数值 1:1；
+   token（--canvas/--surface/--ink/--muted/--line/--soft/--band/--accent/--display/--mono/--ease）
+   沿用 .sgv-home 作用域，不在此重复定义；
+   --action/--action-ink/--success/--warning/--warning-surface/--error-surface 为参考 :root 独有
+   或与 .sgv-home 取值不同的令牌，按明暗主题在本作用域补定义（参考 :root 与 dark 块原值）。
+   原型站点页头/页脚/主导航（由 ShiguangLayout 提供）、预览状态控件、演示 toast、
+   场景设置面板、走查报告样式与未被参考 app.js 使用的死规则（.record-heading/.tab-count）不迁入。 */
+
+.sgv-member {
+  --action: #263a33; --action-ink: #fafbf9; --success: #3f6650;
+  --warning: #85601c; --warning-surface: #f6f0e2; --error-surface: #f8efec;
+}
+.sgv-home[data-theme="dark"] .sgv-member {
+  --action: #eff4ed; --action-ink: #202925; --success: #afd0b4;
+  --warning: #e4c887; --warning-surface: #36352a; --error-surface: #3a2d29;
+}
+.sgv-member h1 { font-size: 35px; font-weight: 650; line-height: 1.45; }
+.sgv-member h2 { font-size: 22px; line-height: 1.5; font-weight: 600; }
+.sgv-member h3 { font-size: 16px; line-height: 1.6; font-weight: 600; }
+.sgv-member h1, .sgv-member h2, .sgv-member h3, .sgv-member h4 { text-wrap: pretty; overflow-wrap: anywhere; }
+.sgv-member h4, .sgv-member dl, .sgv-member dd, .sgv-member figure { margin: 0; }
+.sgv-member .shell { width: min(1216px, calc(100% - 96px)); margin-inline: auto; }
+.sgv-member .icon { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; flex: none; vertical-align: middle; }
+.sgv-member .icon svg { width: 100%; height: 100%; }
+.sgv-member .icon-button { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; flex: none; border-radius: 50%; transition: background 180ms, color 180ms; }
+.sgv-member .icon-button:hover { background: var(--soft); color: var(--accent); }
+.sgv-member .text-button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 13px; font-weight: 500; }
+.sgv-member .text-button:hover { color: var(--accent); }
+.sgv-member .text-button .icon { width: 15px; height: 15px; }
+.sgv-member .button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px; padding: 10px 19px; border: 1px solid var(--line); border-radius: 4px; font-weight: 550; transition: background 180ms, border-color 180ms, color 180ms; }
+.sgv-member .button:hover:not(:disabled) { background: var(--soft); border-color: var(--ink); }
+.sgv-member .button.primary { background: var(--action); border-color: var(--action); color: var(--action-ink); }
+.sgv-member .button.primary:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.sgv-member .button:disabled { background: var(--soft); color: var(--muted); border-color: var(--line); }
+.sgv-member .button.small { min-height: 44px; padding: 8px 14px; font-size: 13px; }
+.sgv-member .muted { color: var(--muted); }
+.sgv-member .accent { color: var(--accent); }
+.sgv-member .small { font-size: 13px; }
+.sgv-member .num { font-variant-numeric: tabular-nums; }
+.sgv-member .wordmark { width: 71px; height: 29px; fill: currentColor; stroke: none; }
+.sgv-member .page-heading { padding: 34px 0 29px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.sgv-member .page-heading p { color: var(--muted); margin-top: 5px; font-size: 14px; }
+/* A semantic membership credential paired with open account typography.
+   No left navigation rail, no two-page folio, no dashboard card grid. */
+.sgv-member .identity-spread { display: grid; grid-template-columns: 400px minmax(0,1fr); gap: 58px; align-items: stretch; }
+.sgv-member .member-pass { background: var(--band); position: relative; min-height: 250px; border: 1px solid var(--line); border-radius: 7px; padding: 23px 25px 20px; overflow: hidden; }
+.sgv-member .pass-top { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
+.sgv-member .pass-top .wordmark { width: 50px; height: 22px; }
+.sgv-member .pass-top > span { font-size: 12px; color: var(--muted); }
+.sgv-member .pass-identity { margin-top: 24px; position: relative; z-index: 2; width: 175px; }
+.sgv-member .pass-identity h2 { font-size: 30px; font-weight: 550; }
+.sgv-member .pass-level { display: inline-flex; align-items: center; gap: 8px; margin-top: 7px; font-size: 13px; }
+.sgv-member .pass-level::before { content: ""; width: 14px; height: 1px; background: var(--accent); }
+.sgv-member .pass-foot { border-top: 1px solid var(--line); margin-top: 29px; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px; position: relative; z-index: 2; color: var(--muted); font-size: 12px; }
+.sgv-member .pass-foot .serial { font-family: var(--mono); font-size: 12px; }
+.sgv-member .pass-art { width: 210px; height: 151px; position: absolute; right: 5px; top: 18px; pointer-events: none; }
+.sgv-member .membership-summary { padding-top: 0; display: flex; flex-direction: column; min-width: 0; }
+.sgv-member .summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.sgv-member .summary-heading h2 { font-size: 19px; }
+.sgv-member .summary-heading .text-button { min-height: 28px; }
+.sgv-member .benefit-facts { display: flex; align-items: center; gap: 35px; padding-top: 11px; }
+.sgv-member .discount-number { display: inline-flex; align-items: baseline; font-size: 62px; font-weight: 350; line-height: 1.15; color: var(--ink); }
+.sgv-member .discount-number span { color: var(--accent); }
+.sgv-member .discount-number small { font-size: 16px; margin-left: 8px; font-weight: 400; }
+.sgv-member .discount-explain { color: var(--muted); font-size: 13px; padding-left: 30px; border-left: 1px solid var(--line); }
+.sgv-member .discount-explain b { color: var(--ink); font-weight: 550; }
+.sgv-member .discount-explain p + p { margin-top: 6px; }
+.sgv-member .growth-block { margin-top: auto; padding-top: 24px; }
+.sgv-member .growth-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13px; }
+.sgv-member .growth-top strong { font-size: 22px; font-weight: 500; margin-left: 8px; }
+.sgv-member .growth-top .growth-next { color: var(--muted); }
+.sgv-member .growth-top .growth-next b { color: var(--accent); font-weight: 500; }
+.sgv-member .growth-scale { height: 23px; margin-top: 11px; position: relative; background: repeating-linear-gradient(90deg,var(--line) 0,var(--line) 1px,transparent 1px,transparent 2.5%); background-size: 100% 8px; background-repeat: no-repeat; background-position: bottom; border-bottom: 1px solid var(--line); }
+.sgv-member .growth-scale::before { content: ""; height: 2px; background: var(--accent); position: absolute; left: 0; bottom: -1px; width: var(--progress,64%); }
+.sgv-member .growth-pin { width: 1px; height: 25px; position: absolute; left: var(--progress,64%); bottom: 0; background: var(--accent); }
+.sgv-member .growth-pin::before { content: ""; width: 5px; height: 5px; position: absolute; background: var(--accent); top: 0; left: -2px; border-radius: 50%; }
+.sgv-member .growth-ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; margin-top: 6px; }
+/* Assets are a single ruled account line, not floating equal-weight cards. */
+.sgv-member .pocket-strip { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 35px; padding: 28px 0 25px; margin-top: 20px; border-top: 1px solid var(--line); }
+.sgv-member .pocket { display: grid; grid-template-columns: 1fr auto; align-items: center; text-align: left; position: relative; padding-right: 25px; }
+.sgv-member .pocket + .pocket { border-left: 1px solid var(--line); padding-left: 35px; }
+.sgv-member .pocket-label { display: flex; gap: 9px; align-items: center; font-size: 13px; color: var(--muted); }
+.sgv-member .pocket-label .icon { width: 16px; height: 16px; }
+.sgv-member .pocket-value { display: flex; align-items: baseline; gap: 7px; margin-top: 1px; font-size: 35px; font-weight: 400; line-height: 1.5; }
+.sgv-member .pocket-value small { font-size: 13px; color: var(--muted); font-weight: 400; }
+.sgv-member .pocket-value .money-symbol { font-size: 22px; color: var(--ink); margin-right: -3px; }
+.sgv-member .pocket-meta { font-size: 12px; color: var(--muted); grid-column: 1/-1; }
+.sgv-member .pocket > .icon { width: 17px; height: 17px; color: var(--muted); }
+.sgv-member .pocket:hover > .icon, .sgv-member .pocket:hover .pocket-label { color: var(--accent); }
+.sgv-member .environment { font-size: 10px; border: 1px solid var(--line); padding: 0 5px; line-height: 1.7; border-radius: 2px; font-family: var(--mono); color: var(--muted); vertical-align: middle; }
+/* Flat folder-edge navigation is local to the member account. */
+.sgv-member .member-tabs { display: flex; align-items: stretch; border-bottom: 1px solid var(--line); gap: 0; min-height: 57px; margin-top: 4px; }
+.sgv-member .member-tabs a { display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 134px; min-height: 57px; padding: 13px 22px; border: 1px solid transparent; border-bottom: 0; border-radius: 6px 6px 0 0; position: relative; color: var(--muted); }
+.sgv-member .member-tabs a[aria-current] { border-color: var(--line); background: var(--surface); color: var(--ink); font-weight: 550; }
+.sgv-member .member-tabs a[aria-current]::before { content: ""; position: absolute; height: 2px; width: 21px; background: var(--accent); left: 22px; top: -1px; }
+.sgv-member .member-tabs a[aria-current]::after { content: ""; height: 1px; background: var(--surface); position: absolute; bottom: -1px; left: 0; right: 0; }
+.sgv-member .member-tabs a:hover { color: var(--accent); }
+.sgv-member .tab-note { color: var(--muted); font-size: 12px; margin-left: auto; align-self: center; text-align: right; }
+.sgv-member .tab-name-short { display: none; }
+.sgv-member .member-tabs a { white-space: nowrap; }
+@media (max-width: 480px) { .sgv-member .tab-name-full { display: none; } .sgv-member .tab-name-short { display: inline; } }
+.sgv-member .member-content { padding-top: 31px; min-height: 280px; }
+.sgv-member .overview-desk { display: grid; grid-template-columns: minmax(0,1.52fr) minmax(0,1fr); gap: 52px; }
+.sgv-member .section-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 18px; }
+.sgv-member .section-head h2 { font-size: 20px; }
+.sgv-member .section-head .text-button { min-height: 32px; color: var(--muted); flex: none; }
+.sgv-member .section-head .text-button:hover { color: var(--accent); }
+.sgv-member .ticket-list { display: grid; gap: 13px; }
+.sgv-member .ticket { display: grid; grid-template-columns: 112px minmax(0,1fr) auto; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); min-height: 112px; position: relative; align-items: center; }
+.sgv-member .ticket-face { padding: 17px 12px; align-self: stretch; border-right: 1px dashed var(--line); display: flex; flex-direction: column; justify-content: center; text-align: center; position: relative; }
+.sgv-member .ticket-face::before, .sgv-member .ticket-face::after { content: ""; width: 11px; height: 11px; border: 1px solid var(--line); border-radius: 50%; background: var(--canvas); position: absolute; right: -6px; }
+.sgv-member .ticket-face::before { top: -6px; clip-path: inset(50% 0 0 0); }
+.sgv-member .ticket-face::after { bottom: -6px; clip-path: inset(0 0 50% 0); }
+.sgv-member .ticket-number { display: flex; align-items: baseline; justify-content: center; gap: 3px; font-size: 37px; font-weight: 400; line-height: 1.2; color: var(--accent); }
+.sgv-member .ticket-number small { font-size: 15px; font-weight: 400; }
+.sgv-member .ticket-threshold { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.sgv-member .ticket-body { padding: 16px 19px; min-width: 0; }
+.sgv-member .ticket-body h3 { font-size: 15px; }
+.sgv-member .ticket-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; margin-top: 7px; }
+.sgv-member .ticket-action { min-width: 44px; min-height: 44px; padding: 10px 17px 10px 5px; color: var(--muted); }
+.sgv-member .ticket-action:hover { color: var(--accent); }
+.sgv-member .ticket-action .icon { width: 16px; height: 16px; }
+.sgv-member .ticket.status-muted .ticket-number { color: var(--muted); }
+.sgv-member .status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--success); white-space: nowrap; }
+.sgv-member .status::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.sgv-member .status.warning { color: var(--warning); }
+.sgv-member .status.error { color: var(--accent); }
+.sgv-member .status.neutral { color: var(--muted); }
+.sgv-member .ending-soon { color: var(--warning); }
+.sgv-member .mini-rewards { border-top: 1px solid var(--line); }
+.sgv-member .mini-reward { display: grid; grid-template-columns: 66px minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.sgv-member .mini-art { width: 66px; height: 55px; pointer-events: none; }
+.sgv-member .mini-reward h3 { font-size: 14px; }
+.sgv-member .mini-reward p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.sgv-member .mini-cost { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-variant-numeric: tabular-nums; font-weight: 500; padding: 4px; min-width: 44px; min-height: 44px; justify-content: center; }
+.sgv-member .mini-cost small { font-size: 12px; font-weight: 400; color: var(--muted); }
+.sgv-member .mini-cost:hover { color: var(--accent); }
+.sgv-member .footnote { color: var(--muted); font-size: 12px; margin-top: 15px; line-height: 1.85; }
+.sgv-member .recent-section { margin-top: 37px; padding-top: 24px; border-top: 1px solid var(--line); }
+.sgv-member .record-list { width: 100%; }
+.sgv-member .record-row { display: grid; grid-template-columns: 1fr 134px 112px 128px; gap: 20px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.sgv-member .record-description h3 { font-size: 14px; font-weight: 550; }
+.sgv-member .record-description p { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.sgv-member .record-row time { color: var(--muted); font-size: 13px; }
+.sgv-member .record-value { font-size: 17px; font-variant-numeric: tabular-nums; text-align: right; }
+.sgv-member .record-value small { font-size: 12px; color: var(--muted); margin-left: 5px; }
+.sgv-member .record-row .status { justify-self: end; }
+.sgv-member .section-intro { display: flex; align-items: flex-end; gap: 24px; justify-content: space-between; padding: 6px 0 24px; }
+.sgv-member .section-intro h2 { font-size: 26px; }
+.sgv-member .section-intro p { color: var(--muted); margin-top: 8px; max-width: 690px; }
+.sgv-member .balance-note { text-align: right; flex: none; }
+.sgv-member .balance-note > span { font-size: 12px; color: var(--muted); }
+.sgv-member .balance-note strong { display: block; font-size: 37px; font-weight: 400; line-height: 1.35; font-variant-numeric: tabular-nums; }
+.sgv-member .balance-note strong small { font-size: 13px; margin-left: 5px; color: var(--muted); }
+.sgv-member .filter-bar { display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 7px 0; min-height: 59px; margin-bottom: 8px; }
+.sgv-member .filter-options { display: flex; flex-wrap: wrap; column-gap: 25px; row-gap: 3px; }
+.sgv-member .filter-options button { min-height: 44px; font-size: 13px; color: var(--muted); position: relative; }
+.sgv-member .filter-options button[aria-pressed="true"] { color: var(--ink); font-weight: 600; }
+.sgv-member .filter-options button[aria-pressed="true"]::after { content: ""; width: 14px; height: 2px; position: absolute; background: var(--accent); bottom: 1px; left: 0; }
+.sgv-member .filter-options button:hover { color: var(--accent); }
+.sgv-member .filter-caption { font-size: 12px; color: var(--muted); flex: none; }
+.sgv-member .catalog-row { display: grid; grid-template-columns: 90px minmax(0,1fr) 160px 150px; align-items: center; gap: 28px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.sgv-member .catalog-art { width: 90px; height: 76px; background: transparent; }
+.sgv-member .catalog-copy h3 { font-size: 18px; }
+.sgv-member .catalog-copy p { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 530px; }
+.sgv-member .catalog-meta { color: var(--muted); font-size: 12px; margin-top: 6px; }
+.sgv-member .catalog-price { text-align: right; }
+.sgv-member .catalog-price strong { font-size: 28px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.sgv-member .catalog-price small { font-size: 12px; color: var(--muted); margin-left: 4px; }
+.sgv-member .catalog-price p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.sgv-member .catalog-cta { text-align: right; }
+.sgv-member .catalog-cta .button { min-width: 124px; }
+.sgv-member .catalog-cta p { font-size: 12px; color: var(--warning); margin-top: 5px; }
+.sgv-member .coupon-folder { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px 26px; padding: 22px 0 8px; }
+.sgv-member .coupon-folder .ticket { min-height: 144px; grid-template-columns: 126px minmax(0,1fr) auto; }
+.sgv-member .coupon-folder .ticket-number { font-size: 43px; }
+.sgv-member .coupon-folder .ticket-body { padding-block: 19px; }
+.sgv-member .coupon-folder .ticket-body p { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.sgv-member .coupon-folder .ticket h3 { font-size: 16px; }
+.sgv-member .coupon-topline { display: flex; justify-content: space-between; gap: 15px; padding-bottom: 16px; }
+.sgv-member .coupon-topline .filter-options { gap: 28px; }
+.sgv-member .coupon-topline .filter-options button { font-size: 16px; }
+.sgv-member .claim-ticket { grid-template-columns: 126px minmax(0,1fr); }
+.sgv-member .claim-ticket .ticket-action { grid-column: 2; justify-self: start; padding: 0 19px 19px; margin-top: -4px; }
+.sgv-member .claim-ticket .ticket-face { grid-row: 1/3; }
+.sgv-member .account-banner { display: flex; align-items: flex-start; gap: 10px; background: var(--soft); padding: 13px 17px; font-size: 13px; margin-bottom: 25px; }
+.sgv-member .account-banner .icon { margin-top: 2px; width: 16px; height: 16px; }
+.sgv-member .account-banner p { color: var(--muted); }
+.sgv-member .account-banner.warning { background: var(--warning-surface); color: var(--warning); }
+.sgv-member .account-banner.error { background: var(--error-surface); color: var(--accent); }
+.sgv-member .account-banner.warning p, .sgv-member .account-banner.error p { color: inherit; }
+.sgv-member .stored-summary { display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; padding: 8px 0 31px; }
+.sgv-member .stored-main h2 { font-size: 16px; font-weight: 500; }
+.sgv-member .stored-total { font-size: 60px; font-weight: 350; line-height: 1.25; margin: 12px 0 8px; font-variant-numeric: tabular-nums; }
+.sgv-member .stored-total small { font-size: 28px; margin-right: 7px; }
+.sgv-member .stored-main > p { color: var(--muted); font-size: 13px; }
+.sgv-member .stored-main .button { margin-top: 23px; }
+.sgv-member .stored-components { margin: 0; border-top: 1px solid var(--line); align-self: start; }
+.sgv-member .stored-component { display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); padding: 18px 0; }
+.sgv-member .stored-component dt { font-size: 14px; }
+.sgv-member .stored-component dt small { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.sgv-member .stored-component dd { font-size: 25px; font-variant-numeric: tabular-nums; font-weight: 400; }
+.sgv-member .stored-component dd small { font-size: 13px; }
+.sgv-member .ledger-row { display: grid; grid-template-columns: 1fr 170px 120px 140px; gap: 24px; padding: 20px 0; align-items: center; border-bottom: 1px solid var(--line); }
+.sgv-member .ledger-row h3 { font-size: 14px; }
+.sgv-member .ledger-row p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.sgv-member .ledger-row time, .sgv-member .ledger-bucket { font-size: 13px; color: var(--muted); }
+.sgv-member .ledger-amount { text-align: right; font-size: 19px; font-variant-numeric: tabular-nums; }
+.sgv-member .ledger-amount.positive { color: var(--success); }
+.sgv-member .bonus-row { display: grid; grid-template-columns: 1fr 180px 160px 100px; gap: 24px; align-items: center; padding: 23px 0; border-bottom: 1px solid var(--line); }
+.sgv-member .bonus-row h3 { font-size: 15px; }
+.sgv-member .bonus-row p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.sgv-member .bonus-row > strong { font-size: 23px; font-weight: 400; }
+.sgv-member .bonus-row .status { justify-self: end; }
+.sgv-member .state-panel { min-height: 270px; padding: 43px 0; max-width: 660px; }
+.sgv-member .state-panel .state-line { width: 32px; height: 2px; background: var(--accent); margin-bottom: 22px; }
+.sgv-member .state-panel h2 { font-size: 24px; }
+.sgv-member .state-panel p { margin-top: 12px; color: var(--muted); line-height: 1.85; }
+.sgv-member .state-panel .button { margin-top: 23px; }
+.sgv-member .inline-empty { padding: 30px 0; border-top: 1px solid var(--line); }
+.sgv-member .inline-empty h3 { font-size: 16px; }
+.sgv-member .inline-empty p { color: var(--muted); font-size: 13px; margin-top: 7px; }
+/* Transaction details unfold in a side sheet; the canvas never becomes a card grid. */
+.sgv-member dialog { padding: 0; border: 1px solid var(--line); color: var(--ink); background: var(--surface); border-radius: 8px; width: min(536px,calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow: auto; }
+.sgv-member dialog::backdrop { background: rgba(21,37,29,.28); }
+.sgv-member dialog.side-sheet { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(492px,100vw); border-radius: 0; border-block: 0; border-right: 0; }
+.sgv-member .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 26px 18px; border-bottom: 1px solid var(--line); }
+.sgv-member .dialog-header h2 { font-size: 21px; }
+.sgv-member .dialog-header p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.sgv-member .dialog-body { padding: 26px; }
+.sgv-member .dialog-body > h3 { font-size: 22px; }
+.sgv-member .dialog-body > p { color: var(--muted); font-size: 14px; margin-top: 10px; line-height: 1.85; }
+.sgv-member .dialog-art { width: 108px; height: 84px; margin-bottom: 20px; background: var(--soft); border-radius: 4px; }
+.sgv-member .dialog-cost { display: flex; align-items: baseline; gap: 7px; padding: 22px 0; }
+.sgv-member .dialog-cost strong { font-size: 42px; font-weight: 400; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.sgv-member .dialog-cost small { font-size: 13px; color: var(--muted); }
+.sgv-member .detail-list { border-top: 1px solid var(--line); margin: 0; }
+.sgv-member .detail-list > div { display: grid; grid-template-columns: 100px 1fr; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.sgv-member .detail-list dt { color: var(--muted); }
+.sgv-member .detail-list dd { text-align: right; overflow-wrap: anywhere; }
+.sgv-member .dialog-body .account-banner { margin: 22px 0 0; }
+.sgv-member .dialog-actions { display: flex; gap: 12px; padding: 0 26px 26px; }
+.sgv-member .dialog-actions .button { flex: 1; }
+.sgv-member .dialog-mark { width: 44px; height: 44px; display: grid; place-items: center; background: var(--soft); color: var(--success); border-radius: 50%; margin-bottom: 21px; }
+.sgv-member .dialog-mark.pending { color: var(--warning); background: var(--warning-surface); }
+.sgv-member .dialog-mark .icon { width: 22px; height: 22px; }
+.sgv-member .choice-amounts { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 21px 0; }
+.sgv-member .choice-amounts button { padding: 14px 8px; min-height: 55px; border: 1px solid var(--line); border-radius: 3px; font-size: 19px; font-variant-numeric: tabular-nums; }
+.sgv-member .choice-amounts button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--soft); }
+.sgv-member .document-copy h3 { margin: 26px 0 9px; font-size: 17px; }
+.sgv-member .document-copy h3:first-child { margin-top: 0; }
+.sgv-member .document-copy p { color: var(--muted); font-size: 13px; line-height: 1.9; margin: 0; }
+.sgv-member .document-copy p + p { margin-top: 10px; }
+@media (prefers-reduced-motion: no-preference) {
+  .sgv-member .member-content { animation: sgv-member-content-arrive 260ms var(--ease); }
+  .sgv-member dialog[open].side-sheet { animation: sgv-member-sheet-arrive 180ms var(--ease); }
+}
+@keyframes sgv-member-content-arrive { from { opacity: .55; translate: 0 5px; } to { opacity: 1; translate: 0 0; } }
+@keyframes sgv-member-sheet-arrive { from { opacity: .5; translate: 15px 0; } to { opacity: 1; translate: 0; } }
+@media (min-width: 1700px) { .sgv-member .shell { width: min(1304px,calc(100% - 160px)); } .sgv-member .identity-spread { grid-template-columns: 428px minmax(0,1fr); gap: 70px; } .sgv-member .member-pass { min-height: 263px; } .sgv-member .pass-art { right: 10px; top: 18px; width: 224px; height: 153px; } }
+@media (max-width: 1150px) {
+  .sgv-member .shell { width: calc(100% - 64px); }
+  .sgv-member .identity-spread { grid-template-columns: 355px minmax(0,1fr); gap: 36px; }
+  .sgv-member .member-pass { padding-inline: 22px; }
+  .sgv-member .pass-art { width: 191px; height: 138px; top: 31px; right: 0; }
+  .sgv-member .benefit-facts { gap: 23px; }
+  .sgv-member .discount-explain { padding-left: 22px; }
+  .sgv-member .discount-number { font-size: 55px; }
+  .sgv-member .overview-desk { gap: 34px; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); }
+  .sgv-member .ticket { grid-template-columns: 100px minmax(0,1fr) auto; }
+  .sgv-member .ticket-body { padding-inline: 15px; }
+  .sgv-member .section-head h2 { font-size: 18px; }
+  .sgv-member .pocket-strip { gap: 25px; }
+  .sgv-member .pocket + .pocket { padding-left: 25px; }
+  .sgv-member .catalog-row { gap: 20px; grid-template-columns: 85px minmax(0,1fr) 125px 135px; }
+  .sgv-member .coupon-folder { gap: 20px; }
+  .sgv-member .coupon-folder .ticket { grid-template-columns: 107px minmax(0,1fr) auto; }
+}
+@media (max-width: 940px) {
+  .sgv-member .identity-spread { grid-template-columns: 316px minmax(0,1fr); gap: 30px; }
+  .sgv-member .pass-art { width: 166px; height: 120px; top: 47px; }
+  .sgv-member .pass-identity { width: 140px; }
+  .sgv-member .benefit-facts { gap: 17px; }
+  .sgv-member .discount-explain { padding-left: 17px; font-size: 12px; }
+  .sgv-member .discount-number { font-size: 48px; }
+  .sgv-member .growth-top { flex-wrap: wrap; gap: 1px; }
+  .sgv-member .growth-block { padding-top: 12px; }
+  .sgv-member .summary-heading h2 { font-size: 17px; }
+  .sgv-member .overview-desk { grid-template-columns: 1fr; gap: 29px; }
+  .sgv-member .overview-rewards .mini-rewards { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; border-top: 0; }
+  .sgv-member .mini-reward { border-top: 1px solid var(--line); }
+  .sgv-member .pocket-value { font-size: 30px; }
+  .sgv-member .pocket-strip { gap: 20px; }
+  .sgv-member .pocket + .pocket { padding-left: 20px; }
+  .sgv-member .pocket { padding-right: 0; }
+  .sgv-member .tab-note { display: none; }
+  .sgv-member .stored-summary { gap: 38px; }
+  .sgv-member .record-row { grid-template-columns: 1fr 110px 90px 100px; gap: 15px; }
+  .sgv-member .ledger-row { grid-template-columns: 1fr 132px 85px 116px; gap: 15px; }
+}
+@media (max-width: 760px) {
+  .sgv-member .shell { width: calc(100% - 40px); }
+  .sgv-member .page-heading { padding: 27px 0 23px; align-items: flex-start; }
+  .sgv-member h1 { font-size: 30px; }
+  .sgv-member .page-heading p { max-width: 345px; font-size: 13px; }
+  .sgv-member .identity-spread { grid-template-columns: 1fr; gap: 25px; }
+  .sgv-member .member-pass { min-height: 244px; padding: 23px 25px 20px; }
+  .sgv-member .pass-art { width: 206px; height: 148px; top: 20px; right: 12px; }
+  .sgv-member .pass-identity { width: 180px; margin-top: 22px; }
+  .sgv-member .pass-foot { margin-top: 25px; }
+  .sgv-member .membership-summary { padding: 0; }
+  .sgv-member .summary-heading h2 { font-size: 18px; }
+  .sgv-member .discount-number { font-size: 49px; }
+  .sgv-member .discount-explain { font-size: 13px; padding-left: 28px; }
+  .sgv-member .benefit-facts { gap: 29px; padding-top: 9px; }
+  .sgv-member .growth-block { padding-top: 18px; }
+  .sgv-member .growth-top { flex-wrap: nowrap; }
+  .sgv-member .pocket-strip { gap: 0; grid-template-columns: 1fr 1fr; padding: 20px 0 18px; margin-top: 23px; }
+  .sgv-member .pocket { padding-right: 20px; min-height: 93px; }
+  .sgv-member .pocket + .pocket { padding-left: 22px; }
+  .sgv-member .pocket.pocket-money { grid-column: 1/-1; border-left: 0; border-top: 1px solid var(--line); padding: 16px 0 0; margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; min-height: 0; }
+  .sgv-member .pocket-money .pocket-main { display: flex; align-items: baseline; gap: 17px; }
+  .sgv-member .pocket-money .pocket-value { font-size: 27px; }
+  .sgv-member .pocket-money .pocket-meta { width: 100%; margin-top: 3px; }
+  .sgv-member .member-tabs { min-height: 54px; width: 100%; }
+  .sgv-member .member-tabs a { min-width: 0; flex: 1; padding: 12px 9px; min-height: 54px; font-size: 13px; gap: 5px; }
+  .sgv-member .member-tabs a[aria-current]::before { left: 10px; width: 15px; }
+  .sgv-member .member-content { padding-top: 24px; }
+  .sgv-member .overview-rewards .mini-rewards { grid-template-columns: 1fr; gap: 0; }
+  .sgv-member .mini-reward + .mini-reward { border-top: 0; }
+  .sgv-member .section-head h2 { font-size: 18px; }
+  .sgv-member .section-head { gap: 10px; margin-bottom: 15px; }
+  .sgv-member .ticket { min-height: 120px; }
+  .sgv-member .ticket-body h3 { font-size: 14px; }
+  .sgv-member .recent-section { margin-top: 30px; }
+  .sgv-member .record-row { grid-template-columns: 1fr auto; gap: 4px 12px; }
+  .sgv-member .record-description { grid-row: 1/3; }
+  .sgv-member .record-row time { grid-column: 1; grid-row: 3; font-size: 12px; margin-top: 4px; }
+  .sgv-member .record-value { grid-column: 2; grid-row: 1; }
+  .sgv-member .record-row .status { grid-column: 2; grid-row: 2; }
+  .sgv-member .section-intro { align-items: flex-start; gap: 17px; padding-top: 0; }
+  .sgv-member .section-intro h2 { font-size: 23px; }
+  .sgv-member .section-intro p { font-size: 13px; }
+  .sgv-member .balance-note strong { font-size: 31px; }
+  .sgv-member .balance-note > span { font-size: 11px; }
+  .sgv-member .filter-options { column-gap: 20px; }
+  .sgv-member .filter-options button { font-size: 12px; }
+  .sgv-member .filter-caption { display: none; }
+  .sgv-member .catalog-row { grid-template-columns: 69px minmax(0,1fr) auto; gap: 12px 17px; padding: 22px 0; }
+  .sgv-member .catalog-art { width: 69px; height: 64px; align-self: start; }
+  .sgv-member .catalog-copy { grid-column: 2/4; }
+  .sgv-member .catalog-copy h3 { font-size: 16px; }
+  .sgv-member .catalog-copy p { font-size: 12px; }
+  .sgv-member .catalog-price { grid-column: 2; text-align: left; }
+  .sgv-member .catalog-price strong { font-size: 24px; }
+  .sgv-member .catalog-cta { grid-column: 3; }
+  .sgv-member .catalog-cta .button { min-width: 108px; }
+  .sgv-member .catalog-cta p { font-size: 11px; max-width: 130px; }
+  .sgv-member .coupon-folder { grid-template-columns: 1fr; gap: 15px; padding-top: 17px; }
+  .sgv-member .coupon-folder .ticket { grid-template-columns: 113px minmax(0,1fr) auto; min-height: 144px; }
+  .sgv-member .coupon-folder .ticket-number { font-size: 40px; }
+  .sgv-member .coupon-folder .ticket h3 { font-size: 15px; }
+  .sgv-member .coupon-topline .filter-options button { font-size: 15px; }
+  .sgv-member .account-banner { font-size: 12px; padding: 12px 14px; }
+  .sgv-member .stored-summary { grid-template-columns: 1fr; gap: 28px; }
+  .sgv-member .stored-total { font-size: 53px; }
+  .sgv-member .stored-main .button { margin-top: 18px; }
+  .sgv-member .stored-components { margin-top: 0; }
+  .sgv-member .stored-component { padding: 14px 0; }
+  .sgv-member .stored-component dd { font-size: 23px; }
+  .sgv-member .ledger-row { grid-template-columns: 1fr auto; gap: 4px 15px; }
+  .sgv-member .ledger-row > div:first-child { grid-column: 1; grid-row: 1/3; }
+  .sgv-member .ledger-row time { grid-column: 1; grid-row: 3; margin-top: 4px; font-size: 12px; }
+  .sgv-member .ledger-bucket { grid-column: 2; grid-row: 2; justify-self: end; font-size: 12px; }
+  .sgv-member .ledger-amount { grid-column: 2; grid-row: 1; }
+  .sgv-member .bonus-row { grid-template-columns: 1fr auto; gap: 8px 20px; }
+  .sgv-member .bonus-row > div { grid-column: 1; }
+  .sgv-member .bonus-row > strong { grid-column: 2; grid-row: 1; text-align: right; }
+  .sgv-member .bonus-row > .status { grid-column: 2; grid-row: 2; }
+  .sgv-member .state-panel { padding-block: 25px; }
+}
+@media (max-width: 380px) {
+  .sgv-member .shell { width: calc(100% - 32px); }
+  .sgv-member .page-heading { gap: 8px; }
+  .sgv-member .page-heading p { max-width: 228px; }
+  .sgv-member .member-pass { padding-inline: 20px; }
+  .sgv-member .pass-art { width: 163px; height: 119px; top: 48px; right: 0; }
+  .sgv-member .pass-identity { width: 125px; }
+  .sgv-member .pass-foot { font-size: 11px; }
+  .sgv-member .pass-foot .serial { font-size: 11px; }
+  .sgv-member .discount-explain { padding-left: 18px; font-size: 12px; }
+  .sgv-member .benefit-facts { gap: 18px; }
+  .sgv-member .growth-top { flex-wrap: wrap; }
+  .sgv-member .pocket-label { gap: 6px; }
+  .sgv-member .pocket-label .icon { width: 14px; height: 14px; }
+  .sgv-member .pocket-value { font-size: 29px; }
+  .sgv-member .pocket-meta { font-size: 11px; }
+  .sgv-member .pocket + .pocket { padding-left: 18px; }
+  .sgv-member .pocket.pocket-money { padding-left: 0; }
+  .sgv-member .pocket-money .pocket-main { gap: 12px; }
+  .sgv-member .pocket-money .pocket-label .environment { display: none; }
+  .sgv-member .section-head h2 { font-size: 17px; }
+  .sgv-member .section-head .text-button { font-size: 12px; }
+  .sgv-member .ticket { grid-template-columns: 81px minmax(0,1fr) 37px; }
+  .sgv-member .ticket-number { font-size: 32px; }
+  .sgv-member .ticket-face { padding-inline: 7px; }
+  .sgv-member .ticket-body { padding-inline: 12px; }
+  .sgv-member .ticket-action { padding-right: 12px; min-width: 37px; }
+  .sgv-member .coupon-folder .ticket { grid-template-columns: 87px minmax(0,1fr) 37px; }
+  .sgv-member .coupon-folder .ticket-number { font-size: 34px; }
+  .sgv-member .ticket-meta { font-size: 11px; }
+  .sgv-member .catalog-row { grid-template-columns: 45px minmax(0,1fr) auto; gap: 12px; }
+  .sgv-member .catalog-art { width: 45px; height: 46px; }
+  .sgv-member .catalog-cta .button { min-width: 96px; padding-inline: 10px; font-size: 12px; }
+  .sgv-member .balance-note strong { font-size: 27px; }
+  .sgv-member .section-intro { gap: 12px; }
+  .sgv-member .section-intro h2 { font-size: 21px; }
+  .sgv-member .dialog-header { padding: 16px 20px; }
+  .sgv-member .dialog-body { padding: 23px 20px; }
+  .sgv-member .dialog-actions { padding: 0 20px 23px; gap: 10px; }
+  .sgv-member .detail-list > div { grid-template-columns: 85px 1fr; gap: 12px; }
+}

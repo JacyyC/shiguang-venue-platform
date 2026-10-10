@@ -1,0 +1,254 @@
+{
+  "run": "sgrel-s06-final",
+  "head": "fe16256dd1e4c269f55ea6677bcc51b52cfc1542",
+  "productDiffSha256": "0e64ed636ca2259e9ab52898eb0fb970c0df83bc7e7aedbd046ee4e40720f9b2",
+  "sourceManifestSha256": "03f6022b4bf70dc374e74576802006f45946e15f07cb4f9cc08c6f356a2890c6",
+  "utc": "2026-09-19T05:44:40.154331+00:00",
+  "containers": [
+    {
+      "Id": "d83fc61d162aac01d27cc919584621345485520ad831f4cda5a0e8bdc018062e",
+      "Image": "sha256:b3b90af2a6552ae30c266fdb7d5dd55f3afb72404bb78d37fe8a23eb857fd3fb"
+    },
+    {
+      "Id": "5c6da791460bc75030287384d97b7250ffab5f721cb4b4d469bebd7b8e7f166b",
+      "Image": "sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99"
+    }
+  ],
+  "limits": [
+    "local isolated synthetic data",
+    "test classpath transaction injection",
+    "no production or real channels"
+  ],
+  "case": "C1",
+  "results": [
+    {
+      "engine": "chromium",
+      "exit": 0,
+      "browser": {
+        "engine": "chromium",
+        "version": "145.0.7632.6",
+        "spaceId": 2,
+        "events": [
+          {
+            "stage": "uncommitted",
+            "ms": 2325,
+            "arrived": true,
+            "transactionActive": true,
+            "ownConnectionRows": 1
+          },
+          {
+            "stage": "client-response-lost",
+            "ms": 2325
+          },
+          {
+            "stage": "independent-read",
+            "ms": 2398,
+            "http": 200,
+            "result": "NONE"
+          },
+          {
+            "stage": "after-reconcile",
+            "ms": 2561,
+            "keyRetained": true
+          },
+          {
+            "stage": "after-refresh",
+            "ms": 2814,
+            "keyRetained": true
+          },
+          {
+            "stage": "retry-ready",
+            "ms": 2860,
+            "fields": [
+              4,
+              11
+            ]
+          },
+          {
+            "stage": "retry-issued",
+            "ms": 2893,
+            "sameKey": true
+          },
+          {
+            "stage": "same-key-replay",
+            "ms": 3137,
+            "http": 200,
+            "id": 1
+          },
+          {
+            "stage": "original-completed",
+            "ms": 3167,
+            "http": 200,
+            "id": 1
+          }
+        ],
+        "sameKey": true,
+        "originalId": 1,
+        "finalPath": "/reservation/result/1"
+      },
+      "counts": {
+        "reservations": 1,
+        "commands": 1,
+        "occupancies": 1,
+        "businessEvents": 1,
+        "funnelEvents": 1,
+        "ownerNotices": 1,
+        "statusLogs": 1
+      },
+      "passed": true
+    },
+    {
+      "engine": "firefox",
+      "exit": 0,
+      "browser": {
+        "engine": "firefox",
+        "version": "146.0.1",
+        "spaceId": 3,
+        "events": [
+          {
+            "stage": "uncommitted",
+            "ms": 2402,
+            "arrived": true,
+            "transactionActive": true,
+            "ownConnectionRows": 1
+          },
+          {
+            "stage": "client-response-lost",
+            "ms": 2402
+          },
+          {
+            "stage": "independent-read",
+            "ms": 2500,
+            "http": 200,
+            "result": "NONE"
+          },
+          {
+            "stage": "after-reconcile",
+            "ms": 2689,
+            "keyRetained": true
+          },
+          {
+            "stage": "after-refresh",
+            "ms": 3243,
+            "keyRetained": true
+          },
+          {
+            "stage": "retry-ready",
+            "ms": 3306,
+            "fields": [
+              4,
+              11
+            ]
+          },
+          {
+            "stage": "retry-issued",
+            "ms": 3354,
+            "sameKey": true
+          },
+          {
+            "stage": "same-key-replay",
+            "ms": 3564,
+            "http": 200,
+            "id": 2
+          },
+          {
+            "stage": "original-completed",
+            "ms": 3604,
+            "http": 200,
+            "id": 2
+          }
+        ],
+        "sameKey": true,
+        "originalId": 2,
+        "finalPath": "/reservation/result/2"
+      },
+      "counts": {
+        "reservations": 1,
+        "commands": 1,
+        "occupancies": 1,
+        "businessEvents": 1,
+        "funnelEvents": 1,
+        "ownerNotices": 1,
+        "statusLogs": 1
+      },
+      "passed": true
+    },
+    {
+      "engine": "webkit",
+      "exit": 0,
+      "browser": {
+        "engine": "webkit",
+        "version": "26.0",
+        "spaceId": 4,
+        "events": [
+          {
+            "stage": "uncommitted",
+            "ms": 2086,
+            "arrived": true,
+            "transactionActive": true,
+            "ownConnectionRows": 1
+          },
+          {
+            "stage": "client-response-lost",
+            "ms": 2089
+          },
+          {
+            "stage": "independent-read",
+            "ms": 2162,
+            "http": 200,
+            "result": "NONE"
+          },
+          {
+            "stage": "after-reconcile",
+            "ms": 2335,
+            "keyRetained": true
+          },
+          {
+            "stage": "after-refresh",
+            "ms": 2715,
+            "keyRetained": true
+          },
+          {
+            "stage": "retry-ready",
+            "ms": 2749,
+            "fields": [
+              4,
+              11
+            ]
+          },
+          {
+            "stage": "retry-issued",
+            "ms": 2784,
+            "sameKey": true
+          },
+          {
+            "stage": "same-key-replay",
+            "ms": 2933,
+            "http": 200,
+            "id": 3
+          },
+          {
+            "stage": "original-completed",
+            "ms": 2970,
+            "http": 200,
+            "id": 3
+          }
+        ],
+        "sameKey": true,
+        "originalId": 3,
+        "finalPath": "/reservation/result/3"
+      },
+      "counts": {
+        "reservations": 1,
+        "commands": 1,
+        "occupancies": 1,
+        "businessEvents": 1,
+        "funnelEvents": 1,
+        "ownerNotices": 1,
+        "statusLogs": 1
+      },
+      "passed": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,597 @@
+.activity-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 4px 0 44px;
+}
+
+.activity-head,
+.activity-head-actions,
+.activity-card-head,
+.activity-meta,
+.activity-actions,
+.activity-detail-actions,
+.activity-inline-actions,
+.activity-location-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-head {
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.activity-head .sg-kicker {
+  margin: 0 0 10px;
+  color: var(--sg-ink-subtle);
+}
+
+.activity-head h1,
+.activity-card h2,
+.activity-section h2,
+.activity-section h3 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.activity-head h1 {
+  max-width: 720px;
+  margin-top: 2px;
+}
+
+.activity-head p,
+.activity-card p {
+  margin: 7px 0 0;
+  color: var(--sg-ink-muted);
+}
+
+.activity-page > .el-tabs {
+  min-width: 0;
+}
+
+/* 筛选区（走查 2026-08-30 F-03 对齐 V6 去卡底化）：搜索+类型+更多条件直接铺纸底，
+   仅以发丝线与下方列表分区，不再做白底收納卡（同发现页 sg-searchrow 形态）。 */
+.activity-discovery-filters {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--sg-border);
+}
+
+.activity-searchrow .sg-search-pill {
+  max-width: 520px;
+}
+
+/* V11 索引栏：栅格 gap 已提供与搜索行的间距，去掉全局 rail 自带 margin，保留发丝线分区 */
+.activity-discovery-filters .sg-indexrail {
+  margin-top: 0;
+}
+
+.activity-result-count {
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+}
+
+.activity-time-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-time-panel .el-date-editor {
+  width: 100%;
+}
+
+.activity-advanced-filters {
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+}
+
+.activity-advanced-filters > summary {
+  width: fit-content;
+  min-height: 34px;
+}
+
+.activity-advanced-fields {
+  width: min(420px, 100%);
+  padding-top: 10px;
+}
+
+.activity-advanced-fields > label > .filter-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 700;
+}
+
+.activity-advanced-fields .el-select,
+.activity-advanced-fields .el-input {
+  width: 100%;
+}
+
+.activity-card,
+.activity-section {
+  min-width: 0;
+  padding: 17px;
+  margin-bottom: 18px;
+  border-radius: var(--sg-radius-card);
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-1);
+}
+
+/* 活动卡排印海报窄条（预览 §08：按类型定 wash）+ 人数独立角标 */
+.activity-card-poster {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 58px;
+  margin: -17px -17px 2px;
+  border-radius: var(--sg-radius-card) var(--sg-radius-card) 0 0;
+  overflow: hidden;
+}
+
+.activity-card[data-wash='mist'] .activity-card-poster {
+  background: radial-gradient(90% 100% at 70% 10%, color-mix(in srgb, var(--sg-mist) 30%, transparent), transparent 72%), var(--sg-mist-soft);
+}
+
+.activity-card[data-wash='pine'] .activity-card-poster {
+  background: radial-gradient(90% 100% at 70% 10%, color-mix(in srgb, var(--sg-pine) 24%, transparent), transparent 72%), var(--sg-pine-soft);
+}
+
+.activity-card[data-wash='honey'] .activity-card-poster {
+  background: radial-gradient(90% 100% at 70% 10%, color-mix(in srgb, var(--sg-honey) 26%, transparent), transparent 72%), var(--sg-honey-soft);
+}
+
+/* 画笔单线图标（V5 §04）：58px 海报条内居中 40px；组件自带 stroke 1.4 圆头 */
+.activity-card-motif {
+  width: 40px;
+  height: 40px;
+  opacity: 0.9;
+}
+
+.activity-count-badge {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-1);
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+}
+
+.activity-count-badge strong {
+  color: var(--sg-ink);
+  font-family: var(--sg-font-serif);
+  font-size: var(--sg-fz-lg);
+  line-height: 1;
+}
+
+.activity-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.activity-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.activity-card-head {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.activity-card h2 {
+  overflow-wrap: anywhere;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.activity-card-body {
+  min-height: 48px;
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.activity-meta {
+  flex-wrap: wrap;
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+}
+
+.activity-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.activity-actions {
+  align-self: end;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.sg-state-error.activity-state {
+  margin: 14px 0;
+}
+
+.activity-load-more {
+  display: block;
+  margin: 18px auto 0;
+}
+
+.activity-form,
+.activity-section-list {
+  display: grid;
+  gap: 14px;
+}
+
+.activity-form-note {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--sg-warning);
+  background: var(--sg-warning-soft);
+  color: var(--sg-warning);
+  font-size: var(--sg-fz-sm);
+}
+
+.activity-detail-actions,
+.activity-inline-actions {
+  flex-wrap: wrap;
+}
+
+.activity-location-status {
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px solid var(--sg-border-strong);
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface-subtle);
+}
+
+.activity-location-status > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.activity-location-status strong {
+  overflow-wrap: anywhere;
+}
+
+.activity-location-status span {
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+}
+
+.activity-location-status.is-confirmed {
+  border-color: color-mix(in srgb, var(--sg-success) 45%, transparent);
+  background: var(--sg-success-soft);
+}
+
+.activity-location-status.is-degraded {
+  border-color: color-mix(in srgb, var(--sg-danger) 45%, transparent);
+  background: var(--sg-danger-soft);
+}
+
+.activity-facts {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 10px 14px;
+  margin: 0;
+}
+
+.activity-facts dt {
+  color: var(--sg-ink-subtle);
+  font-weight: 700;
+}
+
+.activity-facts dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.activity-description {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.75;
+}
+
+.activity-list-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--sg-border-soft);
+}
+
+.activity-list-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.activity-list-row strong,
+.activity-list-row span {
+  display: block;
+}
+
+.activity-list-row span {
+  margin-top: 4px;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+}
+
+.match-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .activity-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .activity-detail-side {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .activity-page {
+    width: min(100% - 20px, 1120px);
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+
+.activity-head,
+  .activity-card-head,
+  .activity-detail-title,
+  .activity-list-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .activity-head-actions,
+  .activity-actions,
+  .activity-detail-actions,
+  .activity-inline-actions {
+    width: 100%;
+  }
+
+  .activity-head-actions .el-button,
+  .activity-actions .el-button,
+  .activity-detail-actions .el-button,
+  .activity-inline-actions .el-button {
+    min-height: 44px;
+    margin-left: 0;
+  }
+
+  .activity-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .activity-detail-title h1 {
+    font-size: 24px;
+  }
+
+  .activity-facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .activity-facts dd {
+    margin-bottom: 8px;
+  }
+}
+
+.activity-head h1 .sg-mask-line + .sg-mask-line {
+  margin-top: 2px;
+}
+
+/* 整卡可点与参与数衬线大字；hover 弹簧 */
+a.activity-card {
+  display: block;
+  color: inherit;
+  transition: transform var(--sg-motion-base) var(--sg-ease-spring), box-shadow var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a.activity-card:hover {
+    transform: translateY(-3px) scale(1.012);
+    box-shadow: var(--sg-shadow-float), inset 0 1px 0 var(--sg-sheen);
+  }
+}
+
+a.activity-card:focus-visible {
+  outline: 2px solid var(--sg-focus);
+  outline-offset: 2px;
+}
+
+.activity-count-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.activity-count {
+  color: var(--sg-ink);
+  line-height: 1;
+}
+
+.activity-count-total {
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-sm);
+}
+
+/* ---- 详情头排印海报完整版 + 玻璃操作卡（预览 §08 活动详情） ---- */
+.activity-poster {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  padding: 26px 26px 22px;
+  border-radius: var(--sg-radius-glass);
+}
+
+.activity-poster[data-wash='mist'] {
+  background: radial-gradient(90% 120% at 75% 0%, color-mix(in srgb, var(--sg-mist) 34%, transparent), transparent 72%), var(--sg-mist-soft);
+}
+
+.activity-poster[data-wash='pine'] {
+  background: radial-gradient(90% 120% at 75% 0%, color-mix(in srgb, var(--sg-pine) 28%, transparent), transparent 72%), var(--sg-pine-soft);
+}
+
+.activity-poster[data-wash='honey'] {
+  background: radial-gradient(90% 120% at 75% 0%, color-mix(in srgb, var(--sg-honey) 30%, transparent), transparent 72%), var(--sg-honey-soft);
+}
+
+/* 活动海报（V5 §04 组件语言）：图标居中放大同场馆氛围位档；
+   低透明度让位衬线大字（海报文字对比度走查锁定） */
+.activity-poster-motif {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: clamp(96px, 10vw, 140px);
+  height: clamp(96px, 10vw, 140px);
+  opacity: 0.22;
+}
+
+.activity-poster-copy {
+  position: relative;
+  min-width: 0;
+}
+
+.activity-poster-kicker {
+  margin: 0 0 8px;
+  color: color-mix(in srgb, var(--sg-ink) 62%, transparent);
+}
+
+.activity-poster-copy h1 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--sg-font-serif);
+  font-size: clamp(24px, 3.4vw, 34px);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.activity-poster-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  color: var(--sg-ink-muted);
+  font-size: var(--sg-fz-sm);
+}
+
+/* 进度独立大数字（sg-tick 走字） */
+.activity-progress {
+  position: relative;
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface);
+  box-shadow: var(--sg-shadow-1);
+}
+
+.activity-progress strong {
+  font-family: var(--sg-font-serif);
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--sg-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.activity-progress-total {
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+}
+
+/* 玻璃操作卡：动作行+地点承诺+我的状态+事实行（同屏唯一玻璃面） */
+.activity-ops {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 16px 18px 18px;
+  border-radius: var(--sg-radius-glass);
+}
+
+.activity-ops .activity-detail-actions {
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--sg-border-soft);
+}
+
+.activity-ops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.activity-mine {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 12px;
+  border-radius: var(--sg-radius-control);
+  background: var(--sg-surface-subtle);
+}
+
+.activity-mine-label {
+  color: var(--sg-ink-subtle);
+  font-size: var(--sg-fz-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.activity-mine p {
+  margin: 0;
+}
+
+.activity-ops .activity-facts {
+  margin: 0;
+}
+
+.activity-ops .activity-description {
+  margin: 0;
+}
+
+/* 三列表 inset 分组卡：发丝线行 + 整行 hover 染 7% 柿橙 */
+.activity-section-list.sg-group-card .activity-list-row {
+  padding: 12px 16px;
+  transition: background-color var(--sg-motion-fast) var(--sg-ease-standard);
+}
+
+.activity-section-list.sg-group-card .activity-list-row + .activity-list-row {
+  box-shadow: 0 -1px 0 var(--sg-border-soft);
+}
+
+.activity-section-list.sg-group-card .activity-list-row:hover {
+  background: color-mix(in srgb, var(--sg-primary) 7%, transparent);
+}

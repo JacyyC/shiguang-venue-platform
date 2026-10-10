@@ -1,0 +1,625 @@
+/* 拾光后台履约面样式（SHIGUANG-BATCH-02-REFACTOR-20260913 S05）。
+   由冻结参考 reference/preview/f/styles.css 机械迁移到 .sga-fulfillment 作用域：数值 1:1；
+   token 与 base.css :root 同名同值（明暗两套挂 html[data-theme]），作用域内自含定义；
+   只迁履约正文类：site-ops/asset 专属类（f-shift-band/f-task/f-handover/f-incident/f-asset-*）
+   属第三批预览上下文，不迁入；.f-lab 审阅工具不迁入。 */
+
+.sga-fulfillment {
+  --canvas: #fafbf9;
+  --surface: #ffffff;
+  --ink: #263a33;
+  --muted: #5b6962;
+  --line: #d5dfd8;
+  --soft: #edf2ed;
+  --accent: #af3526;
+  --display: 'Hiragino Sans GB', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --mono: 'SFMono-Regular', Consolas, monospace;
+  color-scheme: light;
+  max-width: 1650px;
+}
+
+html[data-theme='dark'] .sga-fulfillment {
+  --canvas: #202925;
+  --surface: #28352f;
+  --ink: #eff4ed;
+  --muted: #b8c6bd;
+  --line: #45574c;
+  --soft: #2e3d34;
+  --accent: #ffa38c;
+  color-scheme: dark;
+}
+
+.sga-fulfillment h1,
+.sga-fulfillment h2,
+.sga-fulfillment h3 {
+  font-family: var(--display);
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.sga-fulfillment h1 {
+  font-size: 30px;
+  letter-spacing: 0;
+  margin: 0 0 9px;
+  font-weight: 650;
+}
+
+.sga-fulfillment h2 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+
+.sga-fulfillment h3 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.sga-fulfillment p {
+  margin: 0 0 12px;
+}
+
+.sga-fulfillment button {
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.sga-fulfillment button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.sga-fulfillment input,
+.sga-fulfillment select,
+.sga-fulfillment textarea {
+  font: inherit;
+  color: inherit;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  padding: 10px 12px;
+  min-height: 44px;
+}
+
+.sga-fulfillment textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.sga-fulfillment .eyebrow {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.sga-fulfillment .heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.sga-fulfillment .heading p {
+  max-width: 650px;
+  color: var(--muted);
+}
+
+.sga-fulfillment .heading .date {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+.sga-fulfillment .heading .date strong {
+  display: block;
+  font-size: 21px;
+  color: var(--ink);
+}
+
+.sga-fulfillment .heading h1 {
+  font-size: 32px;
+  margin: 4px 0 10px;
+}
+
+.sga-fulfillment .f-tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.sga-fulfillment .f-tabs button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 10px 0;
+  min-height: 46px;
+  color: var(--muted);
+}
+
+.sga-fulfillment .f-tabs button[aria-current='true'] {
+  border-bottom-color: var(--accent);
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.sga-fulfillment .f-grid {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.85fr) minmax(350px, 1.45fr);
+  gap: 36px;
+}
+
+.sga-fulfillment .f-rail {
+  border-right: 1px solid var(--line);
+  padding-right: 25px;
+}
+
+.sga-fulfillment .f-rail h2 {
+  font-size: 22px;
+}
+
+.sga-fulfillment .f-time {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sga-fulfillment .f-list {
+  display: grid;
+  gap: 0;
+}
+
+.sga-fulfillment .f-pick {
+  display: block;
+  text-align: left;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  padding: 17px 13px;
+  position: relative;
+  min-height: 78px;
+}
+
+.sga-fulfillment .f-pick strong,
+.sga-fulfillment .f-pick small {
+  display: block;
+}
+
+.sga-fulfillment .f-pick strong {
+  font-size: 16px;
+}
+
+.sga-fulfillment .f-pick small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.sga-fulfillment .f-pick[aria-pressed='true'] {
+  background: var(--soft);
+  box-shadow: inset 2px 0 var(--accent);
+}
+
+.sga-fulfillment .f-pick:hover {
+  background: var(--soft);
+}
+
+.sga-fulfillment .f-detail {
+  min-width: 0;
+}
+
+.sga-fulfillment .f-detail h2 {
+  font-size: 26px;
+  margin: 8px 0 9px;
+}
+
+.sga-fulfillment .f-detail .lead {
+  font-size: 17px;
+}
+
+.sga-fulfillment .f-status-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sga-fulfillment .f-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  margin: 24px 0;
+  padding: 22px 0;
+  border-block: 1px solid var(--line);
+}
+
+.sga-fulfillment .f-facts dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sga-fulfillment .f-facts dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.sga-fulfillment .f-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 22px 0;
+}
+
+.sga-fulfillment .f-note {
+  border-left: 2px solid var(--line);
+  padding-left: 15px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sga-fulfillment .f-events {
+  padding: 0;
+  list-style: none;
+  margin: 22px 0;
+}
+
+.sga-fulfillment .f-events li {
+  padding: 0 0 20px 24px;
+  border-left: 1px solid var(--line);
+  position: relative;
+}
+
+.sga-fulfillment .f-events li::before {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  left: -4px;
+  top: 8px;
+}
+
+.sga-fulfillment .f-events small {
+  display: block;
+  color: var(--muted);
+}
+
+.sga-fulfillment .f-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 24px 0;
+}
+
+.sga-fulfillment .f-compare > div {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.sga-fulfillment .f-compare strong {
+  display: block;
+  font-size: 20px;
+  margin: 8px 0;
+}
+
+.sga-fulfillment .f-compare > div:last-child {
+  border-color: var(--accent);
+}
+
+.sga-fulfillment .f-ledger {
+  max-width: 750px;
+  margin: auto;
+}
+
+.sga-fulfillment .f-ledger .bill-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 22px;
+}
+
+.sga-fulfillment .f-ledger .bill-head h2 {
+  margin: 4px 0;
+  font-size: 24px;
+}
+
+.sga-fulfillment .f-money {
+  font-size: 34px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.sga-fulfillment .f-money small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sga-fulfillment .f-lines {
+  margin: 20px 0;
+}
+
+.sga-fulfillment .f-lines > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.sga-fulfillment .f-lines span:last-child {
+  text-align: right;
+}
+
+.sga-fulfillment .f-workday {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 45px;
+}
+
+.sga-fulfillment .f-duty {
+  display: block;
+  text-decoration: none;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  width: 100%;
+  text-align: left;
+  background: none;
+  border-inline: 0;
+  border-bottom: 0;
+}
+
+.sga-fulfillment .f-duty strong {
+  font-size: 22px;
+  display: block;
+}
+
+.sga-fulfillment .f-duty small {
+  display: block;
+  color: var(--muted);
+}
+
+.sga-fulfillment .f-summary {
+  border-left: 1px solid var(--line);
+  padding-left: 30px;
+}
+
+.sga-fulfillment .f-summary dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin: 25px 0;
+}
+
+.sga-fulfillment .f-summary dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sga-fulfillment .f-summary dd {
+  margin: 4px 0;
+  font-size: 29px;
+}
+
+.sga-fulfillment .f-modal {
+  width: 620px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 28px;
+  max-width: min(660px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+}
+
+.sga-fulfillment .f-modal::backdrop {
+  background: #101d18a6;
+}
+
+.sga-fulfillment .f-modal h2 {
+  font-size: 24px;
+}
+
+.sga-fulfillment .f-modal .error-text {
+  color: var(--accent);
+}
+
+.sga-fulfillment .f-modal .modal-actions {
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 20px;
+}
+
+.sga-fulfillment .f-modal label {
+  display: grid;
+  gap: 5px;
+  margin: 15px 0;
+}
+
+.sga-fulfillment .f-modal .check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.sga-fulfillment .f-modal .check input {
+  flex: none;
+  margin-top: 3px;
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+.sga-fulfillment .f-state {
+  padding: 48px 25px;
+  border-block: 1px solid var(--line);
+  text-align: center;
+}
+
+.sga-fulfillment .f-state p {
+  color: var(--muted);
+  max-width: 630px;
+  margin: 0 auto 20px;
+}
+
+.sga-fulfillment .f-state h2 {
+  margin-bottom: 10px;
+}
+
+.sga-fulfillment .f-inline-search {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 18px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sga-fulfillment .f-inline-search label {
+  display: grid;
+  gap: 4px;
+}
+
+.sga-fulfillment .f-inline-search input {
+  width: 230px;
+}
+
+.sga-fulfillment .f-link {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sga-fulfillment .f-permission {
+  padding: 16px;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  margin: 20px 0;
+}
+
+.sga-fulfillment .muted {
+  color: var(--muted);
+}
+
+@media (max-width: 1200px) {
+  .sga-fulfillment .f-grid {
+    gap: 24px;
+    grid-template-columns: minmax(230px, 0.9fr) minmax(320px, 1.2fr);
+  }
+}
+
+@media (max-width: 980px) {
+  .sga-fulfillment .f-grid,
+  .sga-fulfillment .f-workday {
+    grid-template-columns: 1fr;
+  }
+
+  .sga-fulfillment .f-rail {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .sga-fulfillment .f-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .sga-fulfillment .f-pick {
+    height: 100%;
+  }
+
+  .sga-fulfillment .f-summary {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+}
+
+@media (max-width: 550px) {
+  .sga-fulfillment .heading {
+    display: block;
+  }
+
+  .sga-fulfillment .heading .date {
+    text-align: left;
+    margin-top: 18px;
+  }
+
+  .sga-fulfillment .heading .date strong {
+    display: inline;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+
+  .sga-fulfillment .f-tabs {
+    gap: 17px;
+    margin-bottom: 23px;
+  }
+
+  .sga-fulfillment .f-tabs button {
+    font-size: 13px;
+  }
+
+  .sga-fulfillment .f-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sga-fulfillment .f-detail h2 {
+    font-size: 23px;
+  }
+
+  .sga-fulfillment .f-compare {
+    gap: 15px;
+  }
+
+  .sga-fulfillment .f-compare strong {
+    font-size: 17px;
+  }
+
+  .sga-fulfillment .f-modal {
+    padding: 22px 18px;
+  }
+
+  .sga-fulfillment .f-facts {
+    gap: 18px 12px;
+  }
+
+  .sga-fulfillment .f-ledger .bill-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sga-fulfillment .f-money {
+    font-size: 29px;
+  }
+
+  .sga-fulfillment .f-inline-search input {
+    width: 100%;
+  }
+
+  .sga-fulfillment .f-inline-search label {
+    width: 100%;
+  }
+
+  .sga-fulfillment .f-summary dl {
+    gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sga-fulfillment .f-modal,
+  .sga-fulfillment .f-pick {
+    transition: none !important;
+    animation: none !important;
+  }
+}

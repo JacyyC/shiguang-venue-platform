@@ -1,0 +1,95 @@
+{
+  "checkedOn": "2026-10-10",
+  "testedSourceCommit": "68a0a5bc89842af83b3d14371ba6bdf391f47b11",
+  "productSourceManifestSha256": "e705272ecc4e93e5dc5466a4a290955f62e1d5c9bed3c4f6cfe1b142a390d233",
+  "frontend": {
+    "files": 127,
+    "testsPassed": 1231,
+    "freshInstall": true,
+    "buildPassed": true,
+    "npmAuditFindings": 0
+  },
+  "backend": {
+    "tests": 2077,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 29,
+    "executedPassed": 2048,
+    "includesCapacityIT": true,
+    "fullVerifyPassed": true
+  },
+  "explicitStoredValue": {
+    "testsPassed": 29,
+    "skipped": 0
+  },
+  "lab": {
+    "c1": {
+      "passed": true,
+      "scenarios": 3
+    },
+    "c1-controls": {
+      "passed": true,
+      "scenarios": 4
+    },
+    "c2": {
+      "passed": true,
+      "scenarios": 13
+    },
+    "c3": {
+      "passed": true,
+      "scenarios": 5
+    }
+  },
+  "engineeringBrowser": {
+    "passed": true,
+    "checks": 15,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ]
+  },
+  "dependencyAudit": {
+    "mavenPackagesChecked": 157,
+    "rawAdvisories": 2,
+    "reviewedNotApplicable": 2,
+    "unresolved": 0,
+    "reviewExpiry": "2026-11-10"
+  },
+  "originalIntegrity": {
+    "trackedFilesChecked": 5342,
+    "changedCount": 0,
+    "headUnchanged": true,
+    "statusUnchanged": true
+  },
+  "publicSecretScan": {
+    "snapshotFindings": 0,
+    "allLocalHistoryFindings": 0
+  },
+  "remoteCIExecuted": false,
+  "published": false,
+  "performanceOutput": [
+    "R7_S05_CONVERSION_P95 p95_ms=168 samples=32",
+    "R7_S05_ANALYSIS_P95 p95_ms=23 samples=20",
+    "WAVE_A_SCALE_COUNTS venues=5 resources=200 seats=5000 users=20000 groups=500 posts=100000 comments=500000 activities_and_companions=10000 daily_community_writes=3000 reservations=2000",
+    "WAVE_A_QUERY_PLAN alias=g key=idx_community_group_discovery type=range rows=500",
+    "WAVE_A_QUERY_PLAN alias=p key=idx_community_post_cursor type=ref rows=49450",
+    "WAVE_A_QUERY_PLAN alias=c key=idx_community_comment_post_cursor type=ref rows=5",
+    "WAVE_A_QUERY_PLAN alias=a key=PRIMARY type=index rows=101",
+    "WAVE_A_QUERY_PLAN alias=r key=PRIMARY type=index rows=102",
+    "WAVE_A_QUERY_PLAN alias=o key=idx_reservation_occupancy_space_time_active type=range rows=20",
+    "WAVE_A_POST_EXECUTION_PLAN index=idx_community_post_cursor ordered_limit=true",
+    "WAVE_A_BACKGROUND notification_active=2 notification_queued=95 conversion_active=0 conversion_queued=0",
+    "WAVE_A_NOTIFICATION_TASKS total=100 settled=100",
+    "WAVE_A_ENDPOINT_P95 path=/api/community/activities p95_ms=663 requests=25",
+    "WAVE_A_ENDPOINT_P95 path=/api/community/companion-requests p95_ms=665 requests=25",
+    "WAVE_A_ENDPOINT_P95 path=/api/community/groups p95_ms=534 requests=25",
+    "WAVE_A_ENDPOINT_P95 path=/api/community/posts p95_ms=545 requests=25",
+    "WAVE_A_INVENTORY_P95 p95_ms=370 requests=100",
+    "WAVE_A_RESERVATION_WRITE_P95 p95_ms=1405 requests=100",
+    "WAVE_A_QUOTA_WRITE_P95 p95_ms=544 requests=100",
+    "WAVE_A_NOTIFICATION_TASKS total=200 settled=200",
+    "WAVE_A_SCALE_P95 list_search_ms=662 inventory_ms=370 reservation_write_ms=1405 quota_write_ms=544 concurrency=100",
+    "WAVE_A_BACKGROUND notification_active=0 notification_queued=0 conversion_active=0 conversion_queued=0"
+  ]
+}

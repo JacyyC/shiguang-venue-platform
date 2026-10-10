@@ -24,4 +24,4 @@ if [[ -n "$JAVA17_HOME" ]]; then
   export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
-export MAVEN_OPTS="${MAVEN_OPTS:-} -Dmaven.repo.local=$SCRIPT_DIR/.m2/repository"
+# Maven uses its normal user cache. Set MAVEN_OPTS explicitly if a separate repository is required.

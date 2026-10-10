@@ -1,0 +1,32 @@
+[
+  {
+    "familyDirectory": "lxgwwenkaitc",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/lxgwwenkaitc/OFL.txt",
+    "retrievedOn": "2026-10-10",
+    "sha256": "4fff27d35db0e22cd81d58da6f20e09f415cf354a3338e3cf1fc0eb9222c7174"
+  },
+  {
+    "familyDirectory": "mashanzheng",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/mashanzheng/OFL.txt",
+    "retrievedOn": "2026-10-10",
+    "sha256": "d7bdb1cee215b689e23c2f95672a6084c790542170648267a55114103d756a08"
+  },
+  {
+    "familyDirectory": "notosanssc",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanssc/OFL.txt",
+    "retrievedOn": "2026-10-10",
+    "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+  },
+  {
+    "familyDirectory": "zcoolxiaowei",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/zcoolxiaowei/OFL.txt",
+    "retrievedOn": "2026-10-10",
+    "sha256": "a094514ca57cf8f9c5e8d8d1adab5d8cd3a377297ff016f9df2c05b3ecd77f0a"
+  },
+  {
+    "familyDirectory": "zhimangxing",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/zhimangxing/OFL.txt",
+    "retrievedOn": "2026-10-10",
+    "sha256": "10947328199e369a3e6b4a67e8e5507ed99d5bbb264a1f156415aa9b665e4d15"
+  }
+]

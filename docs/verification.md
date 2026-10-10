@@ -40,7 +40,9 @@ gitleaks git --config .gitleaks.toml --redact
 
 Maven 审计先解析实际传递依赖，再查询 OSV。网络不可用或服务失败会明确报错，不会伪报零漏洞。审计也包含 test scope；命中公告需要结合使用路径判断影响。
 
-Gitleaks 默认规则保持开启，仅豁免精选 C2 报告中的特定合成请求键，以及一条固定的日志脱敏测试 JWT。
+当前两条 Spring MVC 公告的适用性判断、源码条件检查与复核期限见[依赖公告审查](security-advisories.md)；原始命中仍保留在审计报告中。
+
+Gitleaks 默认规则保持开启，仅豁免精选 C2 报告中的特定合成请求键、固定格式的迁移文件 SHA256，以及一条固定的日志脱敏测试 JWT。
 
 ## 可靠性实验
 

@@ -41,6 +41,9 @@ services:
   backend:
     build:
       context: ../backend
+      args:
+        MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9.9-eclipse-temurin-17}
+        JRE_IMAGE: ${JRE_IMAGE:-eclipse-temurin:17-jre}
     environment:
       # A26-P3-09：backend 容器与 mysql 同步使用 Asia/Shanghai，
       # 使 LocalDateTime.now()（JVM 默认时区）与对账按 Asia/Shanghai 切日的窗口对齐，
@@ -129,6 +132,9 @@ services:
     build:
       context: ..
       dockerfile: frontend/Dockerfile
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:24-alpine}
+        NGINX_IMAGE: ${NGINX_IMAGE:-nginx:1.29-alpine}
     ports:
       - "127.0.0.1:${NGINX_PORT:-8088}:80"
     volumes:

@@ -1,11 +1,12 @@
-FROM maven:3.9.9-eclipse-temurin-17 AS build
+ARG MAVEN_IMAGE=maven:3.9.9-eclipse-temurin-17
+ARG JRE_IMAGE=eclipse-temurin:17-jre
+FROM ${MAVEN_IMAGE} AS build
 WORKDIR /app
 COPY pom.xml .
-RUN mvn -q -DskipTests dependency:go-offline
 COPY src ./src
-RUN mvn -q -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp -DskipTests package
 
-FROM eclipse-temurin:17-jre
+FROM ${JRE_IMAGE}
 WORKDIR /app
 COPY --from=build /app/target/venue-reservation-backend-0.1.0.jar app.jar
 EXPOSE 8080

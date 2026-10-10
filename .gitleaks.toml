@@ -12,6 +12,13 @@ paths = ['(?:^|/)(?:engineering/reports|frontend/public/engineering)/C2\.json$']
 regexTarget = "secret"
 regexes = ['^c2-[0-9a-f]{32}$']
 
+[[rules.allowlists]]
+description = "SHA256 integrity digests of immutable Flyway migration files"
+condition = "AND"
+paths = ['(?:^|/)docs/migrations\.sha256\.json$']
+regexTarget = "line"
+regexes = ['^\s*"backend/src/main/resources/db/migration/V[0-9]+__[a-z0-9_]+\.sql": "[0-9a-f]{64}",?\s*$']
+
 [[rules]]
 id = "jwt"
 [[rules.allowlists]]

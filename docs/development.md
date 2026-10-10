@@ -31,6 +31,8 @@ cp .env.example .env.local
 
 两个模式共用 `.env.local` 和同一个 Compose 项目，不同时运行。若需要多个副本，分别设置不同的 `COMPOSE_PROJECT_NAME` 及端口。
 
+Docker Hub 无法访问时，可以在 `.env.local` 的 `MYSQL_IMAGE`、`REDIS_IMAGE`、`MAILPIT_IMAGE`、`NODE_IMAGE`、`NGINX_IMAGE`、`MAVEN_IMAGE`、`JRE_IMAGE` 中指定自己信任的镜像地址。公开模板仍使用上游镜像名；使用镜像服务后的验证应记录实际来源。
+
 ## 演示账号与配置
 
 首次运行 Flyway V1–V36 创建合成演示管理员 `admin` / `password`。普通用户可自行注册。不要把这些账号、示例数据库口令或开发 JWT 密钥用于公开服务。

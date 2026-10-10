@@ -43,7 +43,7 @@ def main():
             errors.append(f'Credential/log artifact included: {relative}')
         if not p.is_file():
             errors.append(f'Missing indexed file: {relative}'); continue
-        if p.suffix == '.md':
+        if p.suffix == '.md' and relative.parts[0] != 'licenses':
             text = p.read_text()
             if re.search(r'/Users/|/Volumes/', text): errors.append(f'Local absolute path in public documentation: {relative}')
             # Fenced code examples are not Markdown link declarations.

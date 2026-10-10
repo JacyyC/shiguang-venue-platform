@@ -20,6 +20,8 @@ Existing CSS documents the Unicode-range selection of upstream font subsets. Pre
 
 Vue, Spring, MyBatis, Element Plus and other dependencies retain their respective upstream licenses and notices. They are installed through npm/Maven or built into distributable bundles. Dependency license inventories are generated during release verification; preserve applicable notices when distributing compiled artifacts.
 
+The npm inventory is in `licenses/dependencies/npm-inventory.json`; runtime npm license and notice texts are preserved under `licenses/dependencies/frontend/`. Maven dependencies carry their upstream metadata/notices in their own artifacts; the release also includes a CycloneDX inventory under `licenses/dependencies/`.
+
 ## Screenshots and engineering reports
 
 Release screenshots are captured from this project's local demonstration using synthetic data. Historical engineering reports describe isolated experiments and are labeled as historical; they do not contain production data or assert current production performance.

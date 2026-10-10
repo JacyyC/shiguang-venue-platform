@@ -30,6 +30,8 @@
 
 [第二次运行](https://github.com/JacyyC/shiguang-venue-platform/actions/runs/38053067560)的储值四组集成和完整历史扫描通过。扫描之后的 shell 测试暴露 macOS 固定 `lsof` 路径；改为发现当前工具路径，并按操作系统选择 `stat` 参数，保留进程所有权、隐私目录权限与拒绝误停的断言。
 
+随后在 UTC 主机模拟检查中，活动通知两项通过，但规模夹具刷新统计后，候选查询仍选择全表扫描（估算 1,000 行）。因此修复实际 Mapper：显式使用 V19 已有的候选排序索引；计划测试改为读取 MyBatis 的真实 SQL 和参数执行 EXPLAIN，并保留统计刷新与非全表扫描断言。没有修改 V1–V36 迁移、候选过滤、排序或返回上限；这种查询提示尚不能替代生产规模分布验证。
+
 修复后的实际状态见 [GitHub Actions](https://github.com/JacyyC/shiguang-venue-platform/actions/workflows/ci.yml)；每次运行与具体提交关联，不能把一次通过推广为生产验收。
 
 ## v0.1.0 发布说明草稿

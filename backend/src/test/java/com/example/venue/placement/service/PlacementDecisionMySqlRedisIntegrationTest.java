@@ -25,6 +25,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -103,6 +104,9 @@ class PlacementDecisionMySqlRedisIntegrationTest {
 
     @Autowired
     private com.example.venue.placement.mapper.PlacementEventMapper eventMapper;
+
+    @Autowired
+    private org.apache.ibatis.session.SqlSessionFactory sqlSessionFactory;
 
     @BeforeEach
     void seedFixtures() {
@@ -241,14 +245,7 @@ class PlacementDecisionMySqlRedisIntegrationTest {
         assertThat(eventMapper.countAcceptedViewable(USER_ID, 1L, SCALE_CANDIDATE_BASE,
             now.minusHours(2))).isEqualTo(5);
 
-        assertIndexed("candidate", """
-            EXPLAIN SELECT * FROM placement_candidate_version
-            WHERE slot_id = 1 AND status = 'PUBLISHED'
-              AND effective_from <= CURRENT_TIMESTAMP
-              AND effective_until > CURRENT_TIMESTAMP
-            ORDER BY priority DESC, effective_from DESC, id ASC
-            LIMIT 100
-            """, "idx_placement_candidate_slot_status_priority");
+        assertMapperCandidatePlan(1L, now, 100);
         assertIndexed("event-count", """
             EXPLAIN SELECT COUNT(*) FROM placement_event
             WHERE user_id = 990001 AND slot_id = 1 AND candidate_version_id = 991000
@@ -318,6 +315,19 @@ class PlacementDecisionMySqlRedisIntegrationTest {
         assertIndexed(label, explainSql, Set.of(expectedIndex));
     }
 
+    private void assertMapperCandidatePlan(long slotId, LocalDateTime now, int limit) {
+        Map<String, Object> parameters = Map.of("slotId", slotId, "now", now, "limit", limit);
+        var statement = sqlSessionFactory.getConfiguration().getMappedStatement(
+            com.example.venue.placement.mapper.PlacementCandidateVersionMapper.class.getName()
+                + ".findPublishedForDecision");
+        var boundSql = statement.getBoundSql(parameters);
+        Object[] values = boundSql.getParameterMappings().stream()
+            .map(mapping -> parameters.get(mapping.getProperty()))
+            .toArray();
+        assertIndexed("candidate-mapper", "EXPLAIN " + boundSql.getSql(),
+            Set.of("idx_placement_candidate_slot_status_priority"), values);
+    }
+
     private void assertMapperRecentBySlotPlan(long slotId, LocalDateTime from,
                                               LocalDateTime to, int limit) {
         java.util.Map<String, Object> row = jdbc.queryForList("""
@@ -344,8 +354,9 @@ class PlacementDecisionMySqlRedisIntegrationTest {
             row.get("key"), row.get("type"), row.get("rows"), row.get("Extra"));
     }
 
-    private void assertIndexed(String label, String explainSql, Set<String> expectedIndexes) {
-        java.util.Map<String, Object> row = jdbc.queryForList(explainSql).stream()
+    private void assertIndexed(String label, String explainSql, Set<String> expectedIndexes,
+                               Object... parameters) {
+        java.util.Map<String, Object> row = jdbc.queryForList(explainSql, parameters).stream()
             .findFirst()
             .orElseThrow(() -> new AssertionError("EXPLAIN returned no row for " + label));
         assertThat(String.valueOf(row.get("key"))).as("EXPLAIN key for %s: %s", label, row)

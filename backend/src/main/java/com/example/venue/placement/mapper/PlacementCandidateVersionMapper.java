@@ -15,10 +15,11 @@ public interface PlacementCandidateVersionMapper extends BaseMapper<PlacementCan
     /**
      * 读取已启用版位下满足半开时间窗 effective_from &lt;= now &lt; effective_until 的已发布候选版本，
      * 按 priority DESC, effective_from DESC, id ASC 稳定排序。调用方在锁外读取候选集后逐个走
-     * Reader 重校验与频控 guard。
+     * Reader 重校验与频控 guard。固定使用 V19 的排序索引，避免统计刷新后转为全表排序。
      */
     @Select("""
         SELECT * FROM placement_candidate_version
+        FORCE INDEX (idx_placement_candidate_slot_status_priority)
         WHERE slot_id = #{slotId}
           AND status = 'PUBLISHED'
           AND effective_from <= #{now}

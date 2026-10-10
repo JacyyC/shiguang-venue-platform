@@ -19,7 +19,7 @@ npm run build --prefix frontend
 python3 scripts/run_stored_value_integrations.py
 ```
 
-脚本使用新的带标签 MySQL 容器、随机密码和环回端口；不会连接默认持久数据库。结果写入 `.run/stored-value-ci/`。仅清理自己创建的容器，保留测试报告。
+脚本使用新的带标签 MySQL 容器、随机密码和环回端口；不会连接默认持久数据库。MySQL、JDBC 与测试 JVM 均使用 `Asia/Shanghai`，避免 UTC CI 主机与数据库的时间比较不一致。结果写入 `.run/<运行名>/`；默认运行名带随机后缀。仅清理自己创建的容器，保留测试报告。
 
 ## 启停脚本
 
@@ -48,4 +48,4 @@ Gitleaks 默认规则保持开启，仅豁免精选 C2 报告中的特定合成�
 
 参见 [engineering/lab/README](../engineering/lab/README.md)。每次新建运行名，使用独占合成环境，实验运行记录默认不提交。历史报告不能替代当前代码回归。
 
-本次实际运行结果见[候选版本验证记录](release-verification.md)。GitHub workflow 已准备；只有上传后的真实运行结果才能证明远程 CI 通过。
+本地实际运行结果见[发布前验证记录](release-verification.md)。GitHub CI 的实际状态见 [Actions](https://github.com/JacyyC/shiguang-venue-platform/actions/workflows/ci.yml)，首次运行问题与修复见[发布资料](github-release.md)。本地通过不能代替远程检查。

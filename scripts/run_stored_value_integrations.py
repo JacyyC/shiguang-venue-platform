@@ -52,7 +52,10 @@ def main():
                                   f'{prefix}.jdbc-user=root\n{prefix}.jdbc-password={password}\n')
             properties.chmod(0o600)
             started = time.time()
-            result = subprocess.run(['mvn', '-B', '-ntp', f'-Dtest={suite}', f'-D{prefix}.integration=true',
+            # MySQL, JDBC and the DEV accounting fixtures use Asia/Shanghai.
+            # Pin the test JVM too: hosted runners otherwise default to UTC.
+            result = subprocess.run(['mvn', '-B', '-ntp', '-Duser.timezone=Asia/Shanghai',
+                                     f'-Dtest={suite}', f'-D{prefix}.integration=true',
                                      '-Dsurefire.systemPropertiesFile=' + str(properties), 'test'],
                                     cwd=ROOT / 'backend', capture_output=True, text=True)
             log = (result.stdout + result.stderr).replace(password, '<secret>').replace(str(ROOT), '<repo>')

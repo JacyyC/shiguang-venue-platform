@@ -8,7 +8,7 @@
 - Description：`Vue 3 + Spring Boot 场地预约与社区平台，包含请求恢复、资源并发与 DEV 账务的可复现实验。`
 - Topics：`vue`、`typescript`、`spring-boot`、`java`、`reservation`、`booking-system`、`mysql`、`redis`、`testcontainers`、`vitest`
 - 默认分支：`main`
-- 首版标签：`v0.1.0`；本地准备阶段使用候选版本，发布后才把候选说明改为正式发布事实。
+- 首版标签：`v0.1.0`；版本下载与正式 Release 状态以 [GitHub Releases](https://github.com/JacyyC/shiguang-venue-platform/releases) 为准。
 
 ## 发布授权和检查
 
@@ -18,7 +18,16 @@
 4. 在 GitHub Security 设置启用 Private vulnerability reporting；配置 main 分支保护和 CI 必须通过。
 5. 第一次 push 后查看真实 GitHub Actions 结果；本地通过不能代替远程 CI。
 
-发布授权已确认；远程仓库、推送及 GitHub Actions 的实际结果在完成后记录。
+已创建[公开仓库](https://github.com/JacyyC/shiguang-venue-platform)，独立审查快照已推送到 `main`，MIT 已被 GitHub 识别。已启用 Private vulnerability reporting。
+
+## 首次 GitHub CI 与修复
+
+[首次运行](https://github.com/JacyyC/shiguang-venue-platform/actions/runs/38052476325)的前端测试、构建、依赖扫描与公开结构检查通过，但另外两项检查失败：
+
+- Gitleaks Action 为首次推送构造了根提交的父提交范围，Git 无法解析该范围，扫描未完成。改为固定 Gitleaks 8.30.1 容器直接扫描完整公开 Git 历史；保留默认规则和已有窄范围的合成数据例外。
+- 储值测试中有 9 项报「未完成储值身份核验」：数据库与 JDBC 为 `Asia/Shanghai`，Ubuntu 测试 JVM 默认为 UTC，导致当前核验时间被判断为未来。运行器为测试 JVM 显式设置相同时区；业务身份核验逻辑保持原有要求。
+
+修复后的实际状态见 [GitHub Actions](https://github.com/JacyyC/shiguang-venue-platform/actions/workflows/ci.yml)；每次运行与具体提交关联，不能把一次通过推广为生产验收。
 
 ## v0.1.0 发布说明草稿
 

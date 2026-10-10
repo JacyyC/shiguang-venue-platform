@@ -2,7 +2,9 @@
 
 面向场馆、场地、自习室和活动室的全栈预约与社区平台。适合学习完整业务链路、研究预约并发与异常恢复，或作为二次开发的起点。
 
-**当前版本：v0.1.0 开源候选。** 支付与储值以 DEV 合成环境为主；生产部署、多实例长稳和真实资金能力尚未验证。详见[能力边界](docs/limitations.md)。
+**开源版本：v0.1.0。** 支付与储值以 DEV 合成环境为主；生产部署、多实例长稳和真实资金能力尚未验证。详见[能力边界](docs/limitations.md)。正式版本下载见 [GitHub Releases](https://github.com/JacyyC/shiguang-venue-platform/releases)。
+
+[![CI](https://github.com/JacyyC/shiguang-venue-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/JacyyC/shiguang-venue-platform/actions/workflows/ci.yml)
 
 ## 界面预览
 
